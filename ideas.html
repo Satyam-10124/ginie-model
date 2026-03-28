@@ -1,0 +1,515 @@
+import { useState } from "react";
+
+const C = {
+  bg: "#08090c", surface: "#10121a", card: "#161923", cardHi: "#1c1f2e",
+  border: "#232740", borderHi: "#2e3354",
+  accent: "#818cf8", accentDim: "#818cf820",
+  green: "#34d399", greenDim: "#34d39918",
+  amber: "#fbbf24", amberDim: "#fbbf2418",
+  red: "#f87171", redDim: "#f8717118",
+  teal: "#2dd4bf", tealDim: "#2dd4bf18",
+  pink: "#f472b6", pinkDim: "#f472b618",
+  sky: "#38bdf8", skyDim: "#38bdf818",
+  text: "#e2e8f0", muted: "#94a3b8", dim: "#64748b", faint: "#475569",
+};
+
+const IDEAS = [
+  {
+    id: 1, tier: "S",
+    title: "Canton DevKit CLI",
+    sub: "The Hardhat/Foundry of Canton — one tool to rule them all",
+    category: "Core Dev Tooling",
+    color: C.accent,
+    grantFit: 98,
+    surveyEvidence: "Rated #1 CRITICAL in quantitative survey. Named 11+ times in qualitative feedback. Devs explicitly said 'Hardhat/Foundry/Anchor.'",
+    gap: "Zero existing solution. DPM is for package management only. cn-quickstart is a template, not a CLI lifecycle tool. No proposal in the dev-fund addresses this.",
+    painSolved: [
+      "41% of devs said environment setup took longest to get right",
+      "Multi-node Docker/K8s config before writing a single line of DAML",
+      "No scaffolding — devs start from blank files every time",
+      "Manual Package ID discovery for JSON API (described as 'opaque')",
+      "Fragmented scripts for test → deploy → verify workflows",
+    ],
+    deliverables: [
+      "`canton-dev init` — scaffold a new project from templates (DeFi, RWA, lending, generic)",
+      "`canton-dev sandbox` — spin up local Canton nodes + sync domain in one command (wraps Docker)",
+      "`canton-dev test` — run DAML Script tests with human-readable colored output",
+      "`canton-dev deploy` — deploy DARs to DevNet/TestNet/MainNet with environment config",
+      "`canton-dev console` — interactive DAML REPL connected to any environment",
+      "`canton-dev status` — show node health, connected domains, active contracts count",
+      "Auto Package ID resolution — discovers and injects package IDs for JSON API calls",
+      "Config files: `canton-dev.yaml` per project (like hardhat.config.ts)",
+    ],
+    techStack: "TypeScript CLI (Commander.js), Docker SDK for sandbox orchestration, gRPC client for Ledger API, templates stored as .tar.gz in npm registry",
+    grant: "$80K–$150K · 6 months · 4 milestones",
+    revenueAfter: "Open source core. Premium: cloud-hosted sandboxes, team environments, CI/CD plugins. Canton Foundation distributes to every new dev.",
+    competitors: "Nothing. #7 (DAML LSP) = IDE only. #125 (Spring Boot Starter) = Java backend only. #130 (Package Analyzer) = static analysis. None cover CLI lifecycle.",
+  },
+  {
+    id: 2, tier: "S",
+    title: "Canton Trace — Visual Transaction Debugger",
+    sub: "Tenderly for Canton: step through sub-transactions, simulate failures, decode errors",
+    category: "Core Dev Tooling",
+    color: C.accent,
+    grantFit: 96,
+    surveyEvidence: "Multiple respondents explicitly name-dropped 'Tenderly.' Qualitative feedback describes 'parsing cryptic log files' as the debugging workflow.",
+    gap: "CCView and Lighthouse are block explorers (read-only data browsing). No tool lets you step through a DAML choice execution, see contract state diffs, or simulate 'what-if' transactions.",
+    painSolved: [
+      "Canton errors are notoriously cryptic — no human-readable decoder exists",
+      "Sub-transaction privacy means devs can't see the full tx unless stakeholder on every part",
+      "No way to simulate a transaction before committing (the 'pre-flight profiler' devs asked for)",
+      "PQS provides raw data but no visual interpretation layer",
+      "Debugging multi-party workflows requires correlating logs across multiple participant nodes",
+    ],
+    deliverables: [
+      "Web UI: paste transaction ID → see full execution tree as interactive graph",
+      "Choice-by-choice step-through with contract state before/after diffs",
+      "Human-readable error decoder: maps Canton error codes to plain English + fix suggestions",
+      "Multi-party view toggle: see what each party sees in their privacy scope",
+      "Transaction simulator: 'dry run' a DAML choice with proposed inputs before submitting",
+      "Bandwidth/cost estimator: show estimated Canton Coin cost before execution",
+      "PQS integration: replay historical transactions from the Participant Query Store",
+      "REST API for CI integration: assert transaction properties in automated tests",
+    ],
+    techStack: "React frontend, Node.js backend, gRPC Ledger API + PQS JDBC for data, D3.js for transaction tree visualization",
+    grant: "$100K–$200K · 8 months · 5 milestones",
+    revenueAfter: "Freemium SaaS: free for DevNet/localhost, paid tiers for TestNet/MainNet with team dashboards, saved replays, and alerting.",
+    competitors: "Nothing. #3 (CARA) = audit/regulatory, not debugging. #5 (Security Framework) = static analysis. #130 (Package Analyzer) = compile-time. None do runtime visual debugging.",
+  },
+  {
+    id: 3, tier: "A",
+    title: "Canton PQS GraphQL Gateway",
+    sub: "Turn raw PQS Postgres into a typed, queryable GraphQL API any frontend can consume",
+    category: "Data Infrastructure",
+    color: C.teal,
+    grantFit: 93,
+    surveyEvidence: "Data Indexing & APIs: 20% Critical + 51% Important. Devs struggle to 'read on-ledger data' and want 'decoded views.' The typed SDK gap was explicitly called out.",
+    gap: "PQS gives you raw JSONB in Postgres. Every team builds their own API layer on top. There's no standard typed query interface. The JSON API exists but is limited and being deprecated in favor of direct Ledger API. Nobody has built a GraphQL gateway over PQS.",
+    painSolved: [
+      "Every Canton app team builds a custom REST API over PQS from scratch",
+      "JSONB querying requires deep PQS schema knowledge — no abstraction layer",
+      "Frontend devs can't access contract data without a backend engineer first building an API",
+      "No subscription/real-time update mechanism — devs poll PQS manually",
+      "Package ID lookup for JSON API described as 'opaque' — GraphQL schema auto-generates from DAR",
+    ],
+    deliverables: [
+      "Auto-generate GraphQL schema from compiled .dar files (DAML templates → GraphQL types)",
+      "Query active contracts by template, party, key, or any payload field",
+      "Subscriptions: real-time WebSocket updates when contracts are created/archived/exercised",
+      "Filtering, pagination, and sorting built-in (not custom SQL per app)",
+      "Multi-party scoping: queries respect party authorization automatically",
+      "Schema stitching: combine contracts from multiple DARs into one unified API",
+      "Docker image: `docker run canton-pqs-graphql --pqs-host=... --dar=./my-app.dar`",
+      "TypeScript codegen: generate typed hooks from the GraphQL schema (`useActiveContracts<MyTemplate>()`)",
+    ],
+    techStack: "Node.js + Apollo Server, PostgreSQL (PQS), auto-codegen from DAR metadata, graphql-ws for subscriptions",
+    grant: "$60K–$120K · 5 months · 4 milestones",
+    revenueAfter: "Open source gateway. Revenue via managed hosted version (PQS-GraphQL-as-a-Service) for teams that don't want to operate infrastructure.",
+    competitors: "Nothing. CCView Indexing API is explorer-focused, not app-facing. No dev-fund proposal covers this.",
+  },
+  {
+    id: 4, tier: "A",
+    title: "Canton Sentinel — Validator Ops Dashboard",
+    sub: "Prometheus + Grafana stack pre-configured for Canton validators with one-click deploy",
+    category: "Observability / Node Ops",
+    color: C.green,
+    grantFit: 92,
+    surveyEvidence: "Observability had the highest 'important' consensus across all categories. Devs asked for 'one-click visual dashboards' to verify Sequencer/Mediator handshakes.",
+    gap: "~600 nodes on Canton as of Dec 2025. Each validator self-configures monitoring. No standard Prometheus exporter exists. No pre-built Grafana dashboards. Validators diagnose connectivity with 'complex terminal commands.'",
+    painSolved: [
+      "Validators can't confirm Participant↔Sequencer↔Mediator handshakes without terminal debugging",
+      "No standard metrics format — each operator builds custom scrapers",
+      "No alert system for node disconnects, sequencer lag, or sync failures",
+      "The 600→1000+ node growth trajectory means more operators needing turnkey monitoring",
+      "PQS health, DB connection pool, and ingestion lag are invisible without custom tooling",
+    ],
+    deliverables: [
+      "Prometheus exporter: scrapes Canton participant node, sequencer, mediator metrics via gRPC health API",
+      "Pre-built Grafana dashboards: node health, domain connectivity, transaction throughput, PQS lag",
+      "Alert rules: node disconnect, sequencer lag >X ms, PQS ingestion stall, disk usage thresholds",
+      "Docker Compose: `docker compose up` brings up Prometheus + Grafana + exporters pre-wired",
+      "Helm chart for K8s validators (the enterprise deployment path)",
+      "Network topology view: visual map of which participant connects to which sync domains",
+      "Historical uptime tracking and SLA reporting for validators",
+      "Loki integration for centralized log aggregation across Canton components",
+    ],
+    techStack: "Go (Prometheus exporter), Grafana dashboards (JSON), Docker Compose + Helm, gRPC client for Canton APIs",
+    grant: "$50K–$100K · 4 months · 3 milestones",
+    revenueAfter: "Open source stack. Revenue via managed SaaS (hosted monitoring for validators who don't want to operate Grafana). Aligns with NaaS providers in Canton ecosystem.",
+    competitors: "#126 (Pruning Coordinator) is narrow ops tooling. No dev-fund proposal covers monitoring/observability holistically.",
+  },
+  {
+    id: 5, tier: "A",
+    title: "DAML Cargo — Package Registry & Dependency Manager",
+    sub: "npm/crates.io for DAML: publish, version, discover, install packages",
+    category: "Core Dev Tooling",
+    color: C.accent,
+    grantFit: 90,
+    surveyEvidence: "Named in survey 'Magic Wand Wishlist.' The Package Manager & Operational Dashboards (Cargo) was explicitly listed. Devs described manually downloading .dar files and moving them between folders.",
+    gap: "Zero package registry exists. DPM framework helps build packages but has no publish/discover/install flow. Every team manually manages .dar file dependencies. Version conflicts are resolved by trial and error.",
+    painSolved: [
+      "No `npm install` equivalent — devs manually download and copy .dar files",
+      "Version mismatches between DAML SDK, Canton, and .dar packages cause cryptic failures",
+      "No discoverability — can't search 'who built a DeFi lending template I can reuse?'",
+      "Reference implementations exist but are buried in random GitHub repos",
+      "Canton SDK compatibility matrix is tribal knowledge, not machine-readable",
+    ],
+    deliverables: [
+      "CLI: `daml-cargo init`, `daml-cargo publish`, `daml-cargo install <package>@<version>`",
+      "Public registry web UI: browse, search, view README, see dependency graph",
+      "Semantic versioning with Canton SDK / DAML SDK compatibility matrix",
+      "Lock file (`daml-cargo.lock`) for reproducible builds",
+      "Namespace reservations: `@canton-foundation/*`, `@digital-asset/*` for official packages",
+      "Private registries for enterprise teams (publish internal-only packages)",
+      "Integration with canton-dev CLI (if both get built — `canton-dev add @acme/lending-templates`)",
+      "CI/CD hooks: auto-publish on git tag, compatibility checks on PR",
+    ],
+    techStack: "Rust CLI (fast, cross-platform), registry API in Node.js, PostgreSQL for metadata, S3 for .dar storage, Cloudflare CDN",
+    grant: "$60K–$100K · 5 months · 4 milestones",
+    revenueAfter: "Public registry free (grant-funded). Revenue from private registry hosting for enterprise teams ($X/month per org).",
+    competitors: "Nothing. #130 (Package Analyzer) = static analysis of existing packages, not registry/distribution.",
+  },
+  {
+    id: 6, tier: "A",
+    title: "Canton JWT Auth Middleware",
+    sub: "Drop-in auth library that handles JWT token management for Ledger API + PQS access",
+    category: "Security / Integration",
+    color: C.pink,
+    grantFit: 88,
+    surveyEvidence: "Survey explicitly noted: 'developers struggle significantly with implementing JWT authentication middleware — a repeated friction point for Hybrid and TradFi teams.'",
+    gap: "Every Canton app must implement JWT auth from scratch. The Ledger API requires JWTs. PQS requires JWTs. Token refresh, scope management, party-to-user mapping — all manual. No standard library exists.",
+    painSolved: [
+      "Every team re-implements JWT auth for Ledger API (identical boilerplate, different bugs)",
+      "Token refresh logic is error-prone — PQS streams break when tokens expire",
+      "Party ↔ user ↔ JWT scope mapping is undocumented tribal knowledge",
+      "TradFi teams (83% of projects) expect standard OAuth2/OIDC flows, not custom JWT crafting",
+      "Multi-party JWT scoping (one user accessing multiple parties) is complex and poorly documented",
+    ],
+    deliverables: [
+      "TypeScript library: `@canton-auth/middleware` — Express/Fastify middleware",
+      "Python library: `canton-auth` — FastAPI/Django middleware",
+      "Auto token refresh with configurable preempt window (handles PQS streaming reconnect)",
+      "Party scope resolver: given a user identity, return authorized parties and JWT claims",
+      "OIDC provider integration: plug into Keycloak, Auth0, Okta out of the box",
+      "Reference implementation: complete auth flow from frontend login → Ledger API call → PQS query",
+      "Documentation: 'Canton Auth Cookbook' covering every auth scenario with code samples",
+      "Test helpers: mock JWT issuer for local development (no auth server needed in sandbox)",
+    ],
+    techStack: "TypeScript + Python, jose (JWT library), supports Express/Fastify/Koa (TS) and FastAPI/Django (Py)",
+    grant: "$40K–$70K · 3 months · 3 milestones",
+    revenueAfter: "Fully open source (pure community good). Establishes you as the auth expert in Canton — consulting revenue from enterprise integration.",
+    competitors: "Nothing. No dev-fund proposal addresses auth middleware. This is pure glue infrastructure everyone needs.",
+  },
+  {
+    id: 7, tier: "B",
+    title: "Canton Faucet & Gas Station",
+    sub: "Testnet Canton Coin faucet + gas cost estimator + bandwidth management for app devs",
+    category: "DevEx / Onboarding",
+    color: C.amber,
+    grantFit: 85,
+    surveyEvidence: "Canton 3.4 added cost estimation APIs, but no developer-facing tool wraps them. Forum posts ask 'How to estimate gas fees for transactions on Canton Network' (295 views, highest in that period).",
+    gap: "Denex built a Gas Station for validators, but no general-purpose faucet or dev-facing cost tool exists. Devs deploy 'blindly' and discover cost issues after failure. No testnet faucet with rate limiting.",
+    painSolved: [
+      "New devs can't get testnet Canton Coin easily — no public faucet",
+      "Cost estimation exists in the API but no UI or CLI wraps it",
+      "Devs discover transactions are too large or too expensive only after they fail",
+      "No 'gas budget' tool for planning Canton Coin spend across a test session",
+    ],
+    deliverables: [
+      "Web faucet: request DevNet/TestNet Canton Coin with rate limiting and CAPTCHA",
+      "CLI: `canton-dev faucet --network devnet --amount 100`",
+      "Cost estimator UI: paste a DAML choice + inputs, see estimated bandwidth cost before executing",
+      "Cost profiler: run a test suite and get a report of Canton Coin costs per transaction",
+      "Budget alerts: notify when test session spend exceeds threshold",
+      "API: `GET /estimate` for programmatic cost estimation in CI pipelines",
+    ],
+    techStack: "React frontend, Node.js API, Canton cost estimation gRPC API (new in 3.4), rate limiter with Redis",
+    grant: "$30K–$60K · 3 months · 3 milestones",
+    revenueAfter: "Open source faucet. Revenue potential from managed faucet-as-a-service for hackathon organizers and enterprise DevNet operators.",
+    competitors: "Denex Gas Station exists but is validator-focused, not dev-facing. Forum question on gas estimation has 295 views — clear demand.",
+  },
+  {
+    id: 8, tier: "B",
+    title: "DAML Linter & Upgrade Safety Checker",
+    sub: "eslint for DAML: catch contract bugs, enforce patterns, verify safe upgrades before deploy",
+    category: "Security / Quality",
+    color: C.pink,
+    grantFit: 87,
+    surveyEvidence: "Security & Auditing Tools: 24% Critical + 51% Important. OpenZeppelin just published Canton security research (March 2026) identifying unique DAML bug classes not caught by the compiler.",
+    gap: "DAML compiler catches type errors but not logic errors, unsafe governance patterns, or upgrade compatibility issues. OpenZeppelin's recent research identified that governance-controlled parameters as denominators can abort entire workflows — the compiler doesn't catch this. #5 (Daml Security Framework) is broader; this is a focused, shippable linter.",
+    painSolved: [
+      "DAML compiler doesn't catch: division-by-zero from governance params, time-skew vulnerabilities, unsafe upgrade paths",
+      "No static analysis tool for DAML-specific patterns (unlike Slither for Solidity)",
+      "Contract upgrades on Canton are complex — no automated compatibility checker exists",
+      "Forum post 'Daml smart contracts need auditing like Solidity?' (61 views) shows community awareness growing",
+      "The compilation error about 'exceptions and templates' in the same package (forum, Feb 2026) is exactly the kind of thing a linter catches early",
+    ],
+    deliverables: [
+      "CLI linter: `daml-lint src/` — runs rules against DAML source files",
+      "Rule engine: configurable rules in YAML (like ESLint's .eslintrc)",
+      "Built-in rules: division-by-zero risk, unbounded list operations, missing ensure clauses, unsafe key definitions",
+      "Upgrade safety checker: compare two DAR versions and report breaking changes",
+      "CI/CD integration: GitHub Action that runs linter on PR and comments results",
+      "OpenZeppelin-aligned rules: implement checks for the bug classes they identified (ArithmeticError from governance, time-skew, etc.)",
+      "VS Code extension: inline warnings as you type",
+    ],
+    techStack: "Haskell or Rust (parse DAML AST), YAML config, GitHub Action wrapper, VS Code extension in TypeScript",
+    grant: "$50K–$90K · 5 months · 4 milestones",
+    revenueAfter: "Open source linter. Revenue via enterprise audit services (run linter + manual review). Partnerships with OpenZeppelin, Certora (who have #130 proposal), Dedge.",
+    competitors: "#5 (Daml Security Framework) is a broader framework proposal. #130 (Package Analyzer) is Certora's static analysis. This is more focused and shippable — a standalone linter devs run daily, not an audit framework.",
+  },
+  {
+    id: 9, tier: "B",
+    title: "Canton Webhook Relay",
+    sub: "If-This-Then-That for Canton: subscribe to on-ledger events, push to any HTTP endpoint",
+    category: "Integration / Automation",
+    color: C.sky,
+    grantFit: 84,
+    surveyEvidence: "App architecture docs describe push-based consumption patterns but no tool exists. Every team builds custom event listeners. The integration pattern is well-documented but never productized.",
+    gap: "Canton's architecture recommends backends subscribe to ledger events and push to off-ledger systems. No standard webhook service exists. Every team builds a custom subscriber → transformer → HTTP poster pipeline.",
+    painSolved: [
+      "Every app backend re-implements: subscribe to Ledger API → filter events → POST to webhook URL",
+      "No standard retry logic, dead-letter queues, or delivery guarantees for event notifications",
+      "Off-ledger integrations (Slack alerts, email notifications, accounting systems) require custom code each time",
+      "DeFi apps need real-time notifications for positions, liquidations, settlements — all custom today",
+    ],
+    deliverables: [
+      "Web dashboard: configure webhook subscriptions (template type, party, choice → URL)",
+      "Subscription DSL: 'when MyTemplate is created by party X, POST to https://my-api/handle'",
+      "Retry logic with exponential backoff, dead-letter queue for failed deliveries",
+      "Payload transformation: map DAML contract payload to custom JSON schema before delivery",
+      "Event filtering: subscribe to specific templates, choices, parties, or custom predicates",
+      "Delivery logs and replay: see delivery history, re-deliver failed events",
+      "Docker image: self-hosted or managed",
+      "SDK: `@canton-webhooks/client` for programmatic subscription management",
+    ],
+    techStack: "Node.js or Go, Ledger API gRPC streaming, PostgreSQL for state, Redis for queue, webhook.site-style delivery UI",
+    grant: "$40K–$80K · 4 months · 3 milestones",
+    revenueAfter: "Open source self-hosted. Revenue from managed SaaS (pay per webhook delivery). Every Canton app is a potential customer.",
+    competitors: "Nothing in dev-fund. #114 (Flowryd Workflow Engine) is broader workflow orchestration, not webhook delivery.",
+  },
+  {
+    id: 10, tier: "B",
+    title: "Canton ↔ EVM Bridge Reference Implementation",
+    sub: "Open-source reference for bridging assets/messages between Canton and Ethereum/L2s",
+    category: "Interoperability",
+    color: C.sky,
+    grantFit: 83,
+    surveyEvidence: "71% of devs come from EVM background. Canton already has USDC xReserve (Ethereum↔Canton). But no open-source reference implementation exists for teams to build custom bridges.",
+    gap: "Digital Asset has proprietary bridge solutions (USDC xReserve). But no open-source, reusable bridge template exists for community devs. 71% of Canton devs are from EVM — they have assets and users on Ethereum they want to connect.",
+    painSolved: [
+      "Teams wanting Canton↔Ethereum interop must build from scratch or use proprietary DA tools",
+      "No reference architecture for cross-chain message passing with Canton's privacy model",
+      "DeFi composability between Canton and EVM DeFi is impossible without bridge infrastructure",
+      "RWA tokenization teams (83% TradFi/Hybrid) need to bring existing Ethereum-based assets to Canton",
+    ],
+    deliverables: [
+      "DAML contracts: lock/mint/burn/unlock patterns for bridged assets",
+      "Solidity contracts: corresponding lock/unlock on Ethereum side",
+      "Relayer service: watches events on both chains, submits proofs",
+      "Reference implementation: bridge a simple ERC-20 token to a DAML Holding on Canton",
+      "Security analysis document: trust assumptions, oracle requirements, failure modes",
+      "Integration guide: 'Bridge Your ERC-20 to Canton in 30 Minutes'",
+      "Docker Compose: run the full bridge locally against Canton sandbox + Hardhat fork",
+    ],
+    techStack: "DAML + Solidity, TypeScript relayer, ethers.js + Canton Ledger API, Docker Compose",
+    grant: "$70K–$140K · 6 months · 4 milestones",
+    revenueAfter: "Open source reference. Revenue from custom bridge deployments for institutional clients. Aligns with Canton's RWA tokenization narrative.",
+    competitors: "#9 (PartyLayer) focuses on application-layer interop, not asset bridging. #117 (Cross-Domain Messaging) is Canton-internal. This is Canton↔external chain bridging — different layer entirely.",
+  },
+  {
+    id: 11, tier: "B",
+    title: "Canton Docusaurus — Unified Developer Knowledge Hub",
+    sub: "One docs site to rule them all: DAML language + Canton protocol + APIs + tutorials in one searchable place",
+    category: "Education / DevEx",
+    color: C.amber,
+    grantFit: 82,
+    surveyEvidence: "Fragmented Documentation was a top qualitative pain point. Devs said they 'struggle to synthesize information across disparate resource hubs' and can't form a mental model of the full stack.",
+    gap: "Docs are split across: docs.daml.com, docs.digitalasset.com, docs.canton.network, docs.dev.sync.global, docs.test.sync.global, docs.sync.global, GitHub READMEs, and blog posts. No unified search. No cross-linking. New devs bounce between 6+ sites.",
+    painSolved: [
+      "6+ documentation sites with different auth, different search, different nav structures",
+      "No 'getting started' path that connects DAML → Canton → Network → Deployment end-to-end",
+      "API references scattered across GitHub repos, not aggregated",
+      "Tutorial content is mixed with reference content — devs can't find what they need quickly",
+      "Canton 101 (canton-101.vercel.app) exists but is a community resource, not comprehensive",
+    ],
+    deliverables: [
+      "Unified Docusaurus site: one search bar across all Canton/DAML content",
+      "Learning paths: 'I'm from Ethereum' / 'I'm building DeFi' / 'I'm a validator operator'",
+      "Auto-generated API reference from gRPC proto files and OpenRPC specs",
+      "Interactive code examples: click 'run' to execute DAML snippets in browser sandbox",
+      "Versioned docs: Canton 3.3 / 3.4 / 3.5 side-by-side for migration",
+      "Community contributions via GitHub PRs (Docusaurus makes this easy)",
+      "Search analytics: track what devs search for most to identify doc gaps",
+      "Algolia DocSearch integration for instant, fuzzy search",
+    ],
+    techStack: "Docusaurus 3 (React), MDX content, Algolia search, GitHub Actions for CI/CD, protoc plugin for API docs",
+    grant: "$40K–$80K · 4 months · 3 milestones",
+    revenueAfter: "Fully open source. Canton Foundation likely takes ownership long-term. Establishes your team as the docs authority — consulting engagements follow.",
+    competitors: "Nothing. #121 (Capstone Kits) is educational content, not documentation infrastructure. Canton Foundation DevRel team would be a natural champion for this.",
+  },
+  {
+    id: 12, tier: "C",
+    title: "Canton Load Tester / Benchmark Suite",
+    sub: "k6/Gatling for Canton: stress-test your DAML app before MainNet deployment",
+    category: "Testing / Quality",
+    color: C.teal,
+    grantFit: 80,
+    surveyEvidence: "Implicit in the 'pre-flight profiler' request. Canton 3.4 improved TPS — teams need a way to verify their app handles the throughput.",
+    gap: "No standard benchmarking tool for Canton apps. Teams either don't load test or write one-off scripts. Canton 3.4 upgraded TPS capabilities but devs have no way to measure their app's actual throughput.",
+    painSolved: [
+      "No way to know if your DAML app handles 100 TPS vs 10 TPS before going to MainNet",
+      "Canton Coin cost varies with transaction complexity — no way to profile cost under load",
+      "Multi-party workflows amplify latency — no tool measures party-count scaling behavior",
+    ],
+    deliverables: [
+      "CLI: `canton-bench run scenarios/settlement.yaml --concurrency 50 --duration 60s`",
+      "Scenario DSL: define transaction patterns in YAML (create N contracts, exercise M choices, with P parties)",
+      "Metrics output: TPS, p50/p95/p99 latency, Canton Coin cost per tx, error rate",
+      "Report generation: HTML report with charts (like k6's built-in reports)",
+      "Comparison mode: run same scenario against DevNet vs TestNet, diff the results",
+      "Grafana dashboard integration: stream metrics to Prometheus for real-time viewing",
+    ],
+    techStack: "Go CLI (high-concurrency), gRPC Ledger API, YAML scenario DSL, HTML report generator",
+    grant: "$40K–$70K · 4 months · 3 milestones",
+    revenueAfter: "Open source tool. Revenue from performance consulting services for institutional deployments.",
+    competitors: "Nothing in dev-fund proposals addresses load testing.",
+  },
+];
+
+const TIERS = { S: { label: "Tier S — Build this first", color: C.red, desc: "Highest grant probability. Directly validated by official 2026 survey. Zero competition." }, A: { label: "Tier A — Strong grant candidates", color: C.amber, desc: "Clear ecosystem gaps. Survey-adjacent demand. Moderate competition from tangential proposals." }, B: { label: "Tier B — Solid community goods", color: C.teal, desc: "Real pain points. May need a Tech & Ops Committee champion. Smaller grant amounts." }, C: { label: "Tier C — Worth building", color: C.dim, desc: "Good ideas with less direct survey validation. Build after landing a Tier S/A grant." } };
+
+function Pill({ children, color }) {
+  return <span style={{ display: "inline-block", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, color, background: `${color}20`, letterSpacing: "0.06em", textTransform: "uppercase" }}>{children}</span>;
+}
+
+function IdeaRow({ idea, isOpen, toggle }) {
+  const tierInfo = TIERS[idea.tier];
+  return (
+    <div style={{ background: isOpen ? C.cardHi : C.card, border: `1px solid ${isOpen ? C.borderHi : C.border}`, borderRadius: 10, transition: "all 0.2s", marginBottom: 2 }}>
+      <div onClick={toggle} style={{ padding: "16px 20px", cursor: "pointer", display: "flex", gap: 14, alignItems: "center" }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: `${tierInfo.color}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: tierInfo.color, flexShrink: 0 }}>{idea.tier}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 3 }}>
+            <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{idea.title}</span>
+            <Pill color={idea.color}>{idea.category}</Pill>
+          </div>
+          <div style={{ fontSize: 13, color: C.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{idea.sub}</div>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontSize: 20, fontWeight: 800, color: idea.grantFit >= 95 ? C.green : idea.grantFit >= 88 ? C.accent : C.amber }}>{idea.grantFit}</div>
+          <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.05em" }}>fit score</div>
+        </div>
+        <div style={{ fontSize: 18, color: C.dim, flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }}>▾</div>
+      </div>
+
+      {isOpen && (
+        <div style={{ borderTop: `1px solid ${C.border}`, padding: "20px 20px 24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+            <Section title="Survey evidence" color={C.red} text={idea.surveyEvidence} />
+            <Section title="Why the gap exists" color={C.accent} text={idea.gap} />
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <SectionTitle color={C.amber}>Pain points this solves</SectionTitle>
+            <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+              {idea.painSolved.map((p, i) => <div key={i} style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, paddingLeft: 14, position: "relative" }}><span style={{ position: "absolute", left: 0, color: C.dim }}>›</span>{p}</div>)}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <SectionTitle color={C.green}>Deliverables</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+              {idea.deliverables.map((d, i) => <div key={i} style={{ fontSize: 12, color: C.muted, lineHeight: 1.5, padding: "4px 0 4px 14px", position: "relative" }}><span style={{ position: "absolute", left: 0, color: C.green }}>✓</span>{d}</div>)}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+            <MiniSection title="Tech stack" text={idea.techStack} />
+            <MiniSection title="Grant estimate" text={idea.grant} />
+            <MiniSection title="Revenue after grant" text={idea.revenueAfter} />
+          </div>
+
+          <div style={{ marginTop: 16, padding: "12px 16px", background: C.redDim, borderRadius: 8, border: `1px solid ${C.red}20` }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.red, textTransform: "uppercase", letterSpacing: "0.05em" }}>Competition check: </span>
+            <span style={{ fontSize: 13, color: C.muted }}>{idea.competitors}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Section({ title, color, text }) {
+  return <div><SectionTitle color={color}>{title}</SectionTitle><p style={{ fontSize: 13, color: C.muted, margin: 0, lineHeight: 1.6 }}>{text}</p></div>;
+}
+
+function SectionTitle({ color, children }) {
+  return <div style={{ fontSize: 11, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>{children}</div>;
+}
+
+function MiniSection({ title, text }) {
+  return <div style={{ background: C.surface, borderRadius: 8, padding: "10px 14px" }}><div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{title}</div><div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{text}</div></div>;
+}
+
+export default function App() {
+  const [openId, setOpenId] = useState(1);
+  const [filterTier, setFilterTier] = useState(null);
+
+  const filtered = filterTier ? IDEAS.filter(i => i.tier === filterTier) : IDEAS;
+  const grouped = {};
+  filtered.forEach(i => { if (!grouped[i.tier]) grouped[i.tier] = []; grouped[i.tier].push(i); });
+
+  return (
+    <div style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: C.bg, color: C.text, minHeight: "100vh", padding: "28px 20px" }}>
+      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.green, boxShadow: `0 0 6px ${C.green}80` }} />
+            <span style={{ fontSize: 11, color: C.green, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>Updated analysis · March 2026</span>
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px", letterSpacing: "-0.025em" }}>Canton open source utility ideas</h1>
+          <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.6 }}>
+            12 ideas ranked by grant-fit. Based on the official 2026 developer survey (41 respondents), 131+ dev-fund PRs, forum pain points, Canton 3.4 release notes, and OpenZeppelin's Canton security research.
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
+          <button onClick={() => setFilterTier(null)} style={{ padding: "6px 14px", borderRadius: 99, border: `1px solid ${!filterTier ? C.accent : C.border}`, background: !filterTier ? C.accentDim : "transparent", color: !filterTier ? C.accent : C.dim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>All ({IDEAS.length})</button>
+          {Object.entries(TIERS).map(([k, v]) => {
+            const count = IDEAS.filter(i => i.tier === k).length;
+            return <button key={k} onClick={() => setFilterTier(filterTier === k ? null : k)} style={{ padding: "6px 14px", borderRadius: 99, border: `1px solid ${filterTier === k ? v.color : C.border}`, background: filterTier === k ? `${v.color}18` : "transparent", color: filterTier === k ? v.color : C.dim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Tier {k} ({count})</button>;
+          })}
+        </div>
+
+        {/* Grouped ideas */}
+        {Object.entries(grouped).map(([tier, ideas]) => (
+          <div key={tier} style={{ marginBottom: 24 }}>
+            <div style={{ marginBottom: 10, paddingLeft: 4 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: TIERS[tier].color }}>{TIERS[tier].label}</div>
+              <div style={{ fontSize: 12, color: C.dim }}>{TIERS[tier].desc}</div>
+            </div>
+            {ideas.map(idea => (
+              <IdeaRow key={idea.id} idea={idea} isOpen={openId === idea.id} toggle={() => setOpenId(openId === idea.id ? null : idea.id)} />
+            ))}
+          </div>
+        ))}
+
+        {/* Strategy box */}
+        <div style={{ background: C.surface, borderRadius: 12, padding: 20, border: `1px solid ${C.border}`, marginTop: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.green, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Recommended strategy</div>
+          <p style={{ fontSize: 14, color: C.muted, margin: "0 0 12px", lineHeight: 1.7 }}>
+            <strong style={{ color: C.text }}>Phase 1 — Land the grant:</strong> Pick <strong style={{ color: C.accent }}>Canton DevKit CLI</strong> (#1) or <strong style={{ color: C.accent }}>Canton Trace</strong> (#2). Both are survey-validated, zero-competition, and directly fundable. The DevRel team published the survey to guide grant proposals — build exactly what they asked for.
+          </p>
+          <p style={{ fontSize: 14, color: C.muted, margin: "0 0 12px", lineHeight: 1.7 }}>
+            <strong style={{ color: C.text }}>Phase 2 — Expand the stack:</strong> Use the credibility from your first grant to propose <strong style={{ color: C.teal }}>PQS GraphQL Gateway</strong> (#3) or <strong style={{ color: C.green }}>Canton Sentinel</strong> (#4). These complement your first tool and create a platform.
+          </p>
+          <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.7 }}>
+            <strong style={{ color: C.text }}>Phase 3 — Become the Canton dev platform:</strong> If you build #1 + #3 + #5 you own the developer lifecycle: scaffold → code → query → test → deploy → monitor. That's the Alchemy/Infura of Canton — a venture-scale position built on open source grants.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
