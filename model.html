@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ginie ML Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0e0b;--bg2:#141310;--bg3:#1a1815;--bg4:#201e1a;
+  --paper:#f5f0e8;--paper2:#ede8dc;
+  --amber:#f0a830;--amber2:#e89020;--amber3:#f8c860;
+  --amber-bg:rgba(240,168,48,0.08);--amber-border:rgba(240,168,48,0.2);
+  --teal:#38b898;--teal-bg:rgba(56,184,152,0.08);
+  --red:#e85048;--red-bg:rgba(232,80,72,0.08);
+  --blue:#5090e8;--blue-bg:rgba(80,144,232,0.08);
+  --green:#58b858;--green-bg:rgba(88,184,88,0.08);
+  --muted:rgba(245,240,232,0.5);--muted2:rgba(245,240,232,0.28);
+  --rule:rgba(245,240,232,0.07);--rule2:rgba(245,240,232,0.13);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--amber-border)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(15,14,11,0.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule2);display:flex;align-items:stretch;height:48px}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);padding:0 20px;display:flex;align-items:center;border-right:1px solid var(--rule);white-space:nowrap;letter-spacing:0.04em}
+.nav-links{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);padding:0 14px;display:flex;align-items:center;border-right:1px solid var(--rule);cursor:pointer;user-select:none;text-decoration:none;transition:color 0.2s}
+.nav-link:hover,.nav-link.active{color:var(--amber)}
+
+/* HERO */
+.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--rule2)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:56px 56px}
+.hero-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 0%,rgba(240,168,48,0.06) 0%,transparent 70%)}
+.hero-inner{position:relative;z-index:2;max-width:1060px;margin:0 auto;padding:0 3rem;width:100%}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:2rem;opacity:0;animation:rise 0.5s 0.1s ease forwards}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--amber)}
+.hero-h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(48px,8vw,96px);line-height:0.92;letter-spacing:-0.03em;margin-bottom:1.75rem;opacity:0;animation:rise 0.6s 0.2s ease forwards}
+.hero-h1 em{color:var(--amber);font-style:italic}
+.hero-sub{font-family:'Outfit',sans-serif;font-size:16px;color:var(--muted);max-width:540px;line-height:1.75;font-weight:300;margin-bottom:3rem;opacity:0;animation:rise 0.5s 0.35s ease forwards}
+.chapters{display:flex;gap:8px;flex-wrap:wrap;opacity:0;animation:rise 0.5s 0.5s ease forwards}
+.ch-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:7px 14px;border:1px solid var(--amber-border);color:var(--amber);background:var(--amber-bg);border-radius:2px;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.ch-btn:hover{background:var(--amber);color:var(--bg)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION */
+.section{border-bottom:1px solid var(--rule2);padding:5rem 3rem}
+.section:nth-child(even){background:var(--bg2)}
+.s-inner{max-width:1060px;margin:0 auto}
+.s-kicker{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:0.75rem}
+.s-kicker::before{content:'';width:18px;height:1px;background:var(--amber)}
+.s-title{font-family:'Fraunces',serif;font-size:clamp(26px,3.5vw,44px);font-weight:600;letter-spacing:-0.02em;line-height:1.05;margin-bottom:1.25rem}
+.s-body{font-size:15px;color:var(--muted);max-width:620px;line-height:1.8;margin-bottom:2.5rem;font-weight:300}
+
+/* CONCEPT CARDS */
+.concept-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-bottom:2.5rem}
+.concept{background:var(--bg3);border:1px solid var(--rule);padding:1.5rem;position:relative;overflow:hidden}
+.concept::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.cc-amber::before{background:var(--amber)}
+.cc-teal::before{background:var(--teal)}
+.cc-blue::before{background:var(--blue)}
+.cc-red::before{background:var(--red)}
+.cc-green::before{background:var(--green)}
+.c-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
+.c-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--paper);margin-bottom:8px;letter-spacing:-0.01em}
+.c-body{font-size:13px;color:var(--muted);line-height:1.7}
+.c-analogy{margin-top:10px;padding:10px 12px;background:var(--amber-bg);border-left:2px solid var(--amber);font-size:12px;color:var(--muted);line-height:1.6;font-style:italic}
+.c-analogy strong{color:var(--amber2);font-style:normal;font-weight:500}
+
+/* STEP FLOW */
+.step-flow{display:flex;flex-direction:column;gap:2px;margin-bottom:2.5rem}
+.step{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem 1.5rem;display:grid;grid-template-columns:44px 1fr;gap:1rem;align-items:start}
+.step-n{font-family:'Fraunces',serif;font-size:32px;color:rgba(240,168,48,0.2);line-height:0.9;letter-spacing:-0.02em}
+.step-body{}
+.step-title{font-size:14px;font-weight:500;color:var(--paper);margin-bottom:5px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.step-code{margin-top:8px;padding:8px 12px;background:var(--bg4);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber3);line-height:1.6;border-radius:2px;overflow-x:auto}
+
+/* CODE BLOCK */
+.code-block{background:var(--bg4);border:1px solid var(--rule2);border-radius:4px;padding:1.25rem;margin-bottom:1.5rem;overflow-x:auto}
+.code-block pre{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--paper2)}
+.code-comment{color:rgba(240,168,48,0.5)}
+.code-kw{color:#c792ea}
+.code-str{color:#c3e88d}
+.code-fn{color:#82aaff}
+.code-num{color:#f78c6c}
+
+/* INFO TABLE */
+.info-table{width:100%;border-collapse:collapse;margin-bottom:2rem}
+.info-table th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);font-weight:400;padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule2);background:var(--bg3)}
+.info-table td{padding:11px 14px;border-bottom:1px solid var(--rule);font-size:13px;color:var(--muted);vertical-align:top;line-height:1.55}
+.info-table tr:hover td{background:rgba(255,255,255,0.02)}
+.td-name{font-size:13px;font-weight:500;color:var(--paper)}
+.td-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;letter-spacing:0.08em;text-transform:uppercase}
+.tb-good{background:var(--green-bg);color:var(--green)}
+.tb-warn{background:var(--amber-bg);color:var(--amber)}
+.tb-bad{background:var(--red-bg);color:var(--red)}
+.tb-info{background:var(--blue-bg);color:var(--blue)}
+
+/* CALLOUT */
+.callout{border:1px solid var(--rule2);border-left:3px solid var(--amber);background:var(--bg3);padding:1.25rem 1.5rem;margin-bottom:1.75rem;border-radius:0 4px 4px 0}
+.callout.teal{border-left-color:var(--teal)}
+.callout.red{border-left-color:var(--red)}
+.callout.blue{border-left-color:var(--blue)}
+.callout-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+.callout.teal .callout-label{color:var(--teal)}
+.callout.red .callout-label{color:var(--red)}
+.callout.blue .callout-label{color:var(--blue)}
+.callout-text{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+.callout-text strong{color:var(--paper);font-weight:500}
+
+/* ATTENTION VIS */
+.attn-demo{background:var(--bg3);border:1px solid var(--rule);border-radius:4px;padding:1.5rem;margin-bottom:1.75rem}
+.attn-tokens{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.attn-token{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;border-radius:3px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;user-select:none}
+.at-neutral{background:var(--bg4);color:var(--muted);border-color:var(--rule)}
+.at-query{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.at-high{background:rgba(240,168,48,0.25);color:var(--amber3);border-color:rgba(240,168,48,0.4)}
+.at-med{background:rgba(240,168,48,0.12);color:var(--amber2);border-color:rgba(240,168,48,0.2)}
+.at-low{background:rgba(240,168,48,0.04);color:var(--muted2);border-color:var(--rule)}
+.attn-label{font-size:12px;color:var(--muted);line-height:1.6}
+.attn-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.attn-bar-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);width:90px;flex-shrink:0}
+.attn-bar-track{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.attn-bar-fill{height:100%;border-radius:4px;background:var(--amber);transition:width 0.3s}
+
+/* PIPELINE VIS */
+.pipeline{display:flex;align-items:stretch;gap:0;margin-bottom:2rem;overflow-x:auto}
+.pipe-step{background:var(--bg3);border:1px solid var(--rule);padding:1rem;min-width:130px;flex:1;text-align:center;position:relative}
+.pipe-step::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--amber);font-size:14px;z-index:1}
+.pipe-step:last-child::after{display:none}
+.ps-icon{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+.ps-name{font-size:12px;font-weight:500;color:var(--paper);margin-bottom:4px}
+.ps-desc{font-size:10px;color:var(--muted2);line-height:1.5}
+
+/* CAPABILITY TABLE */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:2rem}
+.cap-card{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem}
+.cap-hdr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px}
+.cap-hdr.good{color:var(--green)}
+.cap-hdr.bad{color:var(--red)}
+.cap-list{list-style:none}
+.cap-item{font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--rule);display:flex;gap:8px;line-height:1.5}
+.cap-item:last-child{border-bottom:none}
+.cap-item::before{flex-shrink:0;font-size:10px;margin-top:2px}
+.cap-item.good::before{content:'✓';color:var(--green)}
+.cap-item.bad::before{content:'✗';color:var(--red)}
+
+/* IMPROVE CARDS */
+.improve-list{display:flex;flex-direction:column;gap:2px;margin-bottom:2rem}
+.improve-item{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem 1.5rem}
+.ii-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.ii-num{font-family:'Fraunces',serif;font-size:28px;color:rgba(240,168,48,0.15);line-height:0.9;letter-spacing:-0.01em}
+.ii-title{font-size:14px;font-weight:500;color:var(--paper)}
+.ii-body{font-size:12px;color:var(--muted);line-height:1.65;padding-left:40px}
+.ii-code{margin-top:8px;padding:8px 12px;background:var(--bg4);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);line-height:1.6}
+
+/* CLOSING */
+.closing{padding:5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.closing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(240,168,48,0.04) 0%,transparent 70%)}
+.closing-inner{position:relative;z-index:1;max-width:500px;margin:0 auto}
+.closing-big{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(56px,10vw,88px);color:var(--amber);line-height:0.85;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.closing-sub{font-size:14px;color:var(--muted);line-height:1.75;font-weight:300}
+
+@media(max-width:800px){
+  .hero,.section{padding:3rem 1.5rem}
+  .concept-grid,.cap-grid{grid-template-columns:1fr}
+  .pipeline{flex-direction:column}
+  .pipe-step::after{display:none}
+  .step{grid-template-columns:32px 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Ginie · ML Guide</div>
+  <div class="nav-links">
+    <a class="nav-link" onclick="navTo('what')">What it is</a>
+    <a class="nav-link" onclick="navTo('tokenizer')">Tokenizer</a>
+    <a class="nav-link" onclick="navTo('transformer')">Transformer</a>
+    <a class="nav-link" onclick="navTo('kqv')">K Q V</a>
+    <a class="nav-link" onclick="navTo('pipeline')">Full pipeline</a>
+    <a class="nav-link" onclick="navTo('colab')">Colab training</a>
+    <a class="nav-link" onclick="navTo('datasets')">Datasets</a>
+    <a class="nav-link" onclick="navTo('capabilities')">Capabilities</a>
+    <a class="nav-link" onclick="navTo('space')">HF Space</a>
+    <a class="nav-link" onclick="navTo('improve')">Improve it</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Ginie AI · Complete ML Guide · Beginner to Builder</div>
+    <h1 class="hero-h1">
+      Everything about<br>
+      <em>this model</em>.<br>
+      From zero.
+    </h1>
+    <p class="hero-sub">How the Ginie model works, what every term means, how training happens on Colab, what the datasets do, where it is strong, where it fails, and exactly how to make it better. Built for someone who is new to ML.</p>
+    <div class="chapters">
+      <a class="ch-btn" onclick="navTo('what')">What it is</a>
+      <a class="ch-btn" onclick="navTo('tokenizer')">Tokenizer</a>
+      <a class="ch-btn" onclick="navTo('transformer')">Transformer</a>
+      <a class="ch-btn" onclick="navTo('kqv')">K Q V</a>
+      <a class="ch-btn" onclick="navTo('pipeline')">Full pipeline</a>
+      <a class="ch-btn" onclick="navTo('colab')">Colab</a>
+      <a class="ch-btn" onclick="navTo('datasets')">Datasets</a>
+      <a class="ch-btn" onclick="navTo('capabilities')">What it can do</a>
+      <a class="ch-btn" onclick="navTo('space')">HF Space</a>
+      <a class="ch-btn" onclick="navTo('improve')">Improve it</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IT IS -->
+<section class="section" id="what">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 1</div>
+    <h2 class="s-title">What Ginie actually is.</h2>
+    <p class="s-body">Before understanding how it works, understand what it is. Ginie is a language model — a giant mathematical function that takes text in and produces text out. That is it. Everything else is just implementation detail.</p>
+
+    <div class="concept-grid">
+      <div class="concept cc-amber">
+        <div class="c-num">Concept 01</div>
+        <div class="c-title">Language Model</div>
+        <div class="c-body">A language model predicts the most likely next word given everything before it. That is the only thing it does — over and over — until it builds a complete response. Ginie predicts the next token in a Solidity contract based on the instruction you gave it and all the tokens it has already generated.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Predictive text on your phone, but trained on millions of smart contracts instead of your messages.</div>
+      </div>
+      <div class="concept cc-teal">
+        <div class="c-num">Concept 02</div>
+        <div class="c-title">Parameters</div>
+        <div class="c-body">Ginie has 2 billion parameters. A parameter is just a number. The model is literally 2 billion numbers arranged in matrices. During training, those numbers get adjusted until the model produces good contracts. After training, they are frozen — the numbers never change again during inference (when you use the model).</div>
+        <div class="c-analogy"><strong>Analogy:</strong> A very complicated dial with 2 billion knobs. Training is turning all the knobs to the right position. Using the model is just reading the output with the knobs fixed.</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">Concept 03</div>
+        <div class="c-title">Fine-tuning vs training from scratch</div>
+        <div class="c-body">Ginie did not start from zero. It started from Chain-GPT/Solidity-LLM, which started from Salesforce/codegen-2B-multi. That base model was trained on billions of lines of code from the entire internet. Fine-tuning just adjusts the existing knowledge toward smart contracts specifically — it takes hours instead of months.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Hiring a senior developer and giving them a 2-week Solidity bootcamp. You do not retrain their entire brain.</div>
+      </div>
+      <div class="concept cc-red">
+        <div class="c-num">Concept 04</div>
+        <div class="c-title">Inference</div>
+        <div class="c-body">Inference means using the model — giving it a prompt and getting output. Training is when the model learns. Inference is when you actually use what it learned. The HuggingFace Space runs inference. Colab training runs training. They are completely different processes requiring completely different amounts of compute.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Training is studying for an exam. Inference is taking the exam. Studying takes weeks. Taking the exam takes an hour.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENIZER -->
+<section class="section" id="tokenizer">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 2</div>
+    <h2 class="s-title">The tokenizer.<br>How text becomes numbers.</h2>
+    <p class="s-body">The model cannot read text. It only works with numbers. The tokenizer converts your text into numbers before the model sees it, and converts numbers back to text after the model finishes. Ginie uses the GPT-2 tokenizer.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">You write a prompt</div>
+          <div class="step-desc">You type: "Write a Solidity ERC20 token with minting and burning." This is raw text — the model cannot process this directly.</div>
+          <div class="step-code">"Write a Solidity ERC20 token with minting and burning."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Tokenizer splits text into tokens</div>
+          <div class="step-desc">The tokenizer does not split by word. It splits by frequency — common words become one token, rare words get split into pieces. "Solidity" might be one token. "minting" might split into "mint" + "ing".</div>
+          <div class="step-code">["Write", " a", " Sol", "idity", " ERC", "20", " token", " with", " minting", " and", " burning", "."]</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Each token gets an ID number</div>
+          <div class="step-desc">Every token in the vocabulary has a unique integer ID. "Write" might be 16289. " a" might be 257. The tokenizer looks up each token and replaces it with its number.</div>
+          <div class="step-code">input_ids = [16289, 257, 1885, 1799, 23485, 1238, 11241, 351, 20350, 290, 6533, 13]</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Model processes the numbers</div>
+          <div class="step-desc">The model works entirely with these integer IDs — it never sees text. It produces new integer IDs as output, one at a time, until it generates the EOS (end of sequence) token or hits max_new_tokens.</div>
+          <div class="step-code">output_ids = [198, 1303, 50, 47, 28, 55, 25, 198, 28, 36, 2926, ...]  <span class="code-comment"># the contract</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Tokenizer decodes numbers back to text</div>
+          <div class="step-desc">tokenizer.decode() looks up each output ID in the vocabulary and converts it back to the corresponding text. You get readable Solidity code.</div>
+          <div class="step-code">tokenizer.decode(outputs[0], skip_special_tokens=True)  <span class="code-comment"># → "// SPDX-License-Identifier: MIT..."</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">What is max_new_tokens?</div>
+      <div class="callout-text">This is the maximum number of new tokens the model can generate in one response. In your app you set it to 600–800. One token is roughly 0.75 words on average. So 800 tokens ≈ 600 words ≈ about 40–60 lines of Solidity. If a contract needs more than that, the model cuts off mid-way. <strong>For complex contracts, increase to 1200–1500.</strong></div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">Vocabulary size</div>
+      <div class="callout-text">The GPT-2 tokenizer has a vocabulary of 50,257 tokens. That means 50,257 unique "words" (actually subword pieces). Every piece of text you could possibly write can be represented as a sequence of those 50,257 pieces. The model never sees anything outside that vocabulary.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMER -->
+<section class="section" id="transformer">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 3</div>
+    <h2 class="s-title">The transformer.<br>How the model thinks.</h2>
+    <p class="s-body">The transformer is the architecture — the structure — of the model. Ginie has 32 transformer layers stacked on top of each other. Each layer refines the model's understanding of the input a little more. By layer 32, it knows what to write next.</p>
+
+    <div class="concept-grid">
+      <div class="concept cc-amber">
+        <div class="c-num">Layer structure</div>
+        <div class="c-title">What happens in each of the 32 layers</div>
+        <div class="c-body">Each transformer layer does two things: first, self-attention (every token looks at every other token and decides which ones matter), then a feed-forward network (each token individually processes its updated representation). After 32 of these, the model has a rich understanding of context and produces the next token.</div>
+      </div>
+      <div class="concept cc-teal">
+        <div class="c-num">Why 32 layers?</div>
+        <div class="c-title">Depth = better reasoning</div>
+        <div class="c-body">Each layer can learn something the previous layer missed. Layer 1 might learn basic syntax. Layer 5 might learn variable relationships. Layer 20 might learn security patterns. Layer 32 synthesises all of it to predict the next token. More layers = more sophisticated understanding — but also more compute needed.</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">Embeddings</div>
+        <div class="c-title">Token IDs become vectors</div>
+        <div class="c-body">When token ID 16289 enters the model, the embedding layer converts it into a vector — a list of 2048 numbers. These numbers capture the semantic meaning of the token. The word "transfer" in a Solidity context gets a different vector than "transfer" in an English essay. This contextual meaning is what the transformer layers refine.</div>
+        <div class="c-analogy"><strong>Key number:</strong> Ginie's embedding dimension is 2048. Each token is represented as a list of 2048 floating-point numbers throughout the model.</div>
+      </div>
+      <div class="concept cc-green">
+        <div class="c-num">Context window</div>
+        <div class="c-title">2048 tokens max at once</div>
+        <div class="c-body">Ginie can hold 2048 tokens in its "working memory" at a time. That includes your prompt AND everything it has generated so far. If the prompt + output exceeds 2048 tokens, the model starts forgetting the beginning. This is the context length limitation — a key constraint for long contracts.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- K Q V -->
+<section class="section" id="kqv">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 4</div>
+    <h2 class="s-title">K, Q, V explained.<br>The heart of attention.</h2>
+    <p class="s-body">Inside every transformer layer, there is a self-attention mechanism. It uses three matrices called Query, Key, and Value. This is what allows the model to understand relationships between tokens — how "transfer" relates to "amount" and "address" in a Solidity function, for example.</p>
+
+    <div class="concept-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="concept cc-amber">
+        <div class="c-num">Q — Query</div>
+        <div class="c-title">What am I looking for?</div>
+        <div class="c-body">Each token generates a Query vector — essentially a question it is asking about the context. The token "balanceOf" is asking: "which other tokens in this sequence are relevant to understanding what I mean?"</div>
+        <div class="c-analogy"><strong>Analogy:</strong> A search query. "Show me things related to token balance."</div>
+      </div>
+      <div class="concept cc-teal">
+        <div class="c-num">K — Key</div>
+        <div class="c-title">What do I have to offer?</div>
+        <div class="c-body">Each token also generates a Key vector — an advertisement of what it contains. The token "address" advertises itself as relevant to wallet locations, function parameters, and ERC20 operations.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> The metadata on a file. "I contain: address-related information."</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">V — Value</div>
+        <div class="c-title">My actual content</div>
+        <div class="c-body">The Value vector is the actual information that gets passed along if the attention score is high. Once Q and K determine that two tokens should attend to each other, the V of the relevant token gets weighted into the output.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> The contents of the file. Once you find the right file (via Q·K match), you read its contents (V).</div>
+      </div>
+    </div>
+
+    <div class="attn-demo">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem">Interactive — click a token to see its attention pattern</div>
+      <div class="attn-tokens" id="tokens">
+        <div class="attn-token at-neutral" onclick="showAttn(0)">function</div>
+        <div class="attn-token at-query" onclick="showAttn(1)">transfer</div>
+        <div class="attn-token at-neutral" onclick="showAttn(2)">(address</div>
+        <div class="attn-token at-neutral" onclick="showAttn(3)">to,</div>
+        <div class="attn-token at-neutral" onclick="showAttn(4)">uint256</div>
+        <div class="attn-token at-neutral" onclick="showAttn(5)">amount)</div>
+      </div>
+      <div id="attn-bars">
+        <div class="attn-bar-row"><span class="attn-bar-lbl">function</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:20%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">transfer</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:100%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">(address</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:85%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">to,</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:60%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">uint256</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:70%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">amount)</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:75%"></div></div></div>
+      </div>
+      <div class="attn-label" id="attn-caption" style="margin-top:12px">"transfer" attends strongly to "address" and "amount" — it knows these are its arguments. Bar width = attention weight.</div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Multi-head attention</div>
+      <div class="callout-text">Ginie does not run attention once per layer — it runs it 16 times in parallel, each with different Q/K/V matrices. Each "head" learns to attend to different relationship types. One head might specialise in syntax. Another in security patterns. Another in variable scoping. The outputs of all 16 heads are concatenated and mixed. <strong>16 attention heads × 32 layers = 512 attention operations per forward pass.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL PIPELINE -->
+<section class="section" id="pipeline">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 5</div>
+    <h2 class="s-title">The complete pipeline.<br>Prompt to deployed contract.</h2>
+    <p class="s-body">From you typing a description to a contract appearing on the Canton explorer — here is every step and what happens in each one.</p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="ps-icon">Step 1</div>
+        <div class="ps-name">User prompt</div>
+        <div class="ps-desc">Plain English description of the contract</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 2</div>
+        <div class="ps-name">Tokenize</div>
+        <div class="ps-desc">GPT-2 tokenizer converts text to token IDs</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 3</div>
+        <div class="ps-name">32 Transformer layers</div>
+        <div class="ps-desc">Attention + FFN across all 32 blocks</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 4</div>
+        <div class="ps-name">Generate tokens</div>
+        <div class="ps-desc">One token at a time until EOS or max_tokens</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 5</div>
+        <div class="ps-name">Decode</div>
+        <div class="ps-desc">Token IDs back to Solidity text</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 6</div>
+        <div class="ps-name">Compile check</div>
+        <div class="ps-desc">solc validates syntax. Auto-fix if fail.</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 7</div>
+        <div class="ps-name">Slither audit</div>
+        <div class="ps-desc">Security vulnerabilities flagged</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 8</div>
+        <div class="ps-name">Deploy</div>
+        <div class="ps-desc">Canton Ledger API → contract ID on explorer</div>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">Temperature — what it does</div>
+      <div class="callout-text">At each step, the model produces a probability distribution over all 50,257 tokens. Temperature scales those probabilities. <strong>Temperature 0:</strong> always pick the most likely token (deterministic, repetitive). <strong>Temperature 1.0:</strong> pick randomly from the distribution (creative, sometimes wrong). <strong>Temperature 0.7:</strong> the sweet spot — mostly follows the most likely path but introduces controlled variation. Ginie uses 0.7 by default.</div>
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-label">do_sample vs greedy</div>
+      <div class="callout-text"><code>do_sample=True</code> means the model samples from the probability distribution — it does not always pick the most likely next token. This gives varied, more natural outputs. <code>do_sample=False</code> (greedy decoding) always picks the single most likely token — outputs are deterministic but often loop or become repetitive. Always use <strong>do_sample=True with temperature 0.6–0.8</strong> for code generation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COLAB TRAINING -->
+<section class="section" id="colab">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 6</div>
+    <h2 class="s-title">Training on Colab.<br>Step by step.</h2>
+    <p class="s-body">Google Colab gives you a free NVIDIA T4 GPU with 16GB VRAM. That is enough to fine-tune a 7B model using LoRA (Low-Rank Adaptation) — the technique that makes training fast and cheap. Here is exactly how it works.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Install Unsloth — the training framework</div>
+          <div class="step-desc">Unsloth is a library that makes LoRA fine-tuning 2–5× faster and uses 60% less memory than vanilla HuggingFace training. It is specifically optimised for T4 and Apple Silicon.</div>
+          <div class="step-code">!pip install unsloth transformers datasets trl torch accelerate</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Load the base model in 4-bit precision</div>
+          <div class="step-desc">4-bit quantisation shrinks the model from 14GB to about 4GB in memory. The model loses almost no quality but now fits on a free T4. load_in_4bit=True is the key setting.</div>
+          <div class="step-code">from unsloth import FastLanguageModel
+model, tokenizer = FastLanguageModel.from_pretrained(
+    "GinieAI/Solidity-LLM",
+    max_seq_length=2048,
+    load_in_4bit=True    <span class="code-comment"># 14GB → 4GB</span>
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Add LoRA adapters</div>
+          <div class="step-desc">LoRA adds tiny trainable matrices (A and B) alongside the frozen model weights. Only A and B update during training — the 2B original parameters stay frozen. rank=16 means the matrices have 16 columns — a small but effective update size. This is why training takes 25 minutes instead of 1,095 hours.</div>
+          <div class="step-code">model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,               <span class="code-comment"># LoRA rank — higher = more capacity</span>
+    lora_alpha=16,      <span class="code-comment"># scaling factor</span>
+    target_modules=["q_proj","k_proj","v_proj","o_proj"],
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Format your training data</div>
+          <div class="step-desc">Every training example must follow the exact same prompt format as your inference. The model learns to complete the Response section given an Instruction. Consistency here is critical — if your training format differs from your inference prompt, the model outputs garbage.</div>
+          <div class="step-code">def format(example):
+    return {"text": f"""### Instruction:
+{example['instruction']}
+
+### Response:
+{example['output']}"""}
+
+dataset = dataset.map(format)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Train with SFTTrainer</div>
+          <div class="step-desc">SFTTrainer (Supervised Fine-Tuning Trainer) is the standard training loop from HuggingFace TRL. You set the number of epochs (3 is usually right for this size dataset), batch size (4 works on T4), and learning rate (2e-4 is safe for LoRA). save_steps=25 means a checkpoint saves every 25 steps — if Colab disconnects, you do not lose everything.</div>
+          <div class="step-code">from trl import SFTTrainer
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=dataset,
+    dataset_text_field="text",
+    max_seq_length=2048,
+    args=TrainingArguments(
+        num_train_epochs=3,
+        per_device_train_batch_size=4,
+        learning_rate=2e-4,
+        save_steps=25,           <span class="code-comment"># save checkpoint every 25 steps</span>
+        output_dir="checkpoints",
+    )
+)
+trainer.train()</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-body">
+          <div class="step-title">Save and push to HuggingFace</div>
+          <div class="step-desc">Save the adapter (not the full model — the adapter is just the tiny LoRA matrices, a few hundred MB). Push to HuggingFace so it is safe even if Colab shuts down. The merged model (adapter + base weights) is what you deploy.</div>
+          <div class="step-code">model.save_pretrained("ginie-v2-adapter")
+model.push_to_hub("GinieAI/Solidity-LLM-v2")   <span class="code-comment"># push adapter to HF</span>
+
+<span class="code-comment"># To merge and push the full model:</span>
+merged = model.merge_and_unload()
+merged.push_to_hub("GinieAI/Solidity-LLM-v2-merged")</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">Critical Colab warning</div>
+      <div class="callout-text">Colab free sessions disconnect after 3–12 hours of inactivity. <strong>Always save to Google Drive or push to HuggingFace Hub every 25 steps.</strong> If the session dies mid-training, you resume from the last checkpoint. Set save_steps=25 in your TrainingArguments — this is non-negotiable for free tier Colab.</div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">What the loss number means</div>
+      <div class="callout-text">During training you will see a number called "loss" printed every few steps. It starts high (around 2.5) and should decrease toward 0.6–1.0 after 3 epochs. <strong>If loss does not decrease, the data format is wrong</strong> — check that your prompt format exactly matches the format the base model was trained with. Fix data quality before changing any hyperparameter.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DATASETS -->
+<section class="section" id="datasets">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 7</div>
+    <h2 class="s-title">The datasets.<br>What trains Ginie.</h2>
+    <p class="s-body">A model is only as good as its training data. Here is every dataset in the Ginie pipeline, what it contains, why it matters, and how it is used.</p>
+
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>What it contains</th>
+          <th>Size</th>
+          <th>Used for</th>
+          <th>Quality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">AlfredPros/smart-contracts-instructions</td>
+          <td>6,000 instruction-output pairs. Each row has an English instruction and a matching Solidity contract. Ready to train — no preprocessing needed.</td>
+          <td>6k pairs</td>
+          <td>Primary fine-tuning. Day 2 download.</td>
+          <td><span class="td-badge tb-good">High</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">digital-asset/daml-finance</td>
+          <td>The official Daml Finance library from Digital Asset. Contains Daml templates for Holdings, Instruments, Accounts, and Settlement. Used to generate Daml instruction pairs via Claude API.</td>
+          <td>~200 templates</td>
+          <td>Canton-specific training. The reason Ginie can write Daml.</td>
+          <td><span class="td-badge tb-good">Very high</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">ASSERT-KTH/DISL</td>
+          <td>514,506 deduplicated Solidity files scraped from Etherscan. The largest publicly available Solidity corpus. Not labelled — needs Claude API to generate instructions.</td>
+          <td>514k files</td>
+          <td>Scale phase (v2). Use 2,000 best ones filtered by quality.</td>
+          <td><span class="td-badge tb-warn">Medium — needs filtering</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">mwritescode/slither-audited-smart-contracts</td>
+          <td>47,000+ Solidity contracts, each with a Slither security scan attached. The key filter: only keep contracts where Slither reports zero high-severity issues.</td>
+          <td>47k contracts</td>
+          <td>Security layer training. Improves the 58% security score.</td>
+          <td><span class="td-badge tb-good">High — pre-audited</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Zellic/smart-contract-fiesta</td>
+          <td>DeFi contracts audited by Zellic, one of the top smart contract security firms. Highest quality Solidity available publicly — real production code that has been reviewed by experts.</td>
+          <td>~1,000</td>
+          <td>Quality boost for v3. Use for DeFi-specific examples.</td>
+          <td><span class="td-badge tb-good">Very high</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">darkknight25/Smart_Contract_Vulnerability_Dataset</td>
+          <td>2,000 contracts labelled with OWASP 2025 vulnerability categories. Negative examples — contracts with known security holes. Trains the security classifier.</td>
+          <td>2k entries</td>
+          <td>Security classifier training. Ginie learns what NOT to generate.</td>
+          <td><span class="td-badge tb-good">High — labelled</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">User logs (flywheel)</td>
+          <td>Every prompt + output + compile status + security score logged in real time. The most valuable dataset of all — real users solving real problems with real feedback signals.</td>
+          <td>Grows weekly</td>
+          <td>v4 weekly retraining. The permanent moat.</td>
+          <td><span class="td-badge tb-info">Improves over time</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-label">Why daml-finance is the most important dataset for Ginie's moat</div>
+      <div class="callout-text">The digital-asset/daml-finance repository contains the official Daml Finance library — the standard library every Canton developer uses. <strong>No other model on HuggingFace has been trained on this data.</strong> When you convert these templates into instruction-output pairs via Claude API and train Ginie on them, you get something that simply does not exist anywhere else. That is the Canton moat. Not the model quality — the data exclusivity.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="section" id="capabilities">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 8</div>
+    <h2 class="s-title">What it can do.<br>What it cannot.</h2>
+    <p class="s-body">Honest assessment of the current v1 model. Knowing the limitations is as important as knowing the strengths — because the limitations tell you exactly where to focus your v2 training data.</p>
+
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-hdr good">What Ginie v1 does well</div>
+        <ul class="cap-list">
+          <li class="cap-item good">Standard ERC20 contracts — mint, burn, transfer, allowance</li>
+          <li class="cap-item good">ERC721 NFT contracts with basic minting</li>
+          <li class="cap-item good">OpenZeppelin import patterns — uses the right library for each standard</li>
+          <li class="cap-item good">Solidity >= 0.8 syntax — modern Solidity with SafeMath built in</li>
+          <li class="cap-item good">Basic access control — Ownable, Role-based with OZ</li>
+          <li class="cap-item good">Events, modifiers, constructor patterns</li>
+          <li class="cap-item good">Simple staking and reward contracts</li>
+          <li class="cap-item good">Following the instruction format consistently</li>
+        </ul>
+      </div>
+      <div class="cap-card">
+        <div class="cap-hdr bad">Where Ginie v1 struggles</div>
+        <ul class="cap-list">
+          <li class="cap-item bad">Complex DeFi — AMMs, liquidity pools, yield farming with multi-token logic</li>
+          <li class="cap-item bad">Daml contracts — not yet in v1, planned for v3</li>
+          <li class="cap-item bad">Reentrancy guards — the 58% security score reflects this gap</li>
+          <li class="cap-item bad">Long contracts over ~150 lines — hits context window limits</li>
+          <li class="cap-item bad">Cross-contract interactions — calling external contract interfaces reliably</li>
+          <li class="cap-item bad">Proxy and upgradeable contract patterns</li>
+          <li class="cap-item bad">Gas optimisation at the assembly level</li>
+          <li class="cap-item bad">Rare or niche standards like ERC4626, ERC2981</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">The 58% security score — what it means in practice</div>
+      <div class="callout-text">58% security means Slither finds issues in about 42% of generated contracts. The most common issues are: missing reentrancy guards on external calls, unchecked return values from external calls, and integer overflow in edge cases (even with Solidity 0.8's built-in checks, some patterns still need explicit handling). <strong>Never deploy a Ginie-generated contract to mainnet without running Slither and fixing every high-severity finding.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- HF SPACE -->
+<section class="section" id="space">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 9</div>
+    <h2 class="s-title">How the HuggingFace<br>Space works.</h2>
+    <p class="s-body">The Space runs Gradio on a free CPU tier inside a Docker container on HuggingFace's servers. Understanding the architecture explains why it is slow and how to make it faster.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Docker container starts on HuggingFace servers</div>
+          <div class="step-desc">When someone opens the Space, HuggingFace spins up a Docker container running Ubuntu. It installs the packages from requirements.txt — gradio, transformers, torch, accelerate. This happens once per deployment and takes 2–4 minutes.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">app.py runs — model downloads from HuggingFace Hub</div>
+          <div class="step-desc">The first time app.py runs, it calls AutoModelForCausalLM.from_pretrained("GinieAI/Solidity-LLM"). This downloads 6GB of model weights from the HuggingFace CDN into the container's local cache. On a cold start (no cache) this takes 3–5 minutes. On a warm start (cached), 30 seconds.</div>
+          <div class="step-code">model = AutoModelForCausalLM.from_pretrained(
+    "GinieAI/Solidity-LLM",
+    torch_dtype=torch.float32,   <span class="code-comment"># float32 because no GPU — CPU only</span>
+    device_map="cpu"
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Gradio serves the UI</div>
+          <div class="step-desc">Gradio is a Python library that creates the web interface — the text boxes, sliders, and buttons — with one decorator. demo.launch() starts a web server on port 7860. HuggingFace proxies external traffic to that port. The user's browser loads the Gradio frontend (HTML/JS) and communicates via WebSocket.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">User submits — generate_contract() runs on CPU</div>
+          <div class="step-desc">The generate_contract() function runs entirely on CPU — no GPU available on the free tier. CPU inference is 20–50× slower than GPU. A 600-token output that would take 8 seconds on a T4 takes 3–8 minutes on CPU. This is the main performance problem with the current Space.</div>
+          <div class="step-code">with torch.no_grad():
+    outputs = model.generate(
+        input_ids=inputs["input_ids"],
+        attention_mask=inputs["attention_mask"],
+        max_new_tokens=600,     <span class="code-comment"># each of these takes ~0.3s on CPU</span>
+        temperature=0.7,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+    )</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Response streams back to the browser</div>
+          <div class="step-desc">The generated text is decoded and returned to Gradio, which displays it in the Code component. The current implementation returns everything at once (not streaming). Adding a TextStreamer would show tokens appearing in real time — much better user experience.</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="info-table">
+      <thead><tr><th>Component</th><th>Current state</th><th>Problem</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-name">Compute tier</td>
+          <td>Free CPU</td>
+          <td>3–8 min per generation</td>
+          <td><span class="td-badge tb-warn">Upgrade to T4 GPU ($0.60/hr)</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Model precision</td>
+          <td>float32 on CPU</td>
+          <td>Maximum memory usage, slowest inference</td>
+          <td><span class="td-badge tb-warn">Use bfloat16 + auto device map</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Streaming</td>
+          <td>Returns all at once</td>
+          <td>User sees nothing for 3–8 min then everything</td>
+          <td><span class="td-badge tb-warn">Add TextStreamer to show token by token</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">YAML metadata</td>
+          <td>Missing</td>
+          <td>Not searchable on HuggingFace</td>
+          <td><span class="td-badge tb-bad">Fix today — 5 minutes</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Build error</td>
+          <td>gradio==6.10.0 conflict</td>
+          <td>Space fails to build entirely</td>
+          <td><span class="td-badge tb-bad">Pin to gradio==4.44.0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- IMPROVE -->
+<section class="section" id="improve">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 10</div>
+    <h2 class="s-title">How to make it better.<br>The exact steps.</h2>
+    <p class="s-body">Every improvement mapped to what it fixes, how to do it, and what result to expect. In order of impact.</p>
+
+    <div class="improve-list">
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">01</div>
+          <div class="ii-title">Fix the Space build error — gradio version conflict</div>
+        </div>
+        <div class="ii-body">
+          Change requirements.txt to pin gradio==4.44.0 and transformers==4.41.2. The current 6.10.0 version has dependency conflicts on HuggingFace's free tier Docker environment. This is why the Space is broken right now.
+          <div class="ii-code">gradio==4.44.0
+transformers==4.41.2
+torch==2.2.2
+accelerate==0.30.0</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">02</div>
+          <div class="ii-title">Add streaming to the Space — users see output appearing in real time</div>
+        </div>
+        <div class="ii-body">
+          Replace the current generate call with TextIteratorStreamer. Instead of waiting 5 minutes to see anything, users watch the contract appear token by token. This alone makes the Space feel 10× faster even if the total generation time is identical.
+          <div class="ii-code">from transformers import TextIteratorStreamer
+from threading import Thread
+
+streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+thread = Thread(target=model.generate, kwargs={**inputs, "streamer": streamer, ...})
+thread.start()
+for chunk in streamer:
+    yield chunk  # Gradio streams this to the UI</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">03</div>
+          <div class="ii-title">Retrain v2 on 7,800 examples to push security score above 70%</div>
+        </div>
+        <div class="ii-body">
+          The 58% security score is the main weakness in the benchmark. Fix it by adding the mwritescode/slither-audited dataset (zero high-severity contracts only) and darkknight25/vulnerability dataset as negative examples. The model learns what good security looks like AND what bad security looks like.
+          <div class="ii-code"># Filter slither-audited for zero high-severity findings
+safe_contracts = [c for c in slither_data if c["high_severity_count"] == 0]
+# Add vulnerability examples as "bad output" negative examples
+# Merge into 7,800 total training examples</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">04</div>
+          <div class="ii-title">Add daml-finance training data — unlock the Canton moat</div>
+        </div>
+        <div class="ii-body">
+          Clone digital-asset/daml-finance. For every .daml template file, use Claude API to generate an instruction-output pair. This produces ~200 high-quality Daml examples that no other model on HuggingFace has been trained on. Merge into the training set. Ginie becomes the only model that can write Daml.
+          <div class="ii-code">import subprocess, os
+subprocess.run(["git", "clone", "https://github.com/digital-asset/daml-finance"])
+daml_files = [f for f in os.listdir("daml-finance/src") if f.endswith(".daml")]
+for f in daml_files:
+    content = open(f).read()
+    instruction = claude_api(f"Generate instruction for this Daml contract:\n{content}")
+    # Save as JSONL training pair</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">05</div>
+          <div class="ii-title">Export GGUF — multiply downloads by 10×</div>
+        </div>
+        <div class="ii-body">
+          The GGUF format runs on any laptop without a GPU via llama.cpp or Ollama. The audience for "runs locally on my Mac" is 10× larger than the audience for "runs on CUDA only." Uploading a Q4_K_M quantised GGUF alongside the safetensors immediately reaches every developer running an M-series Mac.
+          <div class="ii-code">python llama.cpp/convert_hf_to_gguf.py GinieAI/Solidity-LLM --outtype f16
+./llama.cpp/llama-quantize ginie-f16.gguf ginie-q4_k_m.gguf Q4_K_M
+# Upload to GinieAI/Solidity-LLM-GGUF on HuggingFace</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">06</div>
+          <div class="ii-title">Build the data flywheel — the permanent moat</div>
+        </div>
+        <div class="ii-body">
+          Log every prompt, output, compile status, and security score in production. Every Friday, filter for: compiled=True AND security_score >= 70. Add these to the training set. Retrain v(n+1). The model improves weekly from real user prompts — a data distribution competitors cannot buy or synthesise because they do not have your users.
+          <div class="ii-code">import json, datetime
+def log_generation(prompt, output, compiled, security_score):
+    entry = {
+        "instruction": prompt,
+        "output": output,
+        "compiled": compiled,
+        "security_score": security_score,
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    }
+    with open("logs.jsonl", "a") as f:
+        f.write(json.dumps(entry) + "\n")</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="closing-inner">
+    <div class="closing-big">Build it.</div>
+    <p class="closing-sub">You now understand every component — the tokenizer that converts text to numbers, the transformer layers that process them, the Q/K/V attention that finds relationships, the LoRA training that fine-tunes efficiently on Colab, the datasets that make Ginie unique, and the flywheel that makes it better every week. The only thing left is execution.</p>
+  </div>
+</div>
+
+<script>
+function navTo(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var top=el.getBoundingClientRect().top+window.pageYOffset-50;
+  window.scrollTo({top:top,behavior:'smooth'});
+  document.querySelectorAll('.nav-link').forEach(function(l){
+    l.classList.remove('active');
+    var oc=l.getAttribute('onclick')||'';
+    if(oc.indexOf("'"+id+"'")!==-1)l.classList.add('active');
+  });
+}
+
+window.addEventListener('scroll',function(){
+  var current='';
+  ['what','tokenizer','transformer','kqv','pipeline','colab','datasets','capabilities','space','improve'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&window.pageYOffset>=el.offsetTop-120)current=id;
+  });
+  document.querySelectorAll('.nav-link').forEach(function(l){
+    l.classList.remove('active');
+    var oc=l.getAttribute('onclick')||'';
+    if(current&&oc.indexOf("'"+current+"'")!==-1)l.classList.add('active');
+  });
+});
+
+const attnData = [
+  {bars:[90,30,20,15,10,20],caption:'"function" attends most to itself — it is the anchor keyword. Moderate attention to "transfer" as the function name.'},
+  {bars:[20,100,85,60,70,75],caption:'"transfer" attends strongly to "address" and "amount" — its two arguments. This is how the model understands function signatures.'},
+  {bars:[15,80,100,90,40,30],caption:'"address" attends to "to," strongly — they are semantically linked as the recipient parameter.'},
+  {bars:[10,60,90,100,35,25],caption:'"to," attends strongly to "address" — it knows it is a label for the address parameter.'},
+  {bars:[20,70,40,30,100,85],caption:'"uint256" attends strongly to "amount)" — it knows they form the second parameter pair.'},
+  {bars:[15,75,30,25,80,100],caption:'"amount)" attends to "uint256" and "transfer" — it knows its type and which function it belongs to.'}
+];
+const words=['function','transfer','(address','to,','uint256','amount)'];
+
+function showAttn(i){
+  const tokenEls=document.querySelectorAll('.attn-token');
+  tokenEls.forEach(function(t,j){
+    t.className='attn-token ';
+    if(j===i)t.className+='at-query';
+    else{
+      const w=attnData[i].bars[j];
+      if(w>=80)t.className+='at-high';
+      else if(w>=50)t.className+='at-med';
+      else t.className+='at-low';
+    }
+  });
+  const bars=document.querySelectorAll('.attn-bar-fill');
+  attnData[i].bars.forEach(function(v,j){bars[j].style.width=v+'%'});
+  document.getElementById('attn-caption').textContent=attnData[i].caption;
+}
+</script>
+
+</body>
+</html>
