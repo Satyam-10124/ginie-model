@@ -1,515 +1,1463 @@
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ginie AI — 15-Day Build Plan & $500k Raise</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  :root {
+    --ink: #0a0a14;
+    --paper: #f3f2f8;
+    --paper2: #eae9f0;
+    --rule: #ccc8dc;
+    --gold: #3d8c40;
+    --gold-light: #8fcf92;
+    --muted: #3a5a3c;
+    --white: #ffffff;
+    --red: #c0392b;
+    --warn: #c07820;
+    --green: #2d8a4e;
+    --amber: #c07820;
+    --amber-light: #e8b866;
+  }
 
-const C = {
-  bg: "#08090c", surface: "#10121a", card: "#161923", cardHi: "#1c1f2e",
-  border: "#232740", borderHi: "#2e3354",
-  accent: "#818cf8", accentDim: "#818cf820",
-  green: "#34d399", greenDim: "#34d39918",
-  amber: "#fbbf24", amberDim: "#fbbf2418",
-  red: "#f87171", redDim: "#f8717118",
-  teal: "#2dd4bf", tealDim: "#2dd4bf18",
-  pink: "#f472b6", pinkDim: "#f472b618",
-  sky: "#38bdf8", skyDim: "#38bdf818",
-  text: "#e2e8f0", muted: "#94a3b8", dim: "#64748b", faint: "#475569",
-};
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
-const IDEAS = [
-  {
-    id: 1, tier: "S",
-    title: "Canton DevKit CLI",
-    sub: "The Hardhat/Foundry of Canton — one tool to rule them all",
-    category: "Core Dev Tooling",
-    color: C.accent,
-    grantFit: 98,
-    surveyEvidence: "Rated #1 CRITICAL in quantitative survey. Named 11+ times in qualitative feedback. Devs explicitly said 'Hardhat/Foundry/Anchor.'",
-    gap: "Zero existing solution. DPM is for package management only. cn-quickstart is a template, not a CLI lifecycle tool. No proposal in the dev-fund addresses this.",
-    painSolved: [
-      "41% of devs said environment setup took longest to get right",
-      "Multi-node Docker/K8s config before writing a single line of DAML",
-      "No scaffolding — devs start from blank files every time",
-      "Manual Package ID discovery for JSON API (described as 'opaque')",
-      "Fragmented scripts for test → deploy → verify workflows",
-    ],
-    deliverables: [
-      "`canton-dev init` — scaffold a new project from templates (DeFi, RWA, lending, generic)",
-      "`canton-dev sandbox` — spin up local Canton nodes + sync domain in one command (wraps Docker)",
-      "`canton-dev test` — run DAML Script tests with human-readable colored output",
-      "`canton-dev deploy` — deploy DARs to DevNet/TestNet/MainNet with environment config",
-      "`canton-dev console` — interactive DAML REPL connected to any environment",
-      "`canton-dev status` — show node health, connected domains, active contracts count",
-      "Auto Package ID resolution — discovers and injects package IDs for JSON API calls",
-      "Config files: `canton-dev.yaml` per project (like hardhat.config.ts)",
-    ],
-    techStack: "TypeScript CLI (Commander.js), Docker SDK for sandbox orchestration, gRPC client for Ledger API, templates stored as .tar.gz in npm registry",
-    grant: "$80K–$150K · 6 months · 4 milestones",
-    revenueAfter: "Open source core. Premium: cloud-hosted sandboxes, team environments, CI/CD plugins. Canton Foundation distributes to every new dev.",
-    competitors: "Nothing. #7 (DAML LSP) = IDE only. #125 (Spring Boot Starter) = Java backend only. #130 (Package Analyzer) = static analysis. None cover CLI lifecycle.",
-  },
-  {
-    id: 2, tier: "S",
-    title: "Canton Trace — Visual Transaction Debugger",
-    sub: "Tenderly for Canton: step through sub-transactions, simulate failures, decode errors",
-    category: "Core Dev Tooling",
-    color: C.accent,
-    grantFit: 96,
-    surveyEvidence: "Multiple respondents explicitly name-dropped 'Tenderly.' Qualitative feedback describes 'parsing cryptic log files' as the debugging workflow.",
-    gap: "CCView and Lighthouse are block explorers (read-only data browsing). No tool lets you step through a DAML choice execution, see contract state diffs, or simulate 'what-if' transactions.",
-    painSolved: [
-      "Canton errors are notoriously cryptic — no human-readable decoder exists",
-      "Sub-transaction privacy means devs can't see the full tx unless stakeholder on every part",
-      "No way to simulate a transaction before committing (the 'pre-flight profiler' devs asked for)",
-      "PQS provides raw data but no visual interpretation layer",
-      "Debugging multi-party workflows requires correlating logs across multiple participant nodes",
-    ],
-    deliverables: [
-      "Web UI: paste transaction ID → see full execution tree as interactive graph",
-      "Choice-by-choice step-through with contract state before/after diffs",
-      "Human-readable error decoder: maps Canton error codes to plain English + fix suggestions",
-      "Multi-party view toggle: see what each party sees in their privacy scope",
-      "Transaction simulator: 'dry run' a DAML choice with proposed inputs before submitting",
-      "Bandwidth/cost estimator: show estimated Canton Coin cost before execution",
-      "PQS integration: replay historical transactions from the Participant Query Store",
-      "REST API for CI integration: assert transaction properties in automated tests",
-    ],
-    techStack: "React frontend, Node.js backend, gRPC Ledger API + PQS JDBC for data, D3.js for transaction tree visualization",
-    grant: "$100K–$200K · 8 months · 5 milestones",
-    revenueAfter: "Freemium SaaS: free for DevNet/localhost, paid tiers for TestNet/MainNet with team dashboards, saved replays, and alerting.",
-    competitors: "Nothing. #3 (CARA) = audit/regulatory, not debugging. #5 (Security Framework) = static analysis. #130 (Package Analyzer) = compile-time. None do runtime visual debugging.",
-  },
-  {
-    id: 3, tier: "A",
-    title: "Canton PQS GraphQL Gateway",
-    sub: "Turn raw PQS Postgres into a typed, queryable GraphQL API any frontend can consume",
-    category: "Data Infrastructure",
-    color: C.teal,
-    grantFit: 93,
-    surveyEvidence: "Data Indexing & APIs: 20% Critical + 51% Important. Devs struggle to 'read on-ledger data' and want 'decoded views.' The typed SDK gap was explicitly called out.",
-    gap: "PQS gives you raw JSONB in Postgres. Every team builds their own API layer on top. There's no standard typed query interface. The JSON API exists but is limited and being deprecated in favor of direct Ledger API. Nobody has built a GraphQL gateway over PQS.",
-    painSolved: [
-      "Every Canton app team builds a custom REST API over PQS from scratch",
-      "JSONB querying requires deep PQS schema knowledge — no abstraction layer",
-      "Frontend devs can't access contract data without a backend engineer first building an API",
-      "No subscription/real-time update mechanism — devs poll PQS manually",
-      "Package ID lookup for JSON API described as 'opaque' — GraphQL schema auto-generates from DAR",
-    ],
-    deliverables: [
-      "Auto-generate GraphQL schema from compiled .dar files (DAML templates → GraphQL types)",
-      "Query active contracts by template, party, key, or any payload field",
-      "Subscriptions: real-time WebSocket updates when contracts are created/archived/exercised",
-      "Filtering, pagination, and sorting built-in (not custom SQL per app)",
-      "Multi-party scoping: queries respect party authorization automatically",
-      "Schema stitching: combine contracts from multiple DARs into one unified API",
-      "Docker image: `docker run canton-pqs-graphql --pqs-host=... --dar=./my-app.dar`",
-      "TypeScript codegen: generate typed hooks from the GraphQL schema (`useActiveContracts<MyTemplate>()`)",
-    ],
-    techStack: "Node.js + Apollo Server, PostgreSQL (PQS), auto-codegen from DAR metadata, graphql-ws for subscriptions",
-    grant: "$60K–$120K · 5 months · 4 milestones",
-    revenueAfter: "Open source gateway. Revenue via managed hosted version (PQS-GraphQL-as-a-Service) for teams that don't want to operate infrastructure.",
-    competitors: "Nothing. CCView Indexing API is explorer-focused, not app-facing. No dev-fund proposal covers this.",
-  },
-  {
-    id: 4, tier: "A",
-    title: "Canton Sentinel — Validator Ops Dashboard",
-    sub: "Prometheus + Grafana stack pre-configured for Canton validators with one-click deploy",
-    category: "Observability / Node Ops",
-    color: C.green,
-    grantFit: 92,
-    surveyEvidence: "Observability had the highest 'important' consensus across all categories. Devs asked for 'one-click visual dashboards' to verify Sequencer/Mediator handshakes.",
-    gap: "~600 nodes on Canton as of Dec 2025. Each validator self-configures monitoring. No standard Prometheus exporter exists. No pre-built Grafana dashboards. Validators diagnose connectivity with 'complex terminal commands.'",
-    painSolved: [
-      "Validators can't confirm Participant↔Sequencer↔Mediator handshakes without terminal debugging",
-      "No standard metrics format — each operator builds custom scrapers",
-      "No alert system for node disconnects, sequencer lag, or sync failures",
-      "The 600→1000+ node growth trajectory means more operators needing turnkey monitoring",
-      "PQS health, DB connection pool, and ingestion lag are invisible without custom tooling",
-    ],
-    deliverables: [
-      "Prometheus exporter: scrapes Canton participant node, sequencer, mediator metrics via gRPC health API",
-      "Pre-built Grafana dashboards: node health, domain connectivity, transaction throughput, PQS lag",
-      "Alert rules: node disconnect, sequencer lag >X ms, PQS ingestion stall, disk usage thresholds",
-      "Docker Compose: `docker compose up` brings up Prometheus + Grafana + exporters pre-wired",
-      "Helm chart for K8s validators (the enterprise deployment path)",
-      "Network topology view: visual map of which participant connects to which sync domains",
-      "Historical uptime tracking and SLA reporting for validators",
-      "Loki integration for centralized log aggregation across Canton components",
-    ],
-    techStack: "Go (Prometheus exporter), Grafana dashboards (JSON), Docker Compose + Helm, gRPC client for Canton APIs",
-    grant: "$50K–$100K · 4 months · 3 milestones",
-    revenueAfter: "Open source stack. Revenue via managed SaaS (hosted monitoring for validators who don't want to operate Grafana). Aligns with NaaS providers in Canton ecosystem.",
-    competitors: "#126 (Pruning Coordinator) is narrow ops tooling. No dev-fund proposal covers monitoring/observability holistically.",
-  },
-  {
-    id: 5, tier: "A",
-    title: "DAML Cargo — Package Registry & Dependency Manager",
-    sub: "npm/crates.io for DAML: publish, version, discover, install packages",
-    category: "Core Dev Tooling",
-    color: C.accent,
-    grantFit: 90,
-    surveyEvidence: "Named in survey 'Magic Wand Wishlist.' The Package Manager & Operational Dashboards (Cargo) was explicitly listed. Devs described manually downloading .dar files and moving them between folders.",
-    gap: "Zero package registry exists. DPM framework helps build packages but has no publish/discover/install flow. Every team manually manages .dar file dependencies. Version conflicts are resolved by trial and error.",
-    painSolved: [
-      "No `npm install` equivalent — devs manually download and copy .dar files",
-      "Version mismatches between DAML SDK, Canton, and .dar packages cause cryptic failures",
-      "No discoverability — can't search 'who built a DeFi lending template I can reuse?'",
-      "Reference implementations exist but are buried in random GitHub repos",
-      "Canton SDK compatibility matrix is tribal knowledge, not machine-readable",
-    ],
-    deliverables: [
-      "CLI: `daml-cargo init`, `daml-cargo publish`, `daml-cargo install <package>@<version>`",
-      "Public registry web UI: browse, search, view README, see dependency graph",
-      "Semantic versioning with Canton SDK / DAML SDK compatibility matrix",
-      "Lock file (`daml-cargo.lock`) for reproducible builds",
-      "Namespace reservations: `@canton-foundation/*`, `@digital-asset/*` for official packages",
-      "Private registries for enterprise teams (publish internal-only packages)",
-      "Integration with canton-dev CLI (if both get built — `canton-dev add @acme/lending-templates`)",
-      "CI/CD hooks: auto-publish on git tag, compatibility checks on PR",
-    ],
-    techStack: "Rust CLI (fast, cross-platform), registry API in Node.js, PostgreSQL for metadata, S3 for .dar storage, Cloudflare CDN",
-    grant: "$60K–$100K · 5 months · 4 milestones",
-    revenueAfter: "Public registry free (grant-funded). Revenue from private registry hosting for enterprise teams ($X/month per org).",
-    competitors: "Nothing. #130 (Package Analyzer) = static analysis of existing packages, not registry/distribution.",
-  },
-  {
-    id: 6, tier: "A",
-    title: "Canton JWT Auth Middleware",
-    sub: "Drop-in auth library that handles JWT token management for Ledger API + PQS access",
-    category: "Security / Integration",
-    color: C.pink,
-    grantFit: 88,
-    surveyEvidence: "Survey explicitly noted: 'developers struggle significantly with implementing JWT authentication middleware — a repeated friction point for Hybrid and TradFi teams.'",
-    gap: "Every Canton app must implement JWT auth from scratch. The Ledger API requires JWTs. PQS requires JWTs. Token refresh, scope management, party-to-user mapping — all manual. No standard library exists.",
-    painSolved: [
-      "Every team re-implements JWT auth for Ledger API (identical boilerplate, different bugs)",
-      "Token refresh logic is error-prone — PQS streams break when tokens expire",
-      "Party ↔ user ↔ JWT scope mapping is undocumented tribal knowledge",
-      "TradFi teams (83% of projects) expect standard OAuth2/OIDC flows, not custom JWT crafting",
-      "Multi-party JWT scoping (one user accessing multiple parties) is complex and poorly documented",
-    ],
-    deliverables: [
-      "TypeScript library: `@canton-auth/middleware` — Express/Fastify middleware",
-      "Python library: `canton-auth` — FastAPI/Django middleware",
-      "Auto token refresh with configurable preempt window (handles PQS streaming reconnect)",
-      "Party scope resolver: given a user identity, return authorized parties and JWT claims",
-      "OIDC provider integration: plug into Keycloak, Auth0, Okta out of the box",
-      "Reference implementation: complete auth flow from frontend login → Ledger API call → PQS query",
-      "Documentation: 'Canton Auth Cookbook' covering every auth scenario with code samples",
-      "Test helpers: mock JWT issuer for local development (no auth server needed in sandbox)",
-    ],
-    techStack: "TypeScript + Python, jose (JWT library), supports Express/Fastify/Koa (TS) and FastAPI/Django (Py)",
-    grant: "$40K–$70K · 3 months · 3 milestones",
-    revenueAfter: "Fully open source (pure community good). Establishes you as the auth expert in Canton — consulting revenue from enterprise integration.",
-    competitors: "Nothing. No dev-fund proposal addresses auth middleware. This is pure glue infrastructure everyone needs.",
-  },
-  {
-    id: 7, tier: "B",
-    title: "Canton Faucet & Gas Station",
-    sub: "Testnet Canton Coin faucet + gas cost estimator + bandwidth management for app devs",
-    category: "DevEx / Onboarding",
-    color: C.amber,
-    grantFit: 85,
-    surveyEvidence: "Canton 3.4 added cost estimation APIs, but no developer-facing tool wraps them. Forum posts ask 'How to estimate gas fees for transactions on Canton Network' (295 views, highest in that period).",
-    gap: "Denex built a Gas Station for validators, but no general-purpose faucet or dev-facing cost tool exists. Devs deploy 'blindly' and discover cost issues after failure. No testnet faucet with rate limiting.",
-    painSolved: [
-      "New devs can't get testnet Canton Coin easily — no public faucet",
-      "Cost estimation exists in the API but no UI or CLI wraps it",
-      "Devs discover transactions are too large or too expensive only after they fail",
-      "No 'gas budget' tool for planning Canton Coin spend across a test session",
-    ],
-    deliverables: [
-      "Web faucet: request DevNet/TestNet Canton Coin with rate limiting and CAPTCHA",
-      "CLI: `canton-dev faucet --network devnet --amount 100`",
-      "Cost estimator UI: paste a DAML choice + inputs, see estimated bandwidth cost before executing",
-      "Cost profiler: run a test suite and get a report of Canton Coin costs per transaction",
-      "Budget alerts: notify when test session spend exceeds threshold",
-      "API: `GET /estimate` for programmatic cost estimation in CI pipelines",
-    ],
-    techStack: "React frontend, Node.js API, Canton cost estimation gRPC API (new in 3.4), rate limiter with Redis",
-    grant: "$30K–$60K · 3 months · 3 milestones",
-    revenueAfter: "Open source faucet. Revenue potential from managed faucet-as-a-service for hackathon organizers and enterprise DevNet operators.",
-    competitors: "Denex Gas Station exists but is validator-focused, not dev-facing. Forum question on gas estimation has 295 views — clear demand.",
-  },
-  {
-    id: 8, tier: "B",
-    title: "DAML Linter & Upgrade Safety Checker",
-    sub: "eslint for DAML: catch contract bugs, enforce patterns, verify safe upgrades before deploy",
-    category: "Security / Quality",
-    color: C.pink,
-    grantFit: 87,
-    surveyEvidence: "Security & Auditing Tools: 24% Critical + 51% Important. OpenZeppelin just published Canton security research (March 2026) identifying unique DAML bug classes not caught by the compiler.",
-    gap: "DAML compiler catches type errors but not logic errors, unsafe governance patterns, or upgrade compatibility issues. OpenZeppelin's recent research identified that governance-controlled parameters as denominators can abort entire workflows — the compiler doesn't catch this. #5 (Daml Security Framework) is broader; this is a focused, shippable linter.",
-    painSolved: [
-      "DAML compiler doesn't catch: division-by-zero from governance params, time-skew vulnerabilities, unsafe upgrade paths",
-      "No static analysis tool for DAML-specific patterns (unlike Slither for Solidity)",
-      "Contract upgrades on Canton are complex — no automated compatibility checker exists",
-      "Forum post 'Daml smart contracts need auditing like Solidity?' (61 views) shows community awareness growing",
-      "The compilation error about 'exceptions and templates' in the same package (forum, Feb 2026) is exactly the kind of thing a linter catches early",
-    ],
-    deliverables: [
-      "CLI linter: `daml-lint src/` — runs rules against DAML source files",
-      "Rule engine: configurable rules in YAML (like ESLint's .eslintrc)",
-      "Built-in rules: division-by-zero risk, unbounded list operations, missing ensure clauses, unsafe key definitions",
-      "Upgrade safety checker: compare two DAR versions and report breaking changes",
-      "CI/CD integration: GitHub Action that runs linter on PR and comments results",
-      "OpenZeppelin-aligned rules: implement checks for the bug classes they identified (ArithmeticError from governance, time-skew, etc.)",
-      "VS Code extension: inline warnings as you type",
-    ],
-    techStack: "Haskell or Rust (parse DAML AST), YAML config, GitHub Action wrapper, VS Code extension in TypeScript",
-    grant: "$50K–$90K · 5 months · 4 milestones",
-    revenueAfter: "Open source linter. Revenue via enterprise audit services (run linter + manual review). Partnerships with OpenZeppelin, Certora (who have #130 proposal), Dedge.",
-    competitors: "#5 (Daml Security Framework) is a broader framework proposal. #130 (Package Analyzer) is Certora's static analysis. This is more focused and shippable — a standalone linter devs run daily, not an audit framework.",
-  },
-  {
-    id: 9, tier: "B",
-    title: "Canton Webhook Relay",
-    sub: "If-This-Then-That for Canton: subscribe to on-ledger events, push to any HTTP endpoint",
-    category: "Integration / Automation",
-    color: C.sky,
-    grantFit: 84,
-    surveyEvidence: "App architecture docs describe push-based consumption patterns but no tool exists. Every team builds custom event listeners. The integration pattern is well-documented but never productized.",
-    gap: "Canton's architecture recommends backends subscribe to ledger events and push to off-ledger systems. No standard webhook service exists. Every team builds a custom subscriber → transformer → HTTP poster pipeline.",
-    painSolved: [
-      "Every app backend re-implements: subscribe to Ledger API → filter events → POST to webhook URL",
-      "No standard retry logic, dead-letter queues, or delivery guarantees for event notifications",
-      "Off-ledger integrations (Slack alerts, email notifications, accounting systems) require custom code each time",
-      "DeFi apps need real-time notifications for positions, liquidations, settlements — all custom today",
-    ],
-    deliverables: [
-      "Web dashboard: configure webhook subscriptions (template type, party, choice → URL)",
-      "Subscription DSL: 'when MyTemplate is created by party X, POST to https://my-api/handle'",
-      "Retry logic with exponential backoff, dead-letter queue for failed deliveries",
-      "Payload transformation: map DAML contract payload to custom JSON schema before delivery",
-      "Event filtering: subscribe to specific templates, choices, parties, or custom predicates",
-      "Delivery logs and replay: see delivery history, re-deliver failed events",
-      "Docker image: self-hosted or managed",
-      "SDK: `@canton-webhooks/client` for programmatic subscription management",
-    ],
-    techStack: "Node.js or Go, Ledger API gRPC streaming, PostgreSQL for state, Redis for queue, webhook.site-style delivery UI",
-    grant: "$40K–$80K · 4 months · 3 milestones",
-    revenueAfter: "Open source self-hosted. Revenue from managed SaaS (pay per webhook delivery). Every Canton app is a potential customer.",
-    competitors: "Nothing in dev-fund. #114 (Flowryd Workflow Engine) is broader workflow orchestration, not webhook delivery.",
-  },
-  {
-    id: 10, tier: "B",
-    title: "Canton ↔ EVM Bridge Reference Implementation",
-    sub: "Open-source reference for bridging assets/messages between Canton and Ethereum/L2s",
-    category: "Interoperability",
-    color: C.sky,
-    grantFit: 83,
-    surveyEvidence: "71% of devs come from EVM background. Canton already has USDC xReserve (Ethereum↔Canton). But no open-source reference implementation exists for teams to build custom bridges.",
-    gap: "Digital Asset has proprietary bridge solutions (USDC xReserve). But no open-source, reusable bridge template exists for community devs. 71% of Canton devs are from EVM — they have assets and users on Ethereum they want to connect.",
-    painSolved: [
-      "Teams wanting Canton↔Ethereum interop must build from scratch or use proprietary DA tools",
-      "No reference architecture for cross-chain message passing with Canton's privacy model",
-      "DeFi composability between Canton and EVM DeFi is impossible without bridge infrastructure",
-      "RWA tokenization teams (83% TradFi/Hybrid) need to bring existing Ethereum-based assets to Canton",
-    ],
-    deliverables: [
-      "DAML contracts: lock/mint/burn/unlock patterns for bridged assets",
-      "Solidity contracts: corresponding lock/unlock on Ethereum side",
-      "Relayer service: watches events on both chains, submits proofs",
-      "Reference implementation: bridge a simple ERC-20 token to a DAML Holding on Canton",
-      "Security analysis document: trust assumptions, oracle requirements, failure modes",
-      "Integration guide: 'Bridge Your ERC-20 to Canton in 30 Minutes'",
-      "Docker Compose: run the full bridge locally against Canton sandbox + Hardhat fork",
-    ],
-    techStack: "DAML + Solidity, TypeScript relayer, ethers.js + Canton Ledger API, Docker Compose",
-    grant: "$70K–$140K · 6 months · 4 milestones",
-    revenueAfter: "Open source reference. Revenue from custom bridge deployments for institutional clients. Aligns with Canton's RWA tokenization narrative.",
-    competitors: "#9 (PartyLayer) focuses on application-layer interop, not asset bridging. #117 (Cross-Domain Messaging) is Canton-internal. This is Canton↔external chain bridging — different layer entirely.",
-  },
-  {
-    id: 11, tier: "B",
-    title: "Canton Docusaurus — Unified Developer Knowledge Hub",
-    sub: "One docs site to rule them all: DAML language + Canton protocol + APIs + tutorials in one searchable place",
-    category: "Education / DevEx",
-    color: C.amber,
-    grantFit: 82,
-    surveyEvidence: "Fragmented Documentation was a top qualitative pain point. Devs said they 'struggle to synthesize information across disparate resource hubs' and can't form a mental model of the full stack.",
-    gap: "Docs are split across: docs.daml.com, docs.digitalasset.com, docs.canton.network, docs.dev.sync.global, docs.test.sync.global, docs.sync.global, GitHub READMEs, and blog posts. No unified search. No cross-linking. New devs bounce between 6+ sites.",
-    painSolved: [
-      "6+ documentation sites with different auth, different search, different nav structures",
-      "No 'getting started' path that connects DAML → Canton → Network → Deployment end-to-end",
-      "API references scattered across GitHub repos, not aggregated",
-      "Tutorial content is mixed with reference content — devs can't find what they need quickly",
-      "Canton 101 (canton-101.vercel.app) exists but is a community resource, not comprehensive",
-    ],
-    deliverables: [
-      "Unified Docusaurus site: one search bar across all Canton/DAML content",
-      "Learning paths: 'I'm from Ethereum' / 'I'm building DeFi' / 'I'm a validator operator'",
-      "Auto-generated API reference from gRPC proto files and OpenRPC specs",
-      "Interactive code examples: click 'run' to execute DAML snippets in browser sandbox",
-      "Versioned docs: Canton 3.3 / 3.4 / 3.5 side-by-side for migration",
-      "Community contributions via GitHub PRs (Docusaurus makes this easy)",
-      "Search analytics: track what devs search for most to identify doc gaps",
-      "Algolia DocSearch integration for instant, fuzzy search",
-    ],
-    techStack: "Docusaurus 3 (React), MDX content, Algolia search, GitHub Actions for CI/CD, protoc plugin for API docs",
-    grant: "$40K–$80K · 4 months · 3 milestones",
-    revenueAfter: "Fully open source. Canton Foundation likely takes ownership long-term. Establishes your team as the docs authority — consulting engagements follow.",
-    competitors: "Nothing. #121 (Capstone Kits) is educational content, not documentation infrastructure. Canton Foundation DevRel team would be a natural champion for this.",
-  },
-  {
-    id: 12, tier: "C",
-    title: "Canton Load Tester / Benchmark Suite",
-    sub: "k6/Gatling for Canton: stress-test your DAML app before MainNet deployment",
-    category: "Testing / Quality",
-    color: C.teal,
-    grantFit: 80,
-    surveyEvidence: "Implicit in the 'pre-flight profiler' request. Canton 3.4 improved TPS — teams need a way to verify their app handles the throughput.",
-    gap: "No standard benchmarking tool for Canton apps. Teams either don't load test or write one-off scripts. Canton 3.4 upgraded TPS capabilities but devs have no way to measure their app's actual throughput.",
-    painSolved: [
-      "No way to know if your DAML app handles 100 TPS vs 10 TPS before going to MainNet",
-      "Canton Coin cost varies with transaction complexity — no way to profile cost under load",
-      "Multi-party workflows amplify latency — no tool measures party-count scaling behavior",
-    ],
-    deliverables: [
-      "CLI: `canton-bench run scenarios/settlement.yaml --concurrency 50 --duration 60s`",
-      "Scenario DSL: define transaction patterns in YAML (create N contracts, exercise M choices, with P parties)",
-      "Metrics output: TPS, p50/p95/p99 latency, Canton Coin cost per tx, error rate",
-      "Report generation: HTML report with charts (like k6's built-in reports)",
-      "Comparison mode: run same scenario against DevNet vs TestNet, diff the results",
-      "Grafana dashboard integration: stream metrics to Prometheus for real-time viewing",
-    ],
-    techStack: "Go CLI (high-concurrency), gRPC Ledger API, YAML scenario DSL, HTML report generator",
-    grant: "$40K–$70K · 4 months · 3 milestones",
-    revenueAfter: "Open source tool. Revenue from performance consulting services for institutional deployments.",
-    competitors: "Nothing in dev-fund proposals addresses load testing.",
-  },
-];
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
 
-const TIERS = { S: { label: "Tier S — Build this first", color: C.red, desc: "Highest grant probability. Directly validated by official 2026 survey. Zero competition." }, A: { label: "Tier A — Strong grant candidates", color: C.amber, desc: "Clear ecosystem gaps. Survey-adjacent demand. Moderate competition from tangential proposals." }, B: { label: "Tier B — Solid community goods", color: C.teal, desc: "Real pain points. May need a Tech & Ops Committee champion. Smaller grant amounts." }, C: { label: "Tier C — Worth building", color: C.dim, desc: "Good ideas with less direct survey validation. Build after landing a Tier S/A grant." } };
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ink);
+    border-bottom: 1px solid #1a1a2e;
+    padding: 0 40px;
+    display: flex; align-items: center; gap: 0;
+    height: 52px;
+  }
+  .nav-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px; font-weight: 500;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    margin-right: 32px;
+    white-space: nowrap;
+  }
+  .nav-links {
+    display: flex; gap: 0;
+    overflow-x: auto; scrollbar-width: none;
+    flex: 1;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-link {
+    font-size: 11px; font-weight: 500;
+    color: #888; text-decoration: none;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0 14px; height: 52px;
+    display: flex; align-items: center;
+    border-right: 1px solid #1a1a2e;
+    transition: all 0.2s; white-space: nowrap;
+    cursor: pointer; user-select: none;
+  }
+  .nav-link:hover { color: var(--gold-light); background: #111; }
+  .nav-link.active { color: var(--gold-light); }
+  .nav-link.money { color: #888; }
+  .nav-link.money:hover { color: var(--amber-light); background: #111; }
+  .nav-link.money.active { color: var(--amber-light); }
 
-function Pill({ children, color }) {
-  return <span style={{ display: "inline-block", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, color, background: `${color}20`, letterSpacing: "0.06em", textTransform: "uppercase" }}>{children}</span>;
-}
+  main { padding-top: 52px; }
+  .section { padding: 80px 0; border-bottom: 1px solid var(--rule); }
+  .section:nth-child(even) { background: var(--paper2); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
 
-function IdeaRow({ idea, isOpen, toggle }) {
-  const tierInfo = TIERS[idea.tier];
-  return (
-    <div style={{ background: isOpen ? C.cardHi : C.card, border: `1px solid ${isOpen ? C.borderHi : C.border}`, borderRadius: 10, transition: "all 0.2s", marginBottom: 2 }}>
-      <div onClick={toggle} style={{ padding: "16px 20px", cursor: "pointer", display: "flex", gap: 14, alignItems: "center" }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: `${tierInfo.color}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: tierInfo.color, flexShrink: 0 }}>{idea.tier}</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 3 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{idea.title}</span>
-            <Pill color={idea.color}>{idea.category}</Pill>
-          </div>
-          <div style={{ fontSize: 13, color: C.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{idea.sub}</div>
-        </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontSize: 20, fontWeight: 800, color: idea.grantFit >= 95 ? C.green : idea.grantFit >= 88 ? C.accent : C.amber }}>{idea.grantFit}</div>
-          <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.05em" }}>fit score</div>
-        </div>
-        <div style={{ fontSize: 18, color: C.dim, flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }}>▾</div>
+  /* COVER */
+  .cover {
+    background: var(--ink);
+    color: var(--white);
+    padding: 100px 0 80px;
+    position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -60px; right: -80px;
+    width: 600px; height: 600px;
+    border: 1px solid #1a1a2e;
+    border-radius: 50%; opacity: 0.5;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -100px; left: -50px;
+    width: 350px; height: 350px;
+    border: 1px solid #1a1a2e;
+    border-radius: 50%; opacity: 0.35;
+  }
+  .cover-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
+  .cover-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cover-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
+  .cover h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 1.05; font-weight: 400;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .cover h1 em.g { color: var(--gold-light); font-style: italic; }
+  .cover h1 em.m { color: var(--amber-light); font-style: italic; }
+  .cover-sub {
+    font-size: 18px; color: #aaa; font-weight: 300;
+    margin-bottom: 56px; max-width: 640px;
+  }
+  .cover-meta {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: #1a1a2e;
+    border: 1px solid #1a1a2e;
+    max-width: 900px;
+  }
+  .meta-item { background: #0a0a18; padding: 20px 24px; }
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #555; margin-bottom: 6px;
+  }
+  .meta-val { font-size: 15px; font-weight: 600; color: var(--white); }
+
+  .sec-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+  .sec-label.amber { color: var(--amber); }
+  .sec-label.amber::before { background: var(--amber); }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 400; line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; margin-top: 28px; }
+  p { font-size: 16px; color: #3a3850; line-height: 1.75; margin-bottom: 16px; }
+
+  /* VERDICT STRIP */
+  .verdict-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: var(--ink);
+    border: 1px solid var(--ink);
+    margin-top: 48px;
+  }
+  .verdict-box {
+    background: var(--ink); color: var(--white);
+    padding: 24px 20px; text-align: center;
+  }
+  .verdict-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px; color: var(--gold-light);
+    margin-bottom: 8px; line-height: 1.2;
+  }
+  .verdict-label { font-size: 11px; color: #666; letter-spacing: 0.05em; line-height: 1.5; }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 40px;
+  }
+  .card {
+    border: 1px solid var(--rule); background: var(--white); padding: 28px;
+  }
+  .card.c-green { border-left: 4px solid var(--gold); }
+  .card.c-amber { border-left: 4px solid var(--amber); }
+  .card.c-red   { border-left: 4px solid #c0392b; }
+  .card.c-blue  { border-left: 4px solid #3070c0; }
+  .card-hdr {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .card-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* PHASE HEADER */
+  .phase-hdr { display: flex; align-items: center; gap: 1.25rem; padding: 2.5rem 0 1.5rem; }
+  .phase-hdr-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 72px; color: var(--paper2);
+    letter-spacing: -0.02em; line-height: 0.9;
+  }
+  .phase-hdr-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .phase-hdr-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: var(--ink);
+  }
+  .phase-hdr-line { flex: 1; height: 1px; background: var(--rule); }
+  .phase-hdr-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.08em; text-align: right; line-height: 1.5;
+  }
+
+  /* DAY CARDS */
+  .days-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: var(--rule);
+    border: 1px solid var(--rule); margin-bottom: 2rem;
+  }
+  .day-card { background: var(--white); padding: 20px 16px; border-right: 1px solid var(--rule); transition: background 0.2s; }
+  .day-card:last-child { border-right: none; }
+  .day-card:hover { background: #fafcf8; }
+  .dc-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 44px; line-height: 0.9;
+    letter-spacing: -0.01em; color: var(--paper2); margin-bottom: 8px;
+  }
+  .dc-title { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 10px; min-height: 34px; }
+  .dc-tasks { margin-bottom: 10px; }
+  .dc-task { display: flex; gap: 7px; align-items: flex-start; margin-bottom: 5px; }
+  .dc-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px; font-weight: 500;
+    padding: 2px 5px; flex-shrink: 0; margin-top: 1px; letter-spacing: 0.05em;
+  }
+  .tt-data  { background: #e8f4fb; color: #1a5a7a; }
+  .tt-model { background: rgba(61,140,64,0.12); color: #2a6830; }
+  .tt-reach { background: rgba(192,120,32,0.12); color: #7a4a10; }
+  .tt-rev   { background: #fdeaea; color: #7a1a1a; }
+  .dc-task-txt { font-size: 11px; color: #556050; line-height: 1.5; }
+  .dc-ms {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; color: #556050;
+    line-height: 1.5; padding-top: 8px;
+    border-top: 1px solid var(--rule); letter-spacing: 0.03em;
+  }
+  .dc-ms.build { border-top-color: rgba(61,140,64,0.3); color: var(--gold); }
+  .dc-ms.money { border-top-color: rgba(192,120,32,0.3); color: var(--amber); }
+  .dc-ms.blue  { border-top-color: rgba(48,112,192,0.3); color: #3070c0; }
+
+  /* DATA TABLE */
+  .data-table {
+    width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 14px;
+  }
+  .data-table th {
+    background: var(--ink); color: var(--white);
+    padding: 12px 16px; text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 400;
+  }
+  .data-table td {
+    padding: 12px 16px; border-bottom: 1px solid var(--rule);
+    vertical-align: top; line-height: 1.5;
+  }
+  .data-table tr:nth-child(even) td { background: var(--paper2); }
+
+  /* MERMAID */
+  .arch-wrap {
+    border: 1px solid var(--rule); background: var(--white);
+    padding: 32px; margin-top: 40px;
+  }
+  .mermaid-wrap {
+    background: var(--white); border: 1px solid var(--rule);
+    padding: 32px; overflow-x: auto; margin-top: 24px;
+  }
+  .mermaid { display: flex; justify-content: center; }
+  .img-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.08em; text-align: center; margin-top: 16px;
+  }
+
+  /* FLOW TABS */
+  .flow-nav {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 40px; margin-bottom: 32px;
+  }
+  .flow-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 1px solid var(--ink);
+    background: transparent; color: var(--ink);
+    padding: 8px 16px; cursor: pointer; transition: all 0.2s;
+  }
+  .flow-btn:hover, .flow-btn.active { background: var(--ink); color: var(--gold-light); }
+  .flow-panel { display: none; }
+  .flow-panel.active { display: block; }
+  .flow-desc {
+    font-size: 14px; color: var(--muted);
+    margin-bottom: 24px; padding: 16px 20px;
+    border-left: 3px solid var(--gold); background: var(--white);
+  }
+
+  /* STACK GRID */
+  .stack-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-top: 40px;
+  }
+  .stack-card {
+    border: 1px solid var(--rule); background: var(--white); padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stack-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .stack-icon {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--gold); margin-bottom: 10px; letter-spacing: 0.1em;
+  }
+  .stack-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .stack-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em;
+    color: var(--gold); margin-bottom: 8px; text-transform: uppercase;
+  }
+  .stack-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ROADMAP */
+  .roadmap-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px; margin-top: 40px;
+  }
+  .roadmap-card { border: 1px solid var(--rule); background: var(--white); overflow: hidden; }
+  .roadmap-hdr {
+    background: var(--ink); color: var(--white);
+    padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .roadmap-title { font-weight: 700; font-size: 14px; }
+  .roadmap-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--gold-light); letter-spacing: 0.08em;
+  }
+  .roadmap-items { padding: 16px 20px; }
+  .roadmap-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 6px 0; border-bottom: 1px solid var(--paper2); font-size: 13px;
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .ri-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); margin-top: 6px; flex-shrink: 0;
+  }
+
+  /* PAYMENT / REVENUE GRID */
+  .payment-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: var(--rule);
+    border: 1px solid var(--rule); margin-top: 40px;
+  }
+  .payment-card { background: var(--white); padding: 24px 20px; }
+  .payment-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .payment-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .payment-trigger { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+  .payment-amt {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px; font-weight: 500; color: var(--amber);
+  }
+  .payment-note { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .payment-total {
+    background: var(--ink); color: var(--white); padding: 20px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 1px;
+  }
+  .payment-total-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #888; }
+  .payment-total-amt {
+    font-family: 'DM Mono', monospace; font-size: 22px; color: var(--amber-light);
+  }
+
+  /* INVESTOR GRID */
+  .inv-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--rule);
+    border: 1px solid var(--rule); margin-top: 40px;
+  }
+  .inv-tier { background: var(--white); padding: 24px; }
+  .it-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .it-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: var(--ink); margin-bottom: 4px;
+  }
+  .it-check { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .it-check strong { color: var(--ink); }
+  .it-names { display: flex; flex-wrap: wrap; gap: 5px; }
+  .it-chip {
+    font-size: 10px; padding: 3px 8px;
+    border: 1px solid var(--rule);
+    color: var(--muted); background: var(--paper2);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+  }
+
+  /* FUNNEL */
+  .funnel-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: var(--ink);
+    border: 1px solid var(--ink); margin-top: 1px;
+  }
+  .f-step {
+    background: var(--ink); padding: 22px 16px; text-align: center;
+    border-right: 1px solid #1a1a2e;
+  }
+  .f-step:last-child { border-right: none; }
+  .f-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px; color: var(--white);
+    margin-bottom: 5px; line-height: 1;
+  }
+  .f-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; color: #666;
+    letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.5;
+  }
+
+  /* SEQUENCE TABLE */
+  .seq-table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 14px; }
+  .seq-table th {
+    background: var(--ink); color: var(--white);
+    padding: 12px 16px; text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400;
+  }
+  .seq-table td {
+    padding: 12px 16px; border-bottom: 1px solid var(--rule);
+    vertical-align: top; line-height: 1.5;
+  }
+  .seq-table tr:last-child td { border-bottom: none; }
+  .seq-table tr:nth-child(even) td { background: var(--paper2); }
+  .seq-day { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--muted); }
+  .seq-type {
+    display: inline-block; font-family: 'DM Mono', monospace;
+    font-size: 8px; font-weight: 500; padding: 2px 7px;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .st-email { background: #e8f0fb; color: #1a3a7a; }
+  .st-li    { background: rgba(61,140,64,0.12); color: #2a6830; }
+
+  /* SUMMARY TABLE */
+  .summary-table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 14px; }
+  .summary-table td { padding: 13px 20px; border-bottom: 1px solid var(--rule); }
+  .summary-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); width: 220px; background: var(--paper2); font-weight: 500;
+  }
+  .summary-table td:last-child { font-weight: 500; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--ink); color: var(--white);
+    padding: 32px 40px; margin-top: 48px;
+    border-left: 4px solid var(--gold);
+  }
+  .callout.amber { border-left-color: var(--amber); }
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 12px;
+  }
+  .callout.amber .callout-label { color: var(--amber-light); }
+  .callout-text { font-size: 17px; color: #ddd; line-height: 1.7; font-weight: 300; }
+  .callout-text strong { color: var(--white); font-weight: 600; }
+
+  .badge {
+    display: inline-block; font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500; padding: 3px 10px;
+  }
+  .badge-green  { background: #e8fde8; color: #1a5a1a; }
+  .badge-amber  { background: #fdf3e0; color: #7a5200; }
+  .badge-blue   { background: #e8f0fb; color: #1a3a7a; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: var(--white);
+    padding: 60px 0; text-align: center;
+  }
+  footer h2 { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--white); margin-bottom: 12px; }
+  footer p { color: #888; margin-bottom: 0; }
+  .footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+  .footer-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid; padding: 11px 24px; text-decoration: none; transition: all 0.2s;
+  }
+  .ftc-green { border-color: var(--gold-light); color: var(--gold-light); }
+  .ftc-green:hover { background: var(--gold-light); color: var(--ink); }
+  .ftc-amber { border-color: var(--amber-light); color: var(--amber-light); }
+  .ftc-amber:hover { background: var(--amber-light); color: var(--ink); }
+  .ftc-dim { border-color: #333; color: #888; }
+  .ftc-dim:hover { background: #222; color: #ccc; }
+
+  @media (max-width: 900px) {
+    .container, .cover-inner { padding: 0 24px; }
+    .days-grid { grid-template-columns: 1fr 1fr; }
+    .payment-grid { grid-template-columns: 1fr 1fr; }
+    .inv-grid, .roadmap-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: 1fr 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .verdict-strip, .funnel-strip { grid-template-columns: 1fr 1fr; }
+    .cover-meta { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 16px; }
+    .nav-brand { margin-right: 16px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Ginie AI</div>
+  <div class="nav-links">
+    <a class="nav-link" onclick="navTo('overview')">Overview</a>
+    <a class="nav-link" onclick="navTo('pipeline')">Build Pipeline</a>
+    <a class="nav-link" onclick="navTo('datasets')">Datasets</a>
+    <a class="nav-link" onclick="navTo('phase1')">Phase 1</a>
+    <a class="nav-link" onclick="navTo('phase2')">Phase 2</a>
+    <a class="nav-link" onclick="navTo('phase3')">Phase 3</a>
+    <a class="nav-link money" onclick="navTo('money')">Making $500k</a>
+    <a class="nav-link money" onclick="navTo('revenue')">Revenue Model</a>
+    <a class="nav-link money" onclick="navTo('investors')">Investors</a>
+    <a class="nav-link money" onclick="navTo('outreach')">Outreach</a>
+    <a class="nav-link money" onclick="navTo('automation')">Automation</a>
+    <a class="nav-link money" onclick="navTo('summary')">Summary</a>
+  </div>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-tag">Ginie AI · Smart Contract Builder · Master Execution Plan · 2026</div>
+    <h1><em class="g">15 Days</em> to Build.<br><em class="m">$500k</em> to Raise.</h1>
+    <p class="cover-sub">A no-fluff blueprint for building the world's first specialized AI for Daml + Solidity smart contracts — on a zero-dollar budget — and raising $500k through Canton's institutional ecosystem.</p>
+    <div class="cover-meta">
+      <div class="meta-item">
+        <div class="meta-label">Build cost</div>
+        <div class="meta-val" style="color:#8fcf92;">$0</div>
       </div>
-
-      {isOpen && (
-        <div style={{ borderTop: `1px solid ${C.border}`, padding: "20px 20px 24px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-            <Section title="Survey evidence" color={C.red} text={idea.surveyEvidence} />
-            <Section title="Why the gap exists" color={C.accent} text={idea.gap} />
-          </div>
-
-          <div style={{ marginBottom: 20 }}>
-            <SectionTitle color={C.amber}>Pain points this solves</SectionTitle>
-            <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-              {idea.painSolved.map((p, i) => <div key={i} style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, paddingLeft: 14, position: "relative" }}><span style={{ position: "absolute", left: 0, color: C.dim }}>›</span>{p}</div>)}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: 20 }}>
-            <SectionTitle color={C.green}>Deliverables</SectionTitle>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-              {idea.deliverables.map((d, i) => <div key={i} style={{ fontSize: 12, color: C.muted, lineHeight: 1.5, padding: "4px 0 4px 14px", position: "relative" }}><span style={{ position: "absolute", left: 0, color: C.green }}>✓</span>{d}</div>)}
-            </div>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
-            <MiniSection title="Tech stack" text={idea.techStack} />
-            <MiniSection title="Grant estimate" text={idea.grant} />
-            <MiniSection title="Revenue after grant" text={idea.revenueAfter} />
-          </div>
-
-          <div style={{ marginTop: 16, padding: "12px 16px", background: C.redDim, borderRadius: 8, border: `1px solid ${C.red}20` }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.red, textTransform: "uppercase", letterSpacing: "0.05em" }}>Competition check: </span>
-            <span style={{ fontSize: 13, color: C.muted }}>{idea.competitors}</span>
-          </div>
-        </div>
-      )}
+      <div class="meta-item">
+        <div class="meta-label">Training contracts</div>
+        <div class="meta-val">514,506</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Base model</div>
+        <div class="meta-val">Qwen2.5-Coder</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Investors targeted</div>
+        <div class="meta-val">300</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Target raise</div>
+        <div class="meta-val" style="color:#e8b866;">$500k</div>
+      </div>
     </div>
-  );
-}
+  </div>
+</div>
 
-function Section({ title, color, text }) {
-  return <div><SectionTitle color={color}>{title}</SectionTitle><p style={{ fontSize: 13, color: C.muted, margin: 0, lineHeight: 1.6 }}>{text}</p></div>;
-}
+<main>
 
-function SectionTitle({ color, children }) {
-  return <div style={{ fontSize: 11, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>{children}</div>;
-}
+<!-- ═══════ PART ONE: BUILD ═══════ -->
 
-function MiniSection({ title, text }) {
-  return <div style={{ background: C.surface, borderRadius: 8, padding: "10px 14px" }}><div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{title}</div><div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{text}</div></div>;
-}
+<section class="section" id="overview">
+  <div class="container">
+    <div class="sec-label">Part One — Building the Model</div>
+    <h2>From zero to a working Ginie model in 15 days</h2>
+    <p>Three phases. Zero dollars. Free Colab GPU, open-source datasets, Unsloth LoRA fine-tuning on Qwen2.5-Coder. The Canton grant application opens Day 3 — while you build — so institutional validation is in flight before the model ships.</p>
 
-export default function App() {
-  const [openId, setOpenId] = useState(1);
-  const [filterTier, setFilterTier] = useState(null);
+    <div class="verdict-strip">
+      <div class="verdict-box">
+        <div class="verdict-val" style="color:#8fcf92;">Free T4</div>
+        <div class="verdict-label">GPU source<br>Colab + Kaggle</div>
+      </div>
+      <div class="verdict-box">
+        <div class="verdict-val">Qwen2.5</div>
+        <div class="verdict-label">Base model<br>1.5B + 7B Coder</div>
+      </div>
+      <div class="verdict-box">
+        <div class="verdict-val" style="color:#8fcf92;">LoRA</div>
+        <div class="verdict-label">Training method<br>rank 16 · ~25 min</div>
+      </div>
+      <div class="verdict-box">
+        <div class="verdict-val">514k</div>
+        <div class="verdict-label">Available contracts<br>DISL + 6 datasets</div>
+      </div>
+      <div class="verdict-box">
+        <div class="verdict-val" style="color:#8fcf92;">$0</div>
+        <div class="verdict-label">Total build cost<br>free tier only</div>
+      </div>
+    </div>
 
-  const filtered = filterTier ? IDEAS.filter(i => i.tier === filterTier) : IDEAS;
-  const grouped = {};
-  filtered.forEach(i => { if (!grouped[i.tier]) grouped[i.tier] = []; grouped[i.tier].push(i); });
+    <div class="callout" style="margin-top:48px;">
+      <div class="callout-label">The Core Insight</div>
+      <div class="callout-text">Most founders skip to the commercial product before the model is good enough. <strong>The data flywheel is the moat.</strong> Every contract a user generates on Day 14's beta becomes a training example for v3. By Month 3, Ginie's model improves weekly from real user prompts — a self-reinforcing loop that ChainGPT's static model cannot replicate. The flywheel starts on Day 12 when logging goes live.</div>
+    </div>
+  </div>
+</section>
 
-  return (
-    <div style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: C.bg, color: C.text, minHeight: "100vh", padding: "28px 20px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.green, boxShadow: `0 0 6px ${C.green}80` }} />
-            <span style={{ fontSize: 11, color: C.green, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>Updated analysis · March 2026</span>
-          </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px", letterSpacing: "-0.025em" }}>Canton open source utility ideas</h1>
-          <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.6 }}>
-            12 ideas ranked by grant-fit. Based on the official 2026 developer survey (41 respondents), 131+ dev-fund PRs, forum pain points, Canton 3.4 release notes, and OpenZeppelin's Canton security research.
-          </p>
+<!-- PIPELINE -->
+<section class="section" id="pipeline">
+  <div class="container">
+    <div class="sec-label">Complete Pipeline</div>
+    <h2>Day 1 → Day 15 end-to-end flow</h2>
+    <p>Every step from Colab setup to the first contract deployed on Canton MainNet. The competitive baseline test on Day 1 is deliberate — you need to know exactly what ChainGPT produces before you claim Ginie beats it.</p>
+
+    <div class="arch-wrap">
+      <div class="mermaid">
+flowchart TD
+    A(["Day 1 · Colab T4 Setup"]) --> B["Baseline test\nChain-GPT/Solidity-LLM\non 10 test prompts"]
+    B --> C["Day 2 · Download goldmines\nAlfredPros 6k pairs\ndaml-finance · OpenZeppelin"]
+    C --> D["Day 3 · Clean data\n+ Canton grant PR\n+ Apollo Tier 1 list"]
+    D --> E["Day 4 · Load base model\nQwen2.5-Coder-1.5B\nUnsloth 4-bit T4"]
+    E --> F["Day 5 · First LoRA train\nrank 16 · alpha 16\n3 epochs · ~25 min"]
+    F --> G{"Day 6 · Evaluate v1\nvs ChainGPT baseline"}
+    G -->|"Passes"| H["Day 7–8 · Expand dataset\nDISL + Zellic + andstor\n7800 total examples"]
+    G -->|"Fails — retry"| F
+    H --> I["Day 8 · Retrain v2\nloss target under 0.6\nLaunch Tier 2 Apollo"]
+    I --> J["Day 9 · Ginie-7B on Kaggle\nT4×2 · 30 free GPU hours\n~90 min total"]
+    J --> K["Day 10 · Full scorecard\n3 models vs baseline\nBuild Tier 3 investor list"]
+    K --> L["Day 11 · GGUF export\nOllama on M5 Pro Max\n$0 per generation"]
+    L --> M["Day 12 · FastAPI + LangChain\nSwap Claude API out\nData flywheel starts"]
+    M --> N["Day 13 · Security layer\nSlither + OWASP\nCanton DevNet deploy"]
+    N --> O["Day 14 · Retrain v3\nOn real user logs\n10 beta users via EVI"]
+    O --> P(["Day 15 · Demo + term sheets\nGinie live on Canton · 3–5 TS open"])
+
+    style A fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
+    style P fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
+    style G fill:#2e2010,stroke:#c07820,color:#e8b866
+    style J fill:#1a1a28,stroke:#6060c0,color:#a0a0f0
+      </div>
+      <div class="img-caption">Figure 1 — Complete 15-day build pipeline · Colab free T4 → Canton MainNet</div>
+    </div>
+  </div>
+</section>
+
+<!-- DATASETS -->
+<section class="section" id="datasets">
+  <div class="container">
+    <div class="sec-label">Dataset Goldmines</div>
+    <h2>The open-source corpus that trains Ginie</h2>
+    <p>Seven publicly available datasets cover Solidity, Daml, and security patterns. Combined they provide over 514k unique contracts — more than enough for a specialized model that beats general-purpose alternatives on smart contract generation tasks.</p>
+
+    <div class="flow-nav">
+      <button class="flow-btn active" onclick="showFlow('ds-pipeline', this)">Dataset pipeline</button>
+      <button class="flow-btn" onclick="showFlow('ds-table', this)">Full dataset list</button>
+    </div>
+
+    <div id="flow-ds-pipeline" class="flow-panel active">
+      <div class="flow-desc">Three phases of data ingestion: immediate ready-to-train pairs on Day 2, scale phase on Days 7–8, and a security layer added on Days 13–14. Each phase feeds the same training pipeline.</div>
+      <div class="mermaid-wrap"><div class="mermaid">
+flowchart LR
+    subgraph Immediate["Day 2 — Immediate"]
+        A1["AlfredPros/\nsmart-contracts-instructions\n6,000 instruction-output pairs\nNo preprocessing needed"]
+        A2["digital-asset/daml-finance\n+ cn-quickstart\nDaml templates · Claude\ngenerates instructions"]
+        A3["OpenZeppelin/\nopenzeppelin-contracts\nERC20 · ERC721 · Governance"]
+    end
+    subgraph Scale["Day 7–8 — Scale"]
+        B1["ASSERT-KTH/DISL\n514,506 deduplicated\nSolidity contracts\nStream 2k best"]
+        B2["Zellic/smart-contract-fiesta\nAudit-quality DeFi protocols"]
+        B3["andstor/smart_contracts\n200k verified · filter 100+ lines"]
+    end
+    subgraph Security["Day 13–14 — Security"]
+        C1["mwritescode/slither-audited\nSlither scan per contract\nFilter zero-critical only"]
+        C2["darkknight25/\nVulnerability Dataset\n2000 JSONL · OWASP 2025"]
+    end
+    A1 & A2 & A3 --> D["Clean + dedup\n90/10 split\nDay 3 pipeline"]
+    B1 & B2 & B3 --> D
+    D --> E["train.jsonl\n7800+ examples"]
+    C1 & C2 --> F["Security classifier\nSlither validation layer"]
+    E --> G[("Ginie model\nLoRA adapter")]
+    F --> G
+    style G fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
+      </div></div>
+    </div>
+
+    <div id="flow-ds-table" class="flow-panel">
+      <div class="flow-desc">All seven datasets with their sizes, languages, and exactly how each is used in the Ginie training pipeline.</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Dataset</th><th>Size</th><th>Language</th><th>Use in Ginie</th><th>Phase</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>AlfredPros/smart-contracts-instructions</strong></td>
+            <td>6,000 pairs</td>
+            <td>Solidity</td>
+            <td>Primary training data — instruction-output pairs, zero preprocessing needed. Start training Day 5.</td>
+            <td><span class="badge badge-green">Day 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>digital-asset/daml-finance + cn-quickstart</strong></td>
+            <td>~200 templates</td>
+            <td>Daml</td>
+            <td>Canton-specific corpus — Claude generates one instruction pair per .daml file. Essential for Daml quality.</td>
+            <td><span class="badge badge-green">Day 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>OpenZeppelin/openzeppelin-contracts</strong></td>
+            <td>~150 contracts</td>
+            <td>Solidity</td>
+            <td>Gold-standard ERC20, ERC721, governance patterns. ChainGPT uses OZ compliance as benchmark — Ginie must match.</td>
+            <td><span class="badge badge-green">Day 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>ASSERT-KTH/DISL</strong></td>
+            <td>514,506 files</td>
+            <td>Solidity</td>
+            <td>Largest available — stream 2k best contracts (over 100 lines, deduplicated) for the scale phase retrain.</td>
+            <td><span class="badge badge-amber">Day 7</span></td>
+          </tr>
+          <tr>
+            <td><strong>Zellic/smart-contract-fiesta</strong></td>
+            <td>Thousands</td>
+            <td>Solidity + Vyper</td>
+            <td>Audit-quality DeFi protocols — highest quality patterns. Reserved for Ginie-Turbo training in scale phase.</td>
+            <td><span class="badge badge-amber">Day 7</span></td>
+          </tr>
+          <tr>
+            <td><strong>mwritescode/slither-audited-smart-contracts</strong></td>
+            <td>47k+ contracts</td>
+            <td>Solidity</td>
+            <td>Security layer — every contract has a Slither scan attached. Filter for zero-critical results to train clean patterns.</td>
+            <td><span class="badge badge-blue">Day 13</span></td>
+          </tr>
+          <tr>
+            <td><strong>darkknight25/Smart_Contract_Vulnerability_Dataset</strong></td>
+            <td>2,000 entries</td>
+            <td>Solidity</td>
+            <td>OWASP 2025 vulnerability categories — trains the security classifier that scores every Ginie output at generation time.</td>
+            <td><span class="badge badge-blue">Day 13</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PHASE 1 -->
+<section class="section" id="phase1">
+  <div class="container">
+    <div class="phase-hdr">
+      <div class="phase-hdr-num">01</div>
+      <div>
+        <div class="phase-hdr-label">Phase one · Days 1–5</div>
+        <div class="phase-hdr-title">Foundation — setup, data, first train</div>
+      </div>
+      <div class="phase-hdr-line"></div>
+      <div class="phase-hdr-sub">Colab · Data · LoRA v1</div>
+    </div>
+    <div class="days-grid">
+      <div class="day-card">
+        <div class="dc-num">01</div>
+        <div class="dc-title">Colab T4 + competitive baseline</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Colab T4, Drive folders, HuggingFace + Kaggle accounts ready</span></div>
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Run Chain-GPT/Solidity-LLM on 10 prompts. Record scores as baseline</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Post intro on discuss.daml.com — first Canton community presence</span></div>
         </div>
-
-        {/* Filters */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
-          <button onClick={() => setFilterTier(null)} style={{ padding: "6px 14px", borderRadius: 99, border: `1px solid ${!filterTier ? C.accent : C.border}`, background: !filterTier ? C.accentDim : "transparent", color: !filterTier ? C.accent : C.dim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>All ({IDEAS.length})</button>
-          {Object.entries(TIERS).map(([k, v]) => {
-            const count = IDEAS.filter(i => i.tier === k).length;
-            return <button key={k} onClick={() => setFilterTier(filterTier === k ? null : k)} style={{ padding: "6px 14px", borderRadius: 99, border: `1px solid ${filterTier === k ? v.color : C.border}`, background: filterTier === k ? `${v.color}18` : "transparent", color: filterTier === k ? v.color : C.dim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Tier {k} ({count})</button>;
-          })}
+        <div class="dc-ms build">↳ Competitive scores recorded</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">02</div>
+        <div class="dc-title">Download all goldmine datasets</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">AlfredPros 6k pairs — no preprocessing, save as alfred_train.jsonl</span></div>
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">daml-finance + cn-quickstart — Claude generates instruction per .daml file</span></div>
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">OpenZeppelin contracts — filter over 100 lines, 5k Solidity contracts</span></div>
         </div>
+        <div class="dc-ms build">↳ 500+ JSONL pairs · 200 Daml examples saved</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">03</div>
+        <div class="dc-title">Data pipeline + Canton grant PR</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Quality filter, dedup by 200-char hash, 90/10 train/eval split</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Open $50k grant PR on canton-foundation/canton-dev-fund GitHub</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Apollo Professional signup. Build 100-contact Tier 1 Canton investor list</span></div>
+        </div>
+        <div class="dc-ms build">↳ Clean data ready · Grant PR live</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">04</div>
+        <div class="dc-title">Load base model + inference test</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Qwen2.5-Coder-1.5B via Unsloth 4-bit on free T4. Fits easily.</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Score base model on 10 prompts — the before/after for investor pitches</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Make.com + Claude API overnight enrichment on 100 investor contacts</span></div>
+        </div>
+        <div class="dc-ms build">↳ Base model scored · 100 profiles enriched</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">05</div>
+        <div class="dc-title">First LoRA train — Ginie-Mini v1</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">LoRA rank 16 · alpha 16 · 3 epochs · save checkpoint every 25 steps</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">~25 min on T4. Loss drops from ~2.5 to ~0.8 if data is clean</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch 5-touch Apollo sequence to 100 Tier 1 contacts. Slack webhook live</span></div>
+        </div>
+        <div class="dc-ms build">↳ v1 adapter saved to Drive · sequences running</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        {/* Grouped ideas */}
-        {Object.entries(grouped).map(([tier, ideas]) => (
-          <div key={tier} style={{ marginBottom: 24 }}>
-            <div style={{ marginBottom: 10, paddingLeft: 4 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: TIERS[tier].color }}>{TIERS[tier].label}</div>
-              <div style={{ fontSize: 12, color: C.dim }}>{TIERS[tier].desc}</div>
-            </div>
-            {ideas.map(idea => (
-              <IdeaRow key={idea.id} idea={idea} isOpen={openId === idea.id} toggle={() => setOpenId(openId === idea.id ? null : idea.id)} />
-            ))}
-          </div>
-        ))}
+<!-- PHASE 2 -->
+<section class="section" id="phase2">
+  <div class="container">
+    <div class="phase-hdr">
+      <div class="phase-hdr-num">02</div>
+      <div>
+        <div class="phase-hdr-label">Phase two · Days 6–10</div>
+        <div class="phase-hdr-title">Scale data + train 7B on Kaggle</div>
+      </div>
+      <div class="phase-hdr-line"></div>
+      <div class="phase-hdr-sub">Evaluate · Expand · Kaggle GPU</div>
+    </div>
+    <div class="days-grid">
+      <div class="day-card">
+        <div class="dc-num">06</div>
+        <div class="dc-title">Evaluate v1 + classify failures</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Load adapter, run 10 prompts, score vs ChainGPT baseline. Classify failures</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Claude classifies investor replies, drafts responses within 2 hours</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Tag Canton grant PR — follow up with Tech & Ops Committee champion</span></div>
+        </div>
+        <div class="dc-ms blue">↳ Scorecard written · first replies handled</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">07</div>
+        <div class="dc-title">Scrape 2k + Tier 2 investor list</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Stream andstor 2k contracts. Pull 50 Zellic/fiesta DeFi audit contracts</span></div>
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Claude batch generates 1,500 instruction pairs overnight via API</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Build Tier 2 list: 100 blockchain VCs — Multicoin, Pantera, a16z crypto</span></div>
+        </div>
+        <div class="dc-ms blue">↳ 2,000+ examples · Tier 2 enriching overnight</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">08</div>
+        <div class="dc-title">Retrain v2 on 7,800 examples</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Merge all data: 7,800 total. Retrain. Loss target below 0.6</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch Tier 2 Apollo sequences to 100 blockchain VCs</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Post demo on X: Daml bond in 90 sec. Tag @CantonNetwork</span></div>
+        </div>
+        <div class="dc-ms blue">↳ v2 retrained · Tier 2 sequences live</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">09</div>
+        <div class="dc-title">Ginie-7B on Kaggle free GPU</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Kaggle T4×2 · 30 free GPU hours · 7B model · rank 8 LoRA · 2 epochs</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Download adapter to Drive + push to HuggingFace repo. ~90 min total</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">First investor meetings. Lead with Canton grant + 7,800-example corpus</span></div>
+        </div>
+        <div class="dc-ms blue">↳ Ginie-7B saved · first 3–5 meetings complete</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">10</div>
+        <div class="dc-title">Full scorecard + Tier 3 list</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Run all 3 models. Ginie-7B must beat ChainGPT by 20%+ compile rate</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Build Tier 3: 100 dev tools VCs — Insight, Accel, Index, Balderton</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Scope EVI integration — Ginie as AI layer inside EVI platform</span></div>
+        </div>
+        <div class="dc-ms blue">↳ Ginie beats baseline · all 300 contacts loaded</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        {/* Strategy box */}
-        <div style={{ background: C.surface, borderRadius: 12, padding: 20, border: `1px solid ${C.border}`, marginTop: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.green, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Recommended strategy</div>
-          <p style={{ fontSize: 14, color: C.muted, margin: "0 0 12px", lineHeight: 1.7 }}>
-            <strong style={{ color: C.text }}>Phase 1 — Land the grant:</strong> Pick <strong style={{ color: C.accent }}>Canton DevKit CLI</strong> (#1) or <strong style={{ color: C.accent }}>Canton Trace</strong> (#2). Both are survey-validated, zero-competition, and directly fundable. The DevRel team published the survey to guide grant proposals — build exactly what they asked for.
-          </p>
-          <p style={{ fontSize: 14, color: C.muted, margin: "0 0 12px", lineHeight: 1.7 }}>
-            <strong style={{ color: C.text }}>Phase 2 — Expand the stack:</strong> Use the credibility from your first grant to propose <strong style={{ color: C.teal }}>PQS GraphQL Gateway</strong> (#3) or <strong style={{ color: C.green }}>Canton Sentinel</strong> (#4). These complement your first tool and create a platform.
-          </p>
-          <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.7 }}>
-            <strong style={{ color: C.text }}>Phase 3 — Become the Canton dev platform:</strong> If you build #1 + #3 + #5 you own the developer lifecycle: scaffold → code → query → test → deploy → monitor. That's the Alchemy/Infura of Canton — a venture-scale position built on open source grants.
-          </p>
+<!-- PHASE 3 -->
+<section class="section" id="phase3">
+  <div class="container">
+    <div class="phase-hdr">
+      <div class="phase-hdr-num">03</div>
+      <div>
+        <div class="phase-hdr-label">Phase three · Days 11–15</div>
+        <div class="phase-hdr-title">Ship, deploy, demo day</div>
+      </div>
+      <div class="phase-hdr-line"></div>
+      <div class="phase-hdr-sub">GGUF · FastAPI · Canton · Close</div>
+    </div>
+    <div class="days-grid">
+      <div class="day-card">
+        <div class="dc-num">11</div>
+        <div class="dc-title">GGUF export · Ollama on M5</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Q4_K_M GGUF export from Colab. Ollama Modelfile. ollama run ginie-7b</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">1.2GB Mini · 25 tok/sec. 4.5GB 7B · 12 tok/sec. Zero cost per generation</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch Tier 3 sequences. All 300 contacts in simultaneous 5-touch flow</span></div>
+        </div>
+        <div class="dc-ms build">↳ Runs locally · $0 per generation</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">12</div>
+        <div class="dc-title">FastAPI + LangChain swap</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">FastAPI POST /generate wraps Ollama. Swap ChatAnthropic out of pipeline</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Log every prompt + output — data flywheel starts today</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Data room invite to 5 warmest investors. "Closing in 3 weeks."</span></div>
+        </div>
+        <div class="dc-ms build">↳ Own model in pipeline · flywheel running</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">13</div>
+        <div class="dc-title">Security layer + Canton deploy</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">slither-audited + darkknight25 OWASP data. Build security classifier</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Wire solc + Slither into FastAPI. Security score on every output</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">First Daml contract deployed to Canton DevNet. Visible on ccview.io</span></div>
+        </div>
+        <div class="dc-ms build">↳ First Ginie contract verified on Canton explorer</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">14</div>
+        <div class="dc-title">Retrain v3 on user data + beta</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Filter logs: compiled + scored over 70 security. Merge into training set</span></div>
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Retrain v3. Real prompts improve compile rate 5–15% over synthetic</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Onboard 10 beta users via EVI. Post on discuss.daml.com</span></div>
+        </div>
+        <div class="dc-ms build">↳ v3 on real user data · 10 beta users active</div>
+      </div>
+      <div class="day-card">
+        <div class="dc-num">15</div>
+        <div class="dc-title">Demo day + term sheet push</div>
+        <div class="dc-tasks">
+          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Record 3-min demo: prompt → 90 sec → live contract on Canton explorer</span></div>
+          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">30–50 meetings done. 5–8 serious leads. Closing email to all warm contacts</span></div>
+          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Public announcement. FOMO restarts every contact who went silent</span></div>
+        </div>
+        <div class="dc-ms build">↳ Working product · 3–5 term sheets open</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PART TWO: MONEY ═══════ -->
+
+<section class="section" id="money">
+  <div class="container">
+    <div class="sec-label amber">Part Two — Making $500k</div>
+    <h2>Four sources. Used in sequence. Ninety days.</h2>
+    <p>The Canton grant is the starting point, not the destination. The grant gives institutional validation. The validation makes the seed round easier. The seed funds the commercial product. The commercial product generates the revenue that compounds into the SV path. Each source unlocks the next.</p>
+
+    <div class="callout amber" style="margin-top:48px;">
+      <div class="callout-label">The Canton Precedent</div>
+      <div class="callout-text">Digital Asset raised <strong>$135 million in June 2025</strong> from Goldman Sachs, Citadel Securities, DTCC, and BNP Paribas — specifically to expand Canton Network adoption. The network already processes institutional-grade transactions. Ginie's pitch: <strong>every developer Ginie onboards generates more Canton network utility for these exact investors' portfolios.</strong> That's a strategic investment thesis, not just a financial bet. Tier 1 investors have a non-financial reason to write a check.</div>
+    </div>
+
+    <div class="arch-wrap" style="margin-top:40px;">
+      <div class="mermaid">
+flowchart TD
+    A(["Day 3 · Canton grant PR\n$50k · no equity given"]) --> B["3-milestone payout\n$15k + $20k + $15k\npaid in Canton Coin"]
+    B --> G1(["Grant total · $50k"])
+
+    C(["Day 5 · Tier 1 Apollo\n100 Canton ecosystem insiders"]) --> D["DRW · Goldman\nTradeweb · 7RIDGE"]
+    D --> D1{"Week 2–4\nStrategic meetings"}
+    D1 -->|"One check"| E1(["$150k · Strategic investment"])
+
+    F(["Day 8 · Tier 2 Apollo\n100 Blockchain VCs"]) --> H["Multicoin · Pantera\na16z · Electric Capital"]
+    H --> H1{"Week 3–5\nVC meetings"}
+    H1 -->|"1–2 funds"| I1(["$200k · VC round"])
+
+    J(["Day 11 · Tier 3 Apollo\n100 Dev tools VCs"]) --> K["Insight · Accel\nIndex · Balderton"]
+    K --> K1{"Week 4–6\nFill the round"}
+    K1 -->|"Fills gap"| L1(["$75k · Round complete"])
+
+    M(["Day 14 · EVI Beta\n50 users × $49/mo"]) --> N1(["$25k · Early MRR"])
+
+    G1 & E1 & I1 & L1 & N1 --> O(["$500k closed · 90 days"])
+
+    style A fill:#2e2010,stroke:#c07820,color:#e8b866
+    style C fill:#2e2010,stroke:#c07820,color:#e8b866
+    style F fill:#2e2010,stroke:#c07820,color:#e8b866
+    style J fill:#2e2010,stroke:#c07820,color:#e8b866
+    style M fill:#2e2010,stroke:#c07820,color:#e8b866
+    style O fill:#2e2010,stroke:#c07820,color:#e8b866
+    style G1 fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
+      </div>
+      <div class="img-caption">Figure 2 — Revenue flow · from Canton grant PR to $500k closed · 90 days</div>
+    </div>
+  </div>
+</section>
+
+<!-- REVENUE MODEL -->
+<section class="section" id="revenue">
+  <div class="container">
+    <div class="sec-label amber">Revenue Model</div>
+    <h2>$500k — broken down by source</h2>
+    <p>No single source funds the whole raise. Each piece is independently achievable. The Canton grant closes first and anchors every subsequent investor conversation. The EVI MRR proves commercial demand before any VC meeting.</p>
+
+    <div class="payment-grid">
+      <div class="payment-card">
+        <div class="payment-source">Source 01 · First</div>
+        <div class="payment-name">Canton Foundation Grant</div>
+        <div class="payment-trigger">Open-source Daml contract generator + 150+ example corpus. Submitted Day 3 as public goods infrastructure. Three milestones. Requires champion from Tech & Ops Committee.</div>
+        <div class="payment-amt">$50,000</div>
+        <div class="payment-note">~333k CC at $0.15 · no equity · milestone-gated</div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-source">Source 02 · Strategic first</div>
+        <div class="payment-name">Tier 1 Strategic Check</div>
+        <div class="payment-trigger">DRW, Goldman, Tradeweb, 7RIDGE. Strategic angle: every Ginie developer onboarded grows Canton utility for their Super Validator portfolio. One check closes this entire line.</div>
+        <div class="payment-amt">$150,000</div>
+        <div class="payment-note">Strategic investment · week 2–4 meetings</div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-source">Source 03 · VC round</div>
+        <div class="payment-name">Tier 2 Blockchain VC</div>
+        <div class="payment-trigger">Multicoin, Pantera, a16z crypto, Electric Capital. Thesis: institutional blockchain at inflection point needs developer tooling at scale. Ginie-7B beating ChainGPT is the proof.</div>
+        <div class="payment-amt">$200,000</div>
+        <div class="payment-note">One to two VC funds · week 3–5 meetings</div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-source">Source 04 · Fill</div>
+        <div class="payment-name">Tier 3 Dev Tools VC</div>
+        <div class="payment-trigger">Insight, Accel, Index Ventures. AI B2B SaaS with Canton moat + EVI distribution. Use the Tier 1 term sheet as leverage. Faster decisions than crypto VCs. Fills the round cleanly.</div>
+        <div class="payment-amt">$75,000</div>
+        <div class="payment-note">1–2 dev tools funds · week 4–6 · use T1 TS as leverage</div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-source">Source 05 · Ongoing</div>
+        <div class="payment-name">EVI Early MRR</div>
+        <div class="payment-trigger">50 users × $49/mo from EVI's existing Canton developer base. Real revenue from Day 14 proves demand without requiring investors to take a thesis leap. No cold acquisition needed.</div>
+        <div class="payment-amt">$25,000</div>
+        <div class="payment-note">MRR · Day 14 beta · EVI existing user base</div>
+      </div>
+    </div>
+
+    <div class="payment-total" style="margin-top:1px;">
+      <div>
+        <div class="payment-total-label">Total raise target</div>
+        <div style="font-size:12px;color:#555;margin-top:4px;font-family:'DM Mono',monospace;">Canton grant + 3-tier investor system + early MRR · 90 days</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="payment-total-amt">$500,000</div>
+        <div style="font-size:13px;color:#666;margin-top:4px;">seed round</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTORS -->
+<section class="section" id="investors">
+  <div class="container">
+    <div class="sec-label amber">Three-Tier Investor Targeting</div>
+    <h2>300 contacts · three angles · one round</h2>
+    <p>Tier 1 launches first because they have the strongest non-financial reason to invest. A Tier 1 term sheet changes every subsequent Tier 2 and Tier 3 conversation from a cold pitch into a follow-on opportunity. Sequence matters.</p>
+
+    <div class="inv-grid">
+      <div class="inv-tier">
+        <div class="it-label">Tier 1 · Launched Day 5</div>
+        <div class="it-name">Canton Ecosystem Insiders</div>
+        <div class="it-check">Check: <strong>$100k–$500k</strong> · Strategic angle · 100 contacts</div>
+        <div class="it-names">
+          <span class="it-chip">DRW Venture Capital</span>
+          <span class="it-chip">Goldman Sachs</span>
+          <span class="it-chip">Tradeweb Ventures</span>
+          <span class="it-chip">BNP Paribas</span>
+          <span class="it-chip">7RIDGE</span>
+          <span class="it-chip">Liberty City Ventures</span>
+          <span class="it-chip">DB1 Ventures</span>
+          <span class="it-chip">Digital Asset</span>
+        </div>
+      </div>
+      <div class="inv-tier">
+        <div class="it-label">Tier 2 · Launched Day 8</div>
+        <div class="it-name">Blockchain + AI VCs</div>
+        <div class="it-check">Check: <strong>$250k–$1M</strong> · Thesis fit · 100 contacts</div>
+        <div class="it-names">
+          <span class="it-chip">Blockchain Capital</span>
+          <span class="it-chip">Multicoin Capital</span>
+          <span class="it-chip">Pantera Capital</span>
+          <span class="it-chip">Electric Capital</span>
+          <span class="it-chip">a16z crypto</span>
+          <span class="it-chip">Framework Ventures</span>
+          <span class="it-chip">Sequoia</span>
+          <span class="it-chip">Bessemer</span>
+        </div>
+      </div>
+      <div class="inv-tier">
+        <div class="it-label">Tier 3 · Launched Day 11</div>
+        <div class="it-name">Dev Tools + Enterprise SaaS</div>
+        <div class="it-check">Check: <strong>$500k–$2M</strong> · AI B2B SaaS · 100 contacts</div>
+        <div class="it-names">
+          <span class="it-chip">Insight Partners</span>
+          <span class="it-chip">Accel</span>
+          <span class="it-chip">Index Ventures</span>
+          <span class="it-chip">Balderton Capital</span>
+          <span class="it-chip">Redpoint</span>
+          <span class="it-chip">Lightspeed</span>
+          <span class="it-chip">Peak XV</span>
+          <span class="it-chip">Nexus VP</span>
         </div>
       </div>
     </div>
-  );
-}
+
+    <div class="funnel-strip">
+      <div class="f-step">
+        <div class="f-num">300</div>
+        <div class="f-lbl">contacts<br>enriched</div>
+      </div>
+      <div class="f-step">
+        <div class="f-num">105</div>
+        <div class="f-lbl">email<br>opens</div>
+      </div>
+      <div class="f-step">
+        <div class="f-num">30</div>
+        <div class="f-lbl">replies<br>received</div>
+      </div>
+      <div class="f-step">
+        <div class="f-num">18</div>
+        <div class="f-lbl">meetings<br>booked</div>
+      </div>
+      <div class="f-step">
+        <div class="f-num">3–5</div>
+        <div class="f-lbl">term<br>sheets</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTREACH -->
+<section class="section" id="outreach">
+  <div class="container">
+    <div class="sec-label amber">5-Touch Email Sequence</div>
+    <h2>The exact outreach cadence — 21 days, 5 touches</h2>
+    <p>Every email is Claude-generated from the investor's enriched profile — their specific thesis, recent deals, and Canton portfolio overlap. The sequence respects timing, escalates from hook to proof to urgency, and exits gracefully after 21 days.</p>
+
+    <table class="seq-table">
+      <thead>
+        <tr><th style="width:70px;">Day</th><th>Channel</th><th>Angle</th><th>The ask</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="seq-day">1</td>
+          <td><span class="seq-type st-email">Email</span><br>The hook</td>
+          <td>Opens with their specific recent deal or public statement. Ginie in one sentence. One traction metric. Never generic — Claude personalises from enriched profile.</td>
+          <td>15 minutes this week?</td>
+        </tr>
+        <tr>
+          <td class="seq-day">4</td>
+          <td><span class="seq-type st-email">Email</span><br>The proof</td>
+          <td>New traction signal: Canton grant update, new partner conversation, or beta user milestone. Three sentences maximum.</td>
+          <td>Quick call still useful?</td>
+        </tr>
+        <tr>
+          <td class="seq-day">9</td>
+          <td><span class="seq-type st-email">Email</span><br>The angle</td>
+          <td>Canton's $135M raise + CIP-0100 dev fund live. Ginie at the exact developer tooling inflection point for institutional blockchain.</td>
+          <td>Wanted to loop you in before closing.</td>
+        </tr>
+        <tr>
+          <td class="seq-day">12</td>
+          <td><span class="seq-type st-li">LinkedIn</span><br>Connect</td>
+          <td>Short note referencing your email. Makes you a real person, not just an automated sequence. Two sentences maximum.</td>
+          <td>Connect + brief reference</td>
+        </tr>
+        <tr>
+          <td class="seq-day">21</td>
+          <td><span class="seq-type st-email">Email</span><br>Exit</td>
+          <td>"Dropping off radar after this one. If timing changes — ginie.ai." No pressure. Leaves the door permanently open.</td>
+          <td>Graceful exit</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- AUTOMATION -->
+<section class="section" id="automation">
+  <div class="container">
+    <div class="sec-label amber">Apollo + AI Automation Stack</div>
+    <h2>Eight tools · $160/month · six webhook triggers · 24/7</h2>
+    <p>Six Make.com webhook triggers connect Apollo signals to Claude actions, replacing 20+ hours of manual follow-up per week. The stack costs less than one investor dinner and runs while you sleep.</p>
+
+    <div class="flow-nav">
+      <button class="flow-btn active" onclick="showFlow('auto-triggers', this)">Webhook triggers</button>
+      <button class="flow-btn" onclick="showFlow('auto-flow', this)">Full Apollo flow</button>
+      <button class="flow-btn" onclick="showFlow('auto-stack', this)">Stack + costs</button>
+    </div>
+
+    <div id="flow-auto-triggers" class="flow-panel active">
+      <div class="flow-desc">Six automation triggers run 24/7 via Make.com. Every hot signal gets an automated response within minutes — from Slack alert to Claude-drafted reply to auto-sent Calendly link.</div>
+      <div class="card-grid">
+        <div class="card c-amber">
+          <div class="card-hdr">Trigger: email opened 3× in 24 hours</div>
+          <div class="card-title">Slack alert + priority bump</div>
+          <div class="card-body">Contact moves to priority sequence. Slack fires instantly: "[Name] at [Firm] opened 4 times in 24 hours — act within 2 hours." Claude drafts a suggested follow-up. You review and send in one click.</div>
+        </div>
+        <div class="card c-amber">
+          <div class="card-hdr">Trigger: link clicked</div>
+          <div class="card-title">Auto-send Calendly link</div>
+          <div class="card-body">Claude generates a short warm follow-up with Calendly embedded. Sent within 15 minutes of the click. Converts investor curiosity to a booked meeting without manual intervention — even at 3am.</div>
+        </div>
+        <div class="card c-green">
+          <div class="card-hdr">Trigger: reply received</div>
+          <div class="card-title">Claude classifies + drafts reply</div>
+          <div class="card-body">Claude reads the reply, classifies it (positive, objection, not interested, needs info), and drafts a tailored response. You review and send in one click. Response time under 30 minutes on any reply.</div>
+        </div>
+        <div class="card c-green">
+          <div class="card-hdr">Trigger: meeting booked</div>
+          <div class="card-title">Full AI meeting prep brief</div>
+          <div class="card-body">Claude generates a 1-page brief: fund thesis, portfolio overlap with Canton, likely objections and your responses, questions to ask, what a yes looks like. Delivered to your inbox before every call.</div>
+        </div>
+        <div class="card c-blue">
+          <div class="card-hdr">Trigger: new contact added to Apollo</div>
+          <div class="card-title">Overnight enrichment pipeline</div>
+          <div class="card-body">Apollo API pulls contact data → Claude researches via web search → generates investor profile JSON with thesis, recent deals, Canton overlap, and personalisation hook → stored in Notion CRM for sequence use.</div>
+        </div>
+        <div class="card c-red">
+          <div class="card-hdr">Trigger: 21 days no response</div>
+          <div class="card-title">Archive + warm intro research</div>
+          <div class="card-body">Contact archived. Claude researches second-degree connections — mutual contacts in the EVI user base, Canton ecosystem, or your LinkedIn network. Flags the best warm intro path for a follow-up attempt.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="flow-auto-flow" class="flow-panel">
+      <div class="flow-desc">The complete Apollo automation flow — from 265M-contact database to signed term sheet. Make.com connects every Apollo signal to a Claude action, and every Claude action to your calendar or Notion CRM.</div>
+      <div class="mermaid-wrap"><div class="mermaid">
+flowchart TD
+    A[("Apollo.io\n265M contacts")] --> B["Search Tier 1\n100 Canton insiders"]
+    A --> C["Search Tier 2\n100 Blockchain VCs"]
+    A --> D["Search Tier 3\n100 Dev tools VCs"]
+
+    B & C & D --> E["Make.com webhook\n→ Claude API enrichment"]
+    E --> F["Overnight enrichment\nThesis · recent deals\nCanton overlap · hook"]
+    F --> G["5-touch sequence\nClaude-personalised\nper investor profile"]
+
+    G --> H{"Signal detected?"}
+    H -->|"Email opened 3×"| I["Slack alert\n2-hour response window"]
+    H -->|"Link clicked"| J["Auto-send\nCalendly link"]
+    H -->|"Reply received"| K["Claude classifies\n+ drafts reply"]
+    H -->|"Meeting booked"| L["Claude meeting\nprep brief"]
+    H -->|"21 days silence"| M["Archive\n+ warm intro research"]
+
+    I & J & K --> N["Investor meeting"]
+    L --> N
+    N --> O{"Outcome"}
+    O -->|"Strong interest"| P["Data room invite\n+ Canton grant as anchor"]
+    O -->|"Soft interest"| Q["Nurture with\nprogress updates"]
+    P --> R(["Term sheet"])
+
+    style A fill:#1a1a28,stroke:#6060c0,color:#a0a0f0
+    style R fill:#2e2010,stroke:#c07820,color:#e8b866
+    style H fill:#1e1e10,stroke:#c07820,color:#e8b866
+    style O fill:#1e1e10,stroke:#c07820,color:#e8b866
+      </div></div>
+      <div class="img-caption">Figure 3 — Complete Apollo automation flow · from database to term sheet</div>
+    </div>
+
+    <div id="flow-auto-stack" class="flow-panel">
+      <div class="flow-desc">Eight tools. Six are free. Two cost money. The entire outreach automation system runs for $160/month.</div>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="stack-icon">OUTREACH · $99/MO</div>
+          <div class="stack-name">Apollo.io Professional</div>
+          <div class="stack-role">Contact database + sequences</div>
+          <div class="stack-body">265M contacts, email sequences, open/click tracking, intent signals, CRM sync, built-in dialer. The engine of the entire outreach system.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">AI · $20–40/MO</div>
+          <div class="stack-name">Claude API</div>
+          <div class="stack-role">Intelligence layer</div>
+          <div class="stack-body">Investor enrichment, email personalisation at scale, reply classification, meeting prep briefs, warm intro research. Runs overnight on every new contact added.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">AUTOMATION · $16/MO</div>
+          <div class="stack-name">Make.com</div>
+          <div class="stack-role">Webhook bridge</div>
+          <div class="stack-body">Apollo webhook → Claude automation bridge. Handles enrichment, reply handling, Slack alerts, and Notion CRM updates. The connective tissue of the system.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">CRM · FREE</div>
+          <div class="stack-name">Notion</div>
+          <div class="stack-role">Fundraising pipeline</div>
+          <div class="stack-body">Track: contacted → opened → replied → meeting → passed → committed. Store enriched investor profiles. Simple kanban view of the full pipeline.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">SCHEDULING · FREE</div>
+          <div class="stack-name">Calendly</div>
+          <div class="stack-role">Auto-scheduling</div>
+          <div class="stack-body">Auto-scheduling triggered by Apollo link-click webhook. Zero friction from investor curiosity to booked meeting. Works at 3am while you sleep.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">ALERTS · FREE</div>
+          <div class="stack-name">Slack</div>
+          <div class="stack-role">Signal notifications</div>
+          <div class="stack-body">Real-time notifications when a priority investor opens 3+ times, clicks a link, or replies. Enables fast response on the hottest signals.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">GRANT · NO EQUITY</div>
+          <div class="stack-name">Canton Foundation</div>
+          <div class="stack-role">Institutional anchor</div>
+          <div class="stack-body">$50k grant via canton-foundation/canton-dev-fund on GitHub. Opens Day 3. No equity given. The single most powerful line in every investor pitch deck.</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">DISTRIBUTION · EXISTING</div>
+          <div class="stack-name">EVI Platform</div>
+          <div class="stack-role">Built-in distribution</div>
+          <div class="stack-body">First 50 beta users from EVI's existing Canton developer base. No cold acquisition campaign. Real revenue from Day 14 with zero additional marketing spend.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="section" id="summary">
+  <div class="container">
+    <div class="sec-label">At a Glance</div>
+    <h2>Everything in one table</h2>
+
+    <table class="summary-table">
+      <tbody>
+        <tr><td>Build cost</td><td><span class="badge badge-green">$0</span> — free Colab T4, free Kaggle GPU, all open-source datasets</td></tr>
+        <tr><td>Base model</td><td>Qwen2.5-Coder-1.5B (Mini) + 7B — Apache 2.0 licence · LoRA fine-tuning via Unsloth</td></tr>
+        <tr><td>Primary dataset</td><td>AlfredPros/smart-contracts-instructions — 6,000 instruction-output pairs · zero preprocessing · load Day 2</td></tr>
+        <tr><td>Competitive baseline</td><td>Chain-GPT/Solidity-LLM — run on 10 prompts Day 1, score it, beat it with Ginie-7B by Day 10</td></tr>
+        <tr><td>Canton grant</td><td>$50k · three milestones · no equity · submit Day 3 on canton-foundation/canton-dev-fund GitHub</td></tr>
+        <tr><td>Training examples at Day 8</td><td>7,800 total: AlfredPros 6k + Daml 200 + OZ 100 + scraped 1,500 via Claude batch API</td></tr>
+        <tr><td>Ginie-7B training</td><td>Kaggle T4×2 · 30 free GPU hours · ~90 minutes · rank 8 LoRA · Day 9</td></tr>
+        <tr><td>Deployment cost</td><td><span class="badge badge-green">$0/generation</span> — GGUF Q4_K_M on M5 Pro Max via Ollama from Day 11</td></tr>
+        <tr><td>Security validation</td><td>solc compiler + Slither scanner in FastAPI · Day 13 · OWASP 2025 classifier from darkknight25 dataset</td></tr>
+        <tr><td>First Canton deploy</td><td>Day 13 · Canton DevNet · visible on ccview.io and lighthouse.fivenorth.io</td></tr>
+        <tr><td>Data flywheel starts</td><td>Day 12 — every prompt + output logged · v3 retrained on real user data Day 14 · 5–15% compile rate gain</td></tr>
+        <tr><td>Investors targeted</td><td>300 total: 100 Tier 1 (Day 5) + 100 Tier 2 (Day 8) + 100 Tier 3 (Day 11)</td></tr>
+        <tr><td>Outreach automation cost</td><td>$160/month — Apollo $99 + Claude API $40 + Make.com $16 + Notion/Calendly/Slack free</td></tr>
+        <tr><td>Conversion funnel</td><td>300 contacts → 105 opens (35%) → 30 replies (10%) → 18 meetings → 3–5 term sheets</td></tr>
+        <tr><td>Canton grant</td><td>$50k CC · no equity · institutional validation for every subsequent investor pitch</td></tr>
+        <tr><td>Tier 1 strategic check</td><td>$150k · DRW / Goldman / Tradeweb · every Ginie dev onboarded grows their Canton network stake</td></tr>
+        <tr><td>Tier 2 VC round</td><td>$200k · Multicoin / Pantera / a16z · institutional blockchain needs developer tooling at scale</td></tr>
+        <tr><td>Tier 3 fill</td><td>$75k · Insight / Accel / Index · use Tier 1 term sheet as leverage · closes the round</td></tr>
+        <tr><td>EVI early MRR</td><td>$25k · 50 users × $49/mo · real revenue from Day 14 from existing EVI Canton developer base</td></tr>
+        <tr><td>Total raise target</td><td><span class="badge badge-amber">$500,000</span> · Canton grant + 3-tier investors + early MRR · 90 days to close</td></tr>
+        <tr><td>Long-term ceiling</td><td>$2M–5M+ over 3 years if institutional broker traction materialises via grant + seed + SV path</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <h2>The path is real.<br>The shortcut isn't.</h2>
+    <p>Build on free Colab. Submit the grant. Launch the outreach. Close the round.</p>
+    <div class="footer-links">
+      <a href="https://github.com/canton-foundation/canton-dev-fund" class="footer-cta ftc-green" target="_blank">Canton Dev Fund →</a>
+      <a href="https://huggingface.co/datasets/AlfredPros/smart-contracts-instructions" class="footer-cta ftc-amber" target="_blank">AlfredPros Dataset →</a>
+      <a href="https://www.apollo.io" class="footer-cta ftc-dim" target="_blank">Apollo.io →</a>
+      <a href="https://canton.foundation/grants-program/" class="footer-cta ftc-dim" target="_blank">Grant Program →</a>
+    </div>
+    <div style="margin-top:48px; padding-top:24px; border-top:1px solid #1a1a2e;">
+      <p style="font-size:13px;">Ginie AI · 15-Day Build Plan & $500k Raise · 2026</p>
+      <p style="font-size:12px; margin-top:8px;">Built on open-source datasets · Runs on Canton Network · $0 build cost</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'neutral',
+    themeVariables: {
+      primaryColor: '#eae9f0',
+      primaryTextColor: '#0a0a14',
+      primaryBorderColor: '#ccc8dc',
+      lineColor: '#5a5870',
+      secondaryColor: '#f3f2f8',
+      tertiaryColor: '#fff',
+      fontFamily: 'Outfit, sans-serif',
+      fontSize: '13px'
+    },
+    flowchart: { htmlLabels: true, curve: 'basis' }
+  });
+
+  async function renderAllDiagrams() {
+    var stage = document.createElement('div');
+    stage.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1200px;visibility:hidden;';
+    document.body.appendChild(stage);
+    var nodes = Array.from(document.querySelectorAll('.mermaid'));
+    var counter = 0;
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      var src = node.textContent.trim();
+      if (!src) continue;
+      var placeholder = document.createComment('mermaid-placeholder-' + i);
+      node.parentNode.insertBefore(placeholder, node);
+      stage.appendChild(node);
+      try {
+        var id = 'mg' + (counter++);
+        var result = await mermaid.render(id, src);
+        node.innerHTML = result.svg || result;
+      } catch(err) {
+        node.innerHTML = '<p style="color:#c0392b;font-size:12px;padding:8px;font-family:monospace;border:1px solid #f0c0c0">Diagram error: ' + (err.message || err) + '</p>';
+      }
+      placeholder.parentNode.insertBefore(node, placeholder);
+      placeholder.parentNode.removeChild(placeholder);
+    }
+    document.body.removeChild(stage);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderAllDiagrams);
+  } else {
+    renderAllDiagrams();
+  }
+
+  function showFlow(name, btn) {
+    document.querySelectorAll('.flow-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.flow-btn').forEach(function(b) { b.classList.remove('active'); });
+    var t = document.getElementById('flow-' + name);
+    if (t) t.classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  function navTo(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - 60;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    document.querySelectorAll('.nav-link').forEach(function(l) {
+      l.classList.remove('active');
+      var oc = l.getAttribute('onclick') || '';
+      if (oc.indexOf("'" + id + "'") !== -1) l.classList.add('active');
+    });
+  }
+
+  window.addEventListener('scroll', function() {
+    var current = '';
+    document.querySelectorAll('section[id]').forEach(function(s) {
+      if (window.pageYOffset >= s.offsetTop - 120) current = s.id;
+    });
+    document.querySelectorAll('.nav-link').forEach(function(l) {
+      l.classList.remove('active');
+      var oc = l.getAttribute('onclick') || '';
+      if (current && oc.indexOf("'" + current + "'") !== -1) l.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
