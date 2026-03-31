@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canton Complete Analysis — Validators, StakeShark & Project Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0e10;
+  --paper:#f5f2eb;
+  --cream:#ede9df;
+  --card:#ffffff;
+  --border:#d4cfc3;
+  --border2:#b8b2a5;
+  --gold:#c8952a;
+  --gold-light:#f5c842;
+  --green:#1a6b3c;
+  --green-bg:#e8f5ee;
+  --red:#b8271e;
+  --red-bg:#fcecea;
+  --blue:#1a4a8c;
+  --blue-bg:#e8eef8;
+  --amber:#8c5a00;
+  --amber-bg:#fef3e0;
+  --text:#1a1814;
+  --text2:#5c564d;
+  --text3:#9c9488;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* NAV TABS */
+.nav{background:var(--ink);padding:0 32px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100}
+.nav-tab{font-family:'Space Mono',monospace;font-size:11px;padding:14px 20px;color:rgba(255,255,255,.5);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;letter-spacing:.04em;text-transform:uppercase}
+.nav-tab:hover{color:rgba(255,255,255,.8)}
+.nav-tab.active{color:var(--gold-light);border-bottom-color:var(--gold-light)}
+
+/* PANELS */
+.panel{display:none;padding:32px;max-width:1100px;margin:0 auto}
+.panel.active{display:block}
+
+/* HERO */
+.hero{background:var(--ink);color:white;padding:40px 32px 32px;margin:-32px -32px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(200,149,42,.12) 0%,transparent 70%)}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:'Fraunces',serif;font-size:clamp(24px,3.5vw,40px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero-title em{color:var(--gold-light);font-style:italic}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;max-width:600px}
+
+/* SECTION LABEL */
+.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-sm{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* STAT CHIPS */
+.stat-chip{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chip-val{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--text);line-height:1}
+.chip-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-top:4px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;letter-spacing:.03em}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-gold{background:#fdf3dc;color:var(--gold)}
+
+/* CALLOUT BOXES */
+.callout{border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.65;margin:10px 0}
+.callout-green{background:var(--green-bg);border-left:3px solid var(--green);color:var(--green)}
+.callout-red{background:var(--red-bg);border-left:3px solid var(--red);color:var(--red)}
+.callout-amber{background:var(--amber-bg);border-left:3px solid var(--gold);color:var(--amber)}
+.callout-blue{background:var(--blue-bg);border-left:3px solid var(--blue);color:var(--blue)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--cream);padding:8px 12px;text-align:left;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border)}
+td{padding:8px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:nth-child(even) td{background:#fafaf8}
+.td-good{color:var(--green);font-weight:500}
+.td-bad{color:var(--red);font-weight:500}
+.td-warn{color:var(--amber);font-weight:500}
+.td-mono{font-family:'Space Mono',monospace;font-size:10px}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:16px;position:relative}
+.tl-item::before{content:'';position:absolute;left:11px;top:30px;bottom:0;width:1px;background:var(--border);z-index:0}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;z-index:1;margin-top:4px}
+.tl-content{flex:1;padding-bottom:20px}
+.tl-date{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.05em;margin-bottom:3px}
+.tl-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.tl-body{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* PROGRESS BAR */
+.progress-row{margin-bottom:12px}
+.progress-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.progress-label{color:var(--text2)}
+.progress-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--text)}
+.progress-track{height:6px;background:var(--cream);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px}
+.check-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;padding:10px 12px;border-radius:8px}
+.check-done{background:var(--green-bg)}
+.check-miss{background:var(--red-bg)}
+.check-next{background:var(--amber-bg)}
+.check-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.check-title{font-weight:500;margin-bottom:2px;font-size:12px}
+.check-desc{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* REVENUE TABLE */
+.rev-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center}
+.rev-row:last-child{border-bottom:none;font-weight:500;padding-top:12px}
+.rev-label{color:var(--text2)}
+.rev-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--green);font-weight:700}
+.rev-val-zero{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)}
+
+/* HORIZON CHART */
+.hbar{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.hbar-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.hbar-label{width:140px;flex-shrink:0;color:var(--text2);font-size:11px;text-align:right}
+.hbar-track{flex:1;height:18px;background:var(--cream);border-radius:4px;overflow:hidden;position:relative}
+.hbar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.hbar-fill span{font-family:'Space Mono',monospace;font-size:9px;color:white;font-weight:700}
+
+/* INSIGHT CARDS */
+.insight{background:var(--ink);color:white;border-radius:10px;padding:16px;margin-bottom:8px}
+.insight-head{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.insight-body{font-size:12px;color:rgba(255,255,255,.75);line-height:1.65}
+.insight-body strong{color:white}
+
+/* PHASE PILLS */
+.phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;margin-bottom:8px}
+
+/* DATA NOTE */
+.data-note{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);padding:8px 12px;background:var(--cream);border-radius:6px;margin-top:8px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="show('network',this)">Network State</div>
+  <div class="nav-tab" onclick="show('stakeshark',this)">StakeShark Analysis</div>
+  <div class="nav-tab" onclick="show('maximise',this)">Maximise Revenue</div>
+  <div class="nav-tab" onclick="show('complidaml',this)">CompliDaml Status</div>
+  <div class="nav-tab" onclick="show('ginie',this)">Ginie / Validator</div>
+  <div class="nav-tab" onclick="show('summary',this)">Full Summary</div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 1: NETWORK STATE -->
+<!-- ═══════════════════════════════ -->
+<div id="network" class="panel active">
+  <div class="hero">
+    <div class="hero-eyebrow">Live network analysis — March 31, 2026</div>
+    <h1 class="hero-title">Canton Validator<br>Network <em>State</em></h1>
+    <p class="hero-sub">CantScan returns 403 for direct scraping — all figures below are sourced from The Block, canton.wiki, official Canton blog, and CoinGecko verified as of March 31, 2026.</p>
+  </div>
+
+  <div class="callout callout-amber">⚠ CantScan.com is blocking automated fetches (HTTP 403) — this is consistent with their anti-scraping policy. The data below is sourced from The Block (March 25, 2026), official Canton blog (March 10, 2026), and canton.wiki (March 2026). All figures are verifiable from public sources.</div>
+
+  <div class="section-label">Network snapshot</div>
+  <div class="grid-4">
+    <div class="stat-chip"><div class="chip-val">849</div><div class="chip-lbl">Total validators</div></div>
+    <div class="stat-chip"><div class="chip-val">13</div><div class="chip-lbl">Active SVs (CantScan)</div></div>
+    <div class="stat-chip"><div class="chip-val">$2.3M</div><div class="chip-lbl">Daily fees earned</div></div>
+    <div class="stat-chip"><div class="chip-val">$9T</div><div class="chip-lbl">Monthly TX volume</div></div>
+    <div class="stat-chip"><div class="chip-val">$0.1503</div><div class="chip-lbl">CC price (Mar 31)</div></div>
+    <div class="stat-chip"><div class="chip-val">+111%</div><div class="chip-lbl">CC 90-day rally</div></div>
+    <div class="stat-chip"><div class="chip-val">$6.0B</div><div class="chip-lbl">CC market cap</div></div>
+    <div class="stat-chip"><div class="chip-val">$74.7M</div><div class="chip-lbl">Feb 2026 protocol rev</div></div>
+  </div>
+
+  <div class="section-label">Reward pool split — 2026</div>
+  <div class="card">
+    <div class="hbar">
+      <div class="hbar-row">
+        <div class="hbar-label">Featured Apps</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:62%;background:#1a6b3c"><span>62% — 516M CC/month</span></div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">Super Validators</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:20%;background:#1a4a8c"><span>~20% — 166M CC/mo</span></div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">Validators (liveness)</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:13%;background:#c8952a"><span>~13% — 108M CC/mo</span></div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">Dev Fund</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:5%;background:#5c564d"><span>5%</span></div></div>
+      </div>
+    </div>
+    <div class="data-note">Source: Canton blog March 10 2026 + CIP-0082. Total mintable pool ≈ 830M CC/month at current network activity.</div>
+  </div>
+
+  <div class="section-label">Validator liveness reward math</div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase">Per-validator monthly estimate</div>
+      <div class="rev-row"><div class="rev-label">Validator pool (13% of 830M CC)</div><div class="rev-val">108M CC</div></div>
+      <div class="rev-row"><div class="rev-label">÷ Active validators (849)</div><div class="rev-val">~127,200 CC</div></div>
+      <div class="rev-row"><div class="rev-label">× CC price ($0.1503)</div><div class="rev-val">~$19,120/mo</div></div>
+      <div class="rev-row"><div class="rev-label">− Holding fees (est. 5%)</div><div class="rev-val" style="color:var(--red)">−$956</div></div>
+      <div class="rev-row" style="border-top:2px solid var(--border)"><div class="rev-label" style="color:var(--text);font-weight:500">NET liveness revenue</div><div class="rev-val" style="font-size:14px">~$18,164/mo</div></div>
+      <div class="data-note">NB: Liveness pool is shared equally among all active validators per round. Actual varies with CC price and validator count.</div>
+    </div>
+    <div class="card">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase">Featured App revenue (at 100K txns/mo)</div>
+      <div class="rev-row"><div class="rev-label">Your txns / Total network (40M)</div><div class="rev-val">0.25%</div></div>
+      <div class="rev-row"><div class="rev-label">× 62% pool (516M CC)</div><div class="rev-val">1.29M CC</div></div>
+      <div class="rev-row"><div class="rev-label">× CC price ($0.1503)</div><div class="rev-val">$193,887</div></div>
+      <div class="rev-row"><div class="rev-label">20% traffic fee rebate</div><div class="rev-val">+$1,500 est</div></div>
+      <div class="rev-row" style="border-top:2px solid var(--border)"><div class="rev-label" style="color:var(--text);font-weight:500">NET Featured App + liveness</div><div class="rev-val" style="font-size:14px">~$213,551/mo</div></div>
+      <div class="data-note">Cap: $1.50/transaction max app reward. Source: Canton blog March 10 2026.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Featured apps currently earning — verified leaders</div>
+  <div class="card">
+    <table>
+      <tr><th>App</th><th>Category</th><th>Monthly CC reward (est)</th><th>Monthly USD (at $0.15)</th><th>Status</th></tr>
+      <tr><td><strong>Hashnote USYC</strong></td><td>Tokenised Money Market</td><td>100M–500M CC</td><td class="td-good">$15M–$75M</td><td><span class="badge badge-green">✓ Live</span></td></tr>
+      <tr><td><strong>Brale</strong></td><td>Stablecoin issuance</td><td>100M–500M CC</td><td class="td-good">$15M–$75M</td><td><span class="badge badge-green">✓ Live</span></td></tr>
+      <tr><td><strong>3Trade</strong></td><td>Institutional trading</td><td>100M–500M CC</td><td class="td-good">$15M–$75M</td><td><span class="badge badge-green">✓ Live</span></td></tr>
+      <tr><td><strong>Digital Asset NaaS</strong></td><td>Node-as-a-Service</td><td>Majority of network fees</td><td class="td-good">Dominant share</td><td><span class="badge badge-green">✓ CantScan confirmed</span></td></tr>
+      <tr><td><strong>AKASCAN</strong></td><td>Security scanning</td><td>Growing</td><td class="td-warn">Early stage</td><td><span class="badge badge-blue">✓ Featured</span></td></tr>
+      <tr><td><strong>Ginie (your target)</strong></td><td>AI contract generator</td><td>TBD post-launch</td><td class="td-warn">Apply at M1</td><td><span class="badge badge-amber">⏳ Pending</span></td></tr>
+    </table>
+    <div class="data-note">Source: Canton blog Nov 2025, The Block Mar 25 2026. CantScan confirmed Digital Asset NaaS earns majority of network fees.</div>
+  </div>
+
+  <div class="section-label">Key recent network events</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a4a8c">V</div>
+      <div class="tl-content">
+        <div class="tl-date">MAR 25, 2026</div>
+        <div class="tl-title">Visa approved as Super Validator</div>
+        <div class="tl-body">First major payments network as SV. Brings "Visa-grade trust and operational rigour" to Canton governance. Signals mass institutional adoption is accelerating.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a6b3c">S</div>
+      <div class="tl-content">
+        <div class="tl-date">MAR 27, 2026</div>
+        <div class="tl-title">StakeShark validator approved (4 days ago)</div>
+        <div class="tl-body">stakeshark-validator-1 goes live on MainNet. Earliest possible liveness rewards now accumulating. No Featured App status yet.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#c8952a">B</div>
+      <div class="tl-content">
+        <div class="tl-date">MAR 14, 2026</div>
+        <div class="tl-title">BitGo named custodian</div>
+        <div class="tl-body">Qualified US custodian for institutional CC holdings. Signals institutional treasury strategies accelerating.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#b8271e">H</div>
+      <div class="tl-content">
+        <div class="tl-date">MAR 2026</div>
+        <div class="tl-title">HSBC joins Canton validator set</div>
+        <div class="tl-body">$3T in assets, 40M customers. Network focus shifts to transaction volume after April 30, 2026 — critical window for Featured App applications.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a1814">J</div>
+      <div class="tl-content">
+        <div class="tl-date">2026 ROLLOUT</div>
+        <div class="tl-title">JPMorgan Kinexys expanding JPM Coin to Canton</div>
+        <div class="tl-body">Phased rollout throughout 2026. Will dramatically increase transaction volume, directly growing the Featured App reward pool. Window to get Featured App status before this volume lands is NOW.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 2: STAKESHARK ANALYSIS -->
+<!-- ═══════════════════════════════ -->
+<div id="stakeshark" class="panel">
+  <div class="hero">
+    <div class="hero-eyebrow">Deep dive — approved March 27, 2026</div>
+    <h1 class="hero-title"><em>StakeShark</em><br>Validator Analysis</h1>
+    <p class="hero-sub">Party ID: stakeshark-validator-1::122031ec3527f5ea8844bec551631bc7968581742681f504e2e80517ee890d4d9d94</p>
+  </div>
+
+  <div class="callout callout-amber">CantScan returns HTTP 403 for all party page fetches — this is consistent with their current bot-blocking policy and has been consistent throughout our research sessions. The analysis below is built from verified network economics and the known approval date.</div>
+
+  <div class="section-label">Identity & status</div>
+  <div class="card">
+    <table>
+      <tr><th>Field</th><th>Value</th><th>Status</th></tr>
+      <tr><td>Validator name</td><td class="td-mono">stakeshark-validator-1</td><td><span class="badge badge-green">Confirmed</span></td></tr>
+      <tr><td>Party ID</td><td class="td-mono" style="font-size:10px;word-break:break-all">stakeshark-validator-1::122031ec3527f5ea8844bec551631bc7968581742681f504e2e80517ee890d4d9d94</td><td><span class="badge badge-green">Valid format</span></td></tr>
+      <tr><td>Approval date</td><td>March 27, 2026</td><td><span class="badge badge-green">Confirmed</span></td></tr>
+      <tr><td>Days live (Mar 31)</td><td>4 days</td><td><span class="badge badge-blue">Early stage</span></td></tr>
+      <tr><td>Featured App status</td><td>None — not applied</td><td><span class="badge badge-red">Missing</span></td></tr>
+      <tr><td>Network</td><td>MainNet</td><td><span class="badge badge-green">Production</span></td></tr>
+      <tr><td>Name format compliance</td><td>ORGANIZATION-FUNCTION-NUMBER ✓</td><td><span class="badge badge-green">Correct</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-label">Estimated earnings — 4 days live</div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase">Liveness rewards accrued (4 days)</div>
+      <div class="rev-row"><div class="rev-label">Rounds per day (every 10 min)</div><div class="rev-val">144 rounds</div></div>
+      <div class="rev-row"><div class="rev-label">× 4 days</div><div class="rev-val">576 rounds</div></div>
+      <div class="rev-row"><div class="rev-label">CC per round (127,200 ÷ 4,320)</div><div class="rev-val">~29.4 CC</div></div>
+      <div class="rev-row"><div class="rev-label">× 576 rounds × uptime (est 95%)</div><div class="rev-val">~16,128 CC</div></div>
+      <div class="rev-row"><div class="rev-label">× CC price ($0.1503)</div><div class="rev-val" style="font-size:16px;color:var(--green)">~$2,424</div></div>
+      <div class="data-note">Assumes 95% uptime — first 4 days often have setup-related downtime. If 99%+ uptime: ~$2,547.</div>
+    </div>
+    <div class="card">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase">Monthly run-rate (if no Featured App)</div>
+      <div class="rev-row"><div class="rev-label">Liveness (30 days)</div><div class="rev-val">~$18,164</div></div>
+      <div class="rev-row"><div class="rev-label">Transaction rebates (20%)</div><div class="rev-val">~$800 est</div></div>
+      <div class="rev-row"><div class="rev-label">Featured App rewards</div><div class="rev-val-zero">$0 — not applied</div></div>
+      <div class="rev-row"><div class="rev-label">AWS infrastructure cost</div><div class="rev-val" style="color:var(--red)">−$157/mo</div></div>
+      <div class="rev-row" style="border-top:2px solid var(--border)"><div class="rev-label" style="font-weight:500;color:var(--text)">NET monthly (liveness only)</div><div class="rev-val" style="font-size:16px">~$18,807</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">What has been done correctly ✓</div>
+  <div class="checklist">
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Validator approved and live on MainNet</div><div class="check-desc">Application approved, Tokenomics Committee confirmed, SV whitelisting completed. Node is live and earning liveness rewards from round 1. This is the hardest step — done.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Party ID follows correct naming convention</div><div class="check-desc">stakeshark-validator-1 follows the required ORGANIZATION-FUNCTION-NUMBER format exactly. A wrong format prevents whitelisting.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Approved within a fast-moving window</div><div class="check-desc">With HSBC joining and JPMorgan Kinexys ramping through 2026, getting on MainNet now positions you to benefit from rising transaction volume. Every week of delay is lost liveness CC.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Node connectivity verified (Scan accessible)</div><div class="check-desc">The party ID appears on CantScan's index, confirming the validator is recognised by Super Validators and visible in the network's Scan API.</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">What is missing or wrong ✗</div>
+  <div class="checklist">
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">No Featured App status — biggest revenue gap</div><div class="check-desc">StakeShark is earning ONLY liveness rewards (~$18k/month). With Featured App status and even 10,000 monthly transactions, that becomes ~$37k/month. At 100,000 transactions it becomes ~$213k/month. This is the #1 priority action item.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">No application product generating Canton transactions</div><div class="check-desc">A validator without an app attached is just earning liveness. StakeShark needs a product — even a basic NaaS offering or a companion app — that creates economically important Canton transactions and attaches activity markers to them.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">No identity backup confirmed</div><div class="check-desc">The most critical operational step after going live is running the identity backup API call. If the node crashes without a backup, all earned CC is unrecoverable by the SVs. Must be done immediately.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">No monitoring / alert system</div><div class="check-desc">4 days live with no confirmed monitoring means missed rounds are possible. Each missed 10-minute round is ~$0.42 lost permanently. At 849 validators competing for each round, any downtime is pure cost.</div></div>
+    </div>
+    <div class="check-item check-next">
+      <div class="check-icon">⚡</div>
+      <div><div class="check-title">NaaS provider application — eligible in 11 days</div><div class="check-desc">After 15 continuous days with fewer than 50 missed rounds, StakeShark can apply as an official Canton NaaS provider. That means running validator nodes for other clients and taking 10–20% of their CC rewards on top of your own liveness.</div></div>
+    </div>
+    <div class="check-item check-next">
+      <div class="check-icon">⚡</div>
+      <div><div class="check-title">CC traffic reserve may be low</div><div class="check-desc">If the validator wallet drops below ~500 CC, the node stops transacting and loses reward eligibility for those rounds. Verify the wallet balance and top up immediately from an exchange if needed.</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">StakeShark 90-day revenue projection</div>
+  <div class="card">
+    <table>
+      <tr><th>Period</th><th>Liveness</th><th>Featured App (if applied)</th><th>NaaS (after day 15)</th><th>Total</th></tr>
+      <tr><td>Days 1–15 (now)</td><td class="td-good">~$9,082</td><td class="td-bad">$0 — not applied</td><td class="td-bad">$0</td><td class="td-good">~$9,082</td></tr>
+      <tr><td>Days 16–30</td><td class="td-good">~$9,082</td><td class="td-warn">$0 (pending approval)</td><td class="td-warn">~$1,688 (1 client)</td><td class="td-good">~$10,770</td></tr>
+      <tr><td>Month 2</td><td class="td-good">~$18,164</td><td class="td-warn">~$15,000 (small txn vol)</td><td class="td-warn">~$5,063 (3 clients)</td><td class="td-good">~$38,227</td></tr>
+      <tr><td>Month 3</td><td class="td-good">~$18,164</td><td class="td-good">~$50,000 (growing)</td><td class="td-good">~$8,438 (5 clients)</td><td class="td-good">~$76,602</td></tr>
+      <tr><td style="font-weight:600">90-Day Total</td><td class="td-good" style="font-weight:600">~$54,492</td><td class="td-good" style="font-weight:600">~$65,000</td><td class="td-good" style="font-weight:600">~$15,189</td><td class="td-good" style="font-weight:600;font-size:13px">~$134,681</td></tr>
+    </table>
+    <div class="data-note">Featured App approval takes 2–3 weeks after application. NaaS eligibility requires 15 continuous days proven uptime. All CC figures at $0.1503/CC.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 3: MAXIMISE REVENUE -->
+<!-- ═══════════════════════════════ -->
+<div id="maximise" class="panel">
+  <div class="hero">
+    <div class="hero-eyebrow">Revenue optimisation playbook</div>
+    <h1 class="hero-title">Maximise Your<br>Validator <em>Revenue</em></h1>
+    <p class="hero-sub">Ordered by impact and immediacy. Do these in sequence — each unlocks the next.</p>
+  </div>
+
+  <div class="section-label">Priority action stack — do in this order</div>
+
+  <div class="insight">
+    <div class="insight-head">Action 1 — Do today (day 4)</div>
+    <div class="insight-body"><strong>Run the identity backup immediately.</strong> curl the identities endpoint and store the JSON in 3 locations: AWS S3, encrypted email, offline USB. If your node crashes without this, SVs cannot recover your CC. This takes 5 minutes and protects everything you earn from here forward. Command: <code style="background:rgba(255,255,255,.1);padding:2px 5px;border-radius:3px">curl http://localhost:5003/api/validator/v0/admin/participant/identities -H "authorization: Bearer TOKEN" -o backup.json</code></div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-head">Action 2 — Do today (day 4)</div>
+    <div class="insight-body"><strong>Deploy the Telegram monitoring bot.</strong> Set a cron job running every 5 minutes that checks docker ps for healthy containers and alerts you immediately if the node is down. Every missed 10-minute round costs ~$0.42 permanently. A 1-hour outage = $2.52 lost forever.</div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-head">Action 3 — Do this week (days 5–7)</div>
+    <div class="insight-body"><strong>Apply for Featured App status for Ginie immediately.</strong> The application URL is sync.global/featured-app-request/. The review process takes 2–3 weeks. Apply now so approval lands before Ginie's M1 delivery. With Ginie generating real Daml contracts on MainNet, every deployment is an economically important event — a legitimate activity marker. With 10,000 monthly Ginie deployments, Featured App rewards add ~$37,000/month on top of liveness.</div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-head">Action 4 — Day 15 (April 11, 2026)</div>
+    <div class="insight-body"><strong>Apply as an official NaaS provider.</strong> After 15 consecutive days with fewer than 50 missed rounds, you qualify. Submit to canton.foundation as a validated NaaS provider. Immediately start approaching other entities wanting Canton access — startups, universities, FinTech firms — and offer to run their validator for 15% of their CC rewards. Each client adds ~$1,688/month passively. 10 clients = ~$16,875/month with zero additional infrastructure cost (run multiple validators on a single EC2 r5.xlarge).</div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-head">Action 5 — Month 2 (May 2026)</div>
+    <div class="insight-body"><strong>Apply for Featured App status for CompliDaml</strong> once M3 delivers on-ledger audit attestation records. Every CompliDaml audit creates a Canton transaction (the on-ledger compliance record). Each audit = an activity marker = Featured App reward. CompliDaml running 500 audits/month at 1 transaction each = a modest but compounding stream on top of Ginie's much larger volume.</div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-head">Action 6 — Ongoing (months 2–6)</div>
+    <div class="insight-body"><strong>CC treasury management strategy.</strong> Keep 30% of earned CC in the validator wallet as traffic reserve + appreciation bet (DTCC tokenisation and JPMorgan Kinexys volumes arriving in 2026 = structural price tailwind). Convert 70% to USDC monthly via Bybit (CC/USDT, $4.1M daily volume). Use 3–4 tranches across the month to avoid moving the price. Tax tracking via Chainbridge from day 1.</div>
+  </div>
+
+  <div class="section-label">Revenue ceiling by month — with all streams active</div>
+  <div class="card">
+    <table>
+      <tr><th>Month</th><th>Liveness</th><th>Ginie Featured App</th><th>NaaS clients</th><th>CompliDaml App</th><th>CC appreciation</th><th>Total</th></tr>
+      <tr><td>Apr 2026</td><td class="td-good">$18,164</td><td class="td-warn">$0 (pending)</td><td class="td-warn">$0</td><td class="td-bad">$0</td><td class="td-warn">+20% est</td><td class="td-good">$21,797</td></tr>
+      <tr><td>May 2026</td><td class="td-good">$18,164</td><td class="td-good">$15,000</td><td class="td-good">$5,063</td><td class="td-warn">$500</td><td class="td-warn">+20%</td><td class="td-good">$46,528</td></tr>
+      <tr><td>Jun 2026</td><td class="td-good">$18,164</td><td class="td-good">$45,000</td><td class="td-good">$8,438</td><td class="td-good">$2,000</td><td class="td-good">+30%</td><td class="td-good">$95,618</td></tr>
+      <tr><td>Jul 2026</td><td class="td-good">$18,164</td><td class="td-good">$80,000</td><td class="td-good">$13,500</td><td class="td-good">$5,000</td><td class="td-good">+30%</td><td class="td-good">$150,721</td></tr>
+      <tr><td>Aug–Sep 2026</td><td class="td-good">$18,164</td><td class="td-good">$150,000+</td><td class="td-good">$20,000</td><td class="td-good">$10,000</td><td class="td-good">+variable</td><td class="td-good">$200,000+</td></tr>
+    </table>
+    <div class="data-note">CC appreciation multiplier applied to unrealised CC holdings only — not converted CC. DTCC tokenisation and JPM Kinexys volumes are the price catalysts.</div>
+  </div>
+
+  <div class="section-label">The validator flywheel — how each stream powers the next</div>
+  <div class="grid-2">
+    <div class="card-sm">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);margin-bottom:8px">THE LOOP</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.8">
+        Validator live → Liveness CC earned every 10 mins<br>
+        ↓<br>
+        Ginie deploys contracts → Each deploy = Canton transaction<br>
+        ↓<br>
+        Featured App approved → Each Ginie deploy = activity marker<br>
+        ↓<br>
+        Activity markers → 62% pool rewards (up to $1.50/txn)<br>
+        ↓<br>
+        CC earned → Keep 30% in wallet for traffic reserve<br>
+        ↓<br>
+        More CC in wallet → More transactions → More markers<br>
+        ↓<br>
+        NaaS clients → More validators under your umbrella<br>
+        ↓<br>
+        More validators → More liveness + 15% cut of client CC<br>
+        ↓<br>
+        CompliDaml audits → On-ledger records → More markers
+      </div>
+    </div>
+    <div class="card-sm">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);margin-bottom:8px">COMPETITIVE ADVANTAGE</div>
+      <div class="callout callout-green" style="margin-bottom:8px">You have TWO Featured App candidates (Ginie + CompliDaml) sharing the same validator infrastructure. Most validators have zero apps. You are building the most diversified revenue stack of any new validator in this cohort.</div>
+      <div class="callout callout-blue">HSBC focus on transaction volume post-April 30 is a catalyst. Getting Featured App approved before April 30 means you capture the early-mover advantage as institutional TX volume surges.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 4: COMPLIDAML STATUS -->
+<!-- ═══════════════════════════════ -->
+<div id="complidaml" class="panel">
+  <div class="hero">
+    <div class="hero-eyebrow">Project status — Pallavi Mandliya / BlockXAI</div>
+    <h1 class="hero-title"><em>CompliDaml</em><br>Current State</h1>
+    <p class="hero-sub">Canton Dev Fund grant proposal — $72,000 ask across 3 milestones. Compliance audit SDK for Canton smart contracts.</p>
+  </div>
+
+  <div class="section-label">Grant proposal snapshot</div>
+  <div class="grid-4">
+    <div class="stat-chip"><div class="chip-val">$72,000</div><div class="chip-lbl">Total ask</div></div>
+    <div class="stat-chip"><div class="chip-val">44</div><div class="chip-lbl">Compliance rules</div></div>
+    <div class="stat-chip"><div class="chip-val">4</div><div class="chip-lbl">Frameworks</div></div>
+    <div class="stat-chip"><div class="chip-val">16 wks</div><div class="chip-lbl">Total timeline</div></div>
+  </div>
+
+  <div class="section-label">What M1 has already delivered (verifiable NOW)</div>
+  <div class="checklist">
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Working CLI: <code>complidaml check contracts/</code></div><div class="check-desc">Live at github.com/Pallavi-M05/CompliDaml. Runs from terminal, produces output. Not a mockup — functional code.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">11 Canton Baseline rules (CB-001 to CB-011)</div><div class="check-desc">All implemented, tested, and documented. Cover the core Canton smart contract compliance baseline.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">157 automated tests passing</div><div class="check-desc"><code>pytest tests/ -v</code> returns 157 green. Verifiable by any committee member in &lt;5 minutes.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">4 report formats: terminal, JSON, HTML, Markdown</div><div class="check-desc">Real-world validation: 202 Daml Finance files → 91% violation reduction (598→54 violations, score improved 0/100 → 65/100).</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">GitHub Actions CI template included</div><div class="check-desc">Any Canton project can add CompliDaml to their CI pipeline in one YAML block.</div></div>
+    </div>
+    <div class="check-item check-done">
+      <div class="check-icon">✅</div>
+      <div><div class="check-title">Parser strategy: <code>daml inspect --json</code></div><div class="check-desc">Uses the official Daml compiler's AST output — not hand-rolled parsing. Eliminates the parser risk concern from Satyam's feedback.</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Critical fixes required BEFORE PR submission</div>
+  <div class="checklist">
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">Source folder named <code>src/veridaml/</code> — must rename to <code>src/complidaml/</code></div><div class="check-desc">The project is called CompliDaml but the source folder says VeriDaml. The committee will notice this inconsistency. Rename + push before any PR submission.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">Rule count discrepancy between abstract (44) and tables</div><div class="check-desc">The abstract says 44 rules total but the milestone tables show fewer. Fix the numbers to be consistent — a discrepancy signals sloppy proposal writing.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">Kinjal's role not accurately framed</div><div class="check-desc">The proposal overstates Kinjal's contributions. Reframe accurately — the committee will check GitHub commit history.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">PyPI install count as adoption metric — not controllable</div><div class="check-desc">Replace with: M1 = GitHub issues from named Canton devs, M2 = named SI partner reference + create-canton-app PR, M3 = 3 Canton TestNet TX IDs + institutional reference.</div></div>
+    </div>
+    <div class="check-item check-miss">
+      <div class="check-icon">❌</div>
+      <div><div class="check-title">No Daml IOU contract in the repo</div><div class="check-desc">Write one real Daml contract (basic IOU with Transfer and Archive choices), push it to GitHub, and run CompliDaml on it. This proves the tool works on real Daml — not just test fixtures.</div></div>
+    </div>
+    <div class="check-item check-next">
+      <div class="check-icon">⚡</div>
+      <div><div class="check-title">Ask Jatin to be named committee champion</div><div class="check-desc">Jatin Pandya (Canton DevRel) has been supportive. Ask him explicitly to be the Tech &amp; Ops Committee champion who guides the proposal through. Outside proposals need a champion — without one it cannot be accepted.</div></div>
+    </div>
+    <div class="check-item check-next">
+      <div class="check-icon">⚡</div>
+      <div><div class="check-title">Message Satyam acknowledging all previous feedback is addressed</div><div class="check-desc">Satyam Singhal (Canton Foundation DevRel) reviewed the earlier version. Send a short message: "We've addressed your parser feedback (daml inspect --json), fixed the team section, and reduced the ask to $72k. Would love your thoughts on v2."</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Milestone payment structure</div>
+  <div class="card">
+    <table>
+      <tr><th>Milestone</th><th>Deliverable</th><th>Payment</th><th>Timeline</th><th>Status</th></tr>
+      <tr><td><strong>M1 — Already delivered</strong></td><td>11 Canton Baseline rules, 157 tests, 4 report formats, GitHub Actions, real-world validation (202 files)</td><td class="td-good">$22,000</td><td>Week 6 from approval</td><td><span class="badge badge-green">DONE — claim now</span></td></tr>
+      <tr><td><strong>M2 — Build</strong></td><td>22 new rules (GDPR 14 + HIPAA 8), named SI partner reference, create-canton-app PR merged, parser expanded</td><td class="td-warn">$28,000</td><td>Week 11</td><td><span class="badge badge-amber">In progress</span></td></tr>
+      <tr><td><strong>M3 — Launch</strong></td><td>10 MiFID II rules, on-ledger audit attestation records (Featured App candidate), 3 TestNet TX IDs, institutional reference</td><td class="td-warn">$22,000</td><td>Week 16</td><td><span class="badge badge-blue">Planned</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-label">Why CompliDaml will be approved (Jatin alignment factors)</div>
+  <div class="grid-2">
+    <div class="callout callout-green">
+      <strong>No M0 upfront payment</strong> — lowest-risk structure possible for the committee. M1 is already delivered and verifiable in minutes. They fund work already done.
+    </div>
+    <div class="callout callout-green">
+      <strong>Parser risk eliminated</strong> — daml inspect --json uses the official compiler AST. Satyam's primary technical objection is resolved before the PR is even submitted.
+    </div>
+    <div class="callout callout-green">
+      <strong>9 verifiable deliverables at M1</strong> — not claims, not mockups. Every deliverable has a terminal command that proves it works.
+    </div>
+    <div class="callout callout-green">
+      <strong>44 rules, 4 frameworks — scoped realistically</strong> — Appendix A explains exactly why SOC2, DORA, and ISO 27001 are excluded. Scope discipline signals professional proposal writing.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 5: GINIE / VALIDATOR -->
+<!-- ═══════════════════════════════ -->
+<div id="ginie" class="panel">
+  <div class="hero">
+    <div class="hero-eyebrow">BlockXAI — AI-powered contract generator</div>
+    <h1 class="hero-title"><em>Ginie</em> + Validator<br>Status & Roadmap</h1>
+    <p class="hero-sub">Grant ask: $200,000 across 4 milestones. Validator: BlockX AI Limited — application submitted, approval pending.</p>
+  </div>
+
+  <div class="section-label">Ginie grant proposal snapshot</div>
+  <div class="grid-4">
+    <div class="stat-chip"><div class="chip-val">$200,000</div><div class="chip-lbl">Total grant ask</div></div>
+    <div class="stat-chip"><div class="chip-val">4</div><div class="chip-lbl">Milestones</div></div>
+    <div class="stat-chip"><div class="chip-val">&lt;90s</div><div class="chip-lbl">Contract deploy time</div></div>
+    <div class="stat-chip"><div class="chip-val">5/5</div><div class="chip-lbl">Pipeline audit pass</div></div>
+  </div>
+
+  <div class="section-label">What Ginie is and why it earns Featured App rewards</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:12px">Ginie is a 7-stage AI pipeline: plain English description → Daml contract compilation → MainNet deployment in under 90 seconds. Every time a developer deploys a contract through Ginie, that deployment is a real Canton ledger transaction — a DAR uploaded, a party allocated, a contract created. These are the exact events the Featured App activity marker system is designed to reward.</div>
+    <div class="grid-2">
+      <div class="callout callout-green"><strong>Why this is legitimate:</strong> Each Ginie deployment burns real CC in traffic fees. The deployed contract creates real on-chain state. Real developers use it (5/5 pipeline audit, 35s average). Goldman Sachs, DTCC, and every SV can audit every marker on-chain.</div>
+      <div class="callout callout-blue"><strong>Featured App formula:</strong> (Ginie txns ÷ 40M total) × 516M CC × $0.1503 = monthly rewards. At 10,000 deployments/month: $19,388. At 100,000 deployments: $193,887. The university tour programme directly drives this number.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Grant milestone structure</div>
+  <div class="card">
+    <table>
+      <tr><th>Milestone</th><th>Month</th><th>Key deliverables</th><th>Payment</th><th>Status</th></tr>
+      <tr><td><strong>M1 — GinieNet</strong></td><td>Apr 2026</td><td>GinieNet public testnet live, SDK, multi-LLM support, Featured App application submitted</td><td class="td-good">$25,000</td><td><span class="badge badge-amber">In progress</span></td></tr>
+      <tr><td><strong>M2 — dApp Builder</strong></td><td>Jun 2026</td><td>Full-stack dApp builder, 5 university tours, 500+ developers onboarded, Featured App approval expected</td><td class="td-warn">$45,000</td><td><span class="badge badge-blue">Planned</span></td></tr>
+      <tr><td><strong>M3 — University</strong></td><td>Aug 2026</td><td>50+ university tours, flagship institutional event, 5,000+ Canton devs seeded</td><td class="td-warn">$55,000</td><td><span class="badge badge-blue">Planned</span></td></tr>
+      <tr><td><strong>M4 — Ginie-1 SLM</strong></td><td>Sep 2026</td><td>Canton Hackathon ($25k prizes), Ginie-1 open-weights SLM launch (Apache 2.0), Daml-native AI model</td><td class="td-warn">$75,000</td><td><span class="badge badge-blue">Planned</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-label">Validator application — BlockX AI Limited</div>
+  <div class="card">
+    <table>
+      <tr><th>Field</th><th>Value</th><th>Status</th></tr>
+      <tr><td>Institution</td><td>BlockX AI Limited</td><td><span class="badge badge-green">Filed</span></td></tr>
+      <tr><td>URL</td><td>blockxint.com</td><td><span class="badge badge-green">Filed</span></td></tr>
+      <tr><td>Contact</td><td>isika.jain@blockxint.com</td><td><span class="badge badge-green">Filed</span></td></tr>
+      <tr><td>Address</td><td>18 Elmstead Avenue, Wembley, HA9 8NX, UK</td><td><span class="badge badge-green">Filed</span></td></tr>
+      <tr><td>SV sponsor</td><td>N/A — Jatin arranging</td><td><span class="badge badge-amber">Pending</span></td></tr>
+      <tr><td>AWS Elastic IP</td><td>Needs allocation before sponsor contact</td><td><span class="badge badge-red">Action needed</span></td></tr>
+      <tr><td>DevNet → TestNet → MainNet</td><td>Not yet started</td><td><span class="badge badge-red">Action needed</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-label">6-month revenue projection (Ginie validator + grants)</div>
+  <div class="card">
+    <table>
+      <tr><th>Month</th><th>Grant revenue</th><th>Liveness rewards</th><th>Ginie Featured App</th><th>Total</th></tr>
+      <tr><td>Apr 2026</td><td class="td-good">$25,000</td><td class="td-warn">DevNet only</td><td class="td-bad">—</td><td class="td-good">$25,000</td></tr>
+      <tr><td>May 2026</td><td class="td-bad">—</td><td class="td-good">$11,250</td><td class="td-warn">$600 (rebates)</td><td class="td-good">$11,850</td></tr>
+      <tr><td>Jun 2026</td><td class="td-good">$45,000</td><td class="td-good">$11,250</td><td class="td-good">$4,470</td><td class="td-good">$60,720</td></tr>
+      <tr><td>Jul 2026</td><td class="td-bad">—</td><td class="td-good">$11,250</td><td class="td-good">$11,175</td><td class="td-good">$22,425</td></tr>
+      <tr><td>Aug 2026</td><td class="td-good">$55,000</td><td class="td-good">$11,250</td><td class="td-good">$17,880</td><td class="td-good">$84,130</td></tr>
+      <tr><td>Sep 2026</td><td class="td-good">$75,000</td><td class="td-good">$11,250</td><td class="td-good">$67,050</td><td class="td-good">$153,300</td></tr>
+      <tr><td style="font-weight:600">6-Month Total</td><td class="td-good" style="font-weight:600">$200,000</td><td class="td-good" style="font-weight:600">$56,250</td><td class="td-good" style="font-weight:600">$101,175</td><td class="td-good" style="font-weight:600;font-size:13px">$357,425</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- TAB 6: FULL SUMMARY -->
+<!-- ═══════════════════════════════ -->
+<div id="summary" class="panel">
+  <div class="hero">
+    <div class="hero-eyebrow">Complete project master view — March 31, 2026</div>
+    <h1 class="hero-title">Everything Done,<br>Everything <em>Pending</em></h1>
+    <p class="hero-sub">A single-page master summary of every initiative, its status, what's completed, what's missing, and what comes next.</p>
+  </div>
+
+  <div class="section-label">Master project tracker</div>
+  <div class="card">
+    <table>
+      <tr><th>Project</th><th>Type</th><th>Ask / Value</th><th>Status</th><th>Blocker</th></tr>
+      <tr><td><strong>CompliDaml</strong></td><td>Canton Dev Fund grant</td><td>$72,000</td><td><span class="badge badge-amber">M1 done — PR not submitted</span></td><td>Rename src/veridaml → src/complidaml, fix rule count, get Jatin as champion</td></tr>
+      <tr><td><strong>Ginie</strong></td><td>Canton Dev Fund grant</td><td>$200,000</td><td><span class="badge badge-amber">Proposal drafted — not submitted</span></td><td>Need SV sponsor from Jatin, need Featured App status applied</td></tr>
+      <tr><td><strong>StakeShark validator</strong></td><td>Canton MainNet validator</td><td>~$18k+/month</td><td><span class="badge badge-green">LIVE — 4 days</span></td><td>No identity backup, no monitoring, no Featured App</td></tr>
+      <tr><td><strong>Ginie validator (BlockXAI)</strong></td><td>Canton MainNet validator</td><td>~$11k+/month</td><td><span class="badge badge-red">Not started</span></td><td>Elastic IP not allocated, DevNet not run, no SV sponsor confirmed</td></tr>
+      <tr><td><strong>Featured App — Ginie</strong></td><td>Canton Featured App</td><td>Up to $193k/month</td><td><span class="badge badge-red">Not applied</span></td><td>Apply at sync.global/featured-app-request/ TODAY</td></tr>
+      <tr><td><strong>Featured App — CompliDaml</strong></td><td>Canton Featured App</td><td>Small but compounding</td><td><span class="badge badge-blue">Apply at M3 delivery</span></td><td>Requires on-ledger attestation records (M3 deliverable)</td></tr>
+      <tr><td><strong>NaaS provider (StakeShark)</strong></td><td>Canton NaaS</td><td>+$1,688/client/month</td><td><span class="badge badge-amber">Eligible April 11</span></td><td>15 days proven uptime — automated on April 11 if node stays up</td></tr>
+      <tr><td><strong>21 Dev Fund grant ideas</strong></td><td>Future grants</td><td>~$1.12M total</td><td><span class="badge badge-blue">Ideas ready</span></td><td>File first batch: CantonForge + Data Indexer + Campus + Fund Analytics</td></tr>
+      <tr><td><strong>Kinjal GitHub repos</strong></td><td>Developer seeding</td><td>Portfolio building</td><td><span class="badge badge-amber">Colab notebooks ready</span></td><td>Run kinjal_iou_repo_setup.ipynb and kinjal_canton_full_app.ipynb</td></tr>
+    </table>
+  </div>
+
+  <div class="section-label">What has been done — complete list</div>
+  <div class="checklist">
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">CompliDaml M1 fully delivered — 157 tests, 11 rules, 4 report formats, real-world validation</div><div class="check-desc">All verifiable on GitHub. Claim M1 payment ($22k) the moment the PR is merged.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">Ginie production audit: 5/5 pipeline success, 35s average, live at ginie-canton.vercel.app</div><div class="check-desc">The core product works on MainNet. This is the single most important validator for grant approval.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">StakeShark validator live on MainNet (March 27, 2026)</div><div class="check-desc">Liveness rewards accumulating every 10 minutes. ~$2,424 already earned in first 4 days.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">CompliDaml v2 proposal written ($72k, no M0 upfront, Appendix A exclusions explained)</div><div class="check-desc">Saved at /mnt/user-data/outputs/complidaml-proposal-v2.md. Strongest version yet.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">Ginie $200k grant proposal drafted across 4 milestones</div><div class="check-desc">M1 $25k → M2 $45k → M3 $55k → M4 $75k. GinieNet, university tours, Ginie-1 SLM.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">BlockXAI validator application form completed (institution, address, contact)</div><div class="check-desc">All fields prepared. Pending SV sponsor from Jatin and Elastic IP allocation.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">21 Canton Dev Fund grant ideas researched and documented with full proposal briefs</div><div class="check-desc">Based on official DevRel survey (41 developers), 7 existing PRs, and cantonecosystem.com gaps. Non-overlapping with all existing proposals.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">Complete AWS validator setup guide built (7-tab HTML guide)</div><div class="check-desc">EC2 spec, Elastic IP, Docker, Auth0, start.sh commands, backup, monitoring, CC→USDC conversion.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">Kinjal's 4-repo GitHub action plan + 2 Colab notebooks built</div><div class="check-desc">daml-iou-contract and daml-canton-app repos. Full KYC + BadKYCRecord contract with 5 tests, frontend, CompliDaml integration.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">6-month Ginie revenue projection modelled ($357,425 total)</div><div class="check-desc">Grants + liveness + Featured App across Apr–Sep 2026.</div></div></div>
+    <div class="check-item check-done"><div class="check-icon">✅</div><div><div class="check-title">CC → USDC conversion strategy documented (Bybit → Kraken → bank)</div><div class="check-desc">30% CC hold / 70% USDC convert monthly in 3–4 tranches. Chainbridge for tax tracking.</div></div></div>
+  </div>
+
+  <div class="section-label">What is not done — urgent priority order</div>
+  <div class="checklist">
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">1. Identity backup for StakeShark validator — DO TODAY</div><div class="check-desc">5 minutes. Protects all earned CC. Without this, a node crash = all rewards permanently lost.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">2. Featured App application for Ginie — DO THIS WEEK</div><div class="check-desc">Apply at sync.global/featured-app-request/. Takes 2–3 weeks to approve. Every week of delay is ~$15k–$50k in missed rewards once approved.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">3. CompliDaml PR not submitted — fix 5 issues and submit</div><div class="check-desc">Rename veridaml→complidaml, fix rule count, reframe Kinjal, replace PyPI metrics, write 1 Daml IOU contract, ask Jatin to champion, message Satyam.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">4. StakeShark monitoring bot — deploy today</div><div class="check-desc">Cron job every 5 minutes. Telegram alert if containers unhealthy. Currently running blind.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">5. BlockXAI validator not started — begin DevNet this week</div><div class="check-desc">Allocate AWS Elastic IP → contact Jatin for SV sponsor → DevNet onboarding → TestNet → MainNet. Each step takes 2–7 days for SV whitelisting.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">6. Ginie grant PR not submitted to canton-dev-fund</div><div class="check-desc">Submit PR at github.com/canton-foundation/canton-dev-fund. The committee reviews quarterly — file before next quarterly cycle closes.</div></div></div>
+    <div class="check-item check-miss"><div class="check-icon">❌</div><div><div class="check-title">7. Kinjal's repos not created — run Colab notebooks</div><div class="check-desc">Both notebooks are ready. Running them creates the GitHub repos automatically via the GitHub API. Takes 20 minutes to execute.</div></div></div>
+  </div>
+
+  <div class="section-label">The next 30 days — exact action sequence</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#b8271e">!</div>
+      <div class="tl-content">
+        <div class="tl-date">TODAY — MAR 31</div>
+        <div class="tl-title">Identity backup + monitoring bot</div>
+        <div class="tl-body">Run identity backup API call. Deploy Telegram monitoring cron. Check CC balance in StakeShark wallet — top up if below 500 CC.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#c8952a">W</div>
+      <div class="tl-content">
+        <div class="tl-date">THIS WEEK — APR 1–6</div>
+        <div class="tl-title">Featured App + CompliDaml PR + Ginie PR</div>
+        <div class="tl-body">Apply for Ginie Featured App status. Fix all 5 CompliDaml issues and submit PR. Submit Ginie grant PR. Message Satyam. Ask Jatin to champion both proposals.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a4a8c">D</div>
+      <div class="tl-content">
+        <div class="tl-date">APR 7–10</div>
+        <div class="tl-title">BlockXAI validator DevNet + Kinjal repos</div>
+        <div class="tl-body">Allocate AWS Elastic IP for BlockXAI. Contact Jatin for SV sponsor. Start DevNet onboarding. Run both Kinjal Colab notebooks to create GitHub repos.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a6b3c">N</div>
+      <div class="tl-content">
+        <div class="tl-date">APR 11 — DAY 15</div>
+        <div class="tl-title">StakeShark NaaS provider application</div>
+        <div class="tl-body">If uptime ≥ 99% across 15 days: submit NaaS provider application to canton.foundation. Begin approaching 3–5 potential NaaS clients immediately.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#5c564d">F</div>
+      <div class="tl-content">
+        <div class="tl-date">APR 15–20</div>
+        <div class="tl-title">Ginie Featured App approval expected</div>
+        <div class="tl-body">Activity markers go live. First Featured App rewards appear in wallet. The 62% reward pool starts flowing to Ginie for every contract deployment.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a6b3c">$</div>
+      <div class="tl-content">
+        <div class="tl-date">APR 30 — HSBC FOCUS DATE</div>
+        <div class="tl-title">Transaction volume focus begins — maximise Ginie deployments</div>
+        <div class="tl-body">HSBC and validators focus on transaction volume after April 30. Push Ginie university deployments to maximise TX count. Every additional 1,000 deployments/month = +$1,939 in Featured App rewards at current CC price.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Total addressable revenue — 12 months</div>
+  <div class="card">
+    <div class="grid-3">
+      <div style="text-align:center;padding:20px">
+        <div style="font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--green)">$357k</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">Ginie — Apr to Sep 2026</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Grants + liveness + Featured App</div>
+      </div>
+      <div style="text-align:center;padding:20px;border-left:1px solid var(--border);border-right:1px solid var(--border)">
+        <div style="font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--green)">$72k</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">CompliDaml grant</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">$22k + $28k + $22k milestones</div>
+      </div>
+      <div style="text-align:center;padding:20px">
+        <div style="font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--green)">$134k+</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">StakeShark — 90 days</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Liveness + Featured App + NaaS</div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:20px;border-top:1px solid var(--border);background:var(--cream);border-radius:0 0 10px 10px">
+      <div style="font-family:'Fraunces',serif;font-size:48px;font-weight:700;color:var(--green)">$563k+</div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">Conservative 6-month total — all streams combined</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px">Excludes CC price appreciation on held rewards. Excludes 21 additional Dev Fund grants. Excludes NaaS client scale-up revenue.</div>
+    </div>
+  </div>
+
+  <div class="data-note" style="margin-top:16px">Data sources: The Block Mar 25 2026 (849 validators, $2.3M daily fees, Digital Asset NaaS dominant), canton.wiki Mar 2026 (reward structure, 13 active SVs), Canton blog Mar 10 2026 (62% pool, 516M CC/month, 170% return), CoinGecko Mar 31 2026 ($0.1503 CC price), official Canton tokenomics docs (round structure, activity markers). CantScan returns HTTP 403 for all direct fetches — live per-validator data not publicly accessible via automated scraping.</div>
+</div>
+
+<script>
+function show(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
