@@ -1,347 +1,525 @@
-<html><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>21 Canton Dev Fund Grant Ideas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface2:#1a1a1e;
+  --surface3:#222228;
+  --border:#2a2a32;
+  --border2:#38383f;
+  --text:#f0efe8;
+  --text2:#9d9b8e;
+  --text3:#5a5853;
+  --accent:#f5c842;
+  --accent2:#ff6b35;
+  --green:#4ade80;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
+  --coral:#fb7185;
+  --teal:#2dd4bf;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-size:13px;line-height:1.6;color:var(--color-text-primary)}
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary)}
-.tab.active{background:var(--color-text-primary);color:var(--color-background-primary)}
-.panel{display:none}.panel.active{display:block}
-.opp{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:10px;position:relative}
-.opp-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.opp-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
-.opp-earn{font-size:12px;font-weight:500;text-align:right}
-.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;margin-top:3px}
-.b-green{background:#EAF3DE;color:#27500A}
-.b-amber{background:#FAEEDA;color:#633806}
-.b-blue{background:#E6F1FB;color:#0C447C}
-.b-purple{background:#EEEDFE;color:#3C3489}
-.b-teal{background:#E1F5EE;color:#085041}
-.b-red{background:#FCEBEB;color:#791F1F}
-.b-gray{background:#F1EFE8;color:#5F5E5A}
-.row{display:flex;gap:8px;margin-bottom:5px;font-size:12px;color:var(--color-text-secondary);align-items:flex-start}
-.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.dg{background:#639922}.da{background:#EF9F27}.dr{background:#E24B4A}.db{background:#378ADD}.dp{background:#7F77DD}.dt{background:#1D9E75}.dgr{background:#888780}
-strong{color:var(--color-text-primary);font-weight:500}
-.acc-bar{height:6px;border-radius:3px;margin:6px 0 4px;background:var(--color-border-tertiary)}
-.acc-fill{height:100%;border-radius:3px}
-.acc-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-tertiary)}
-.lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-tertiary);margin:14px 0 8px}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
-.stat-n{font-size:18px;font-weight:500;color:var(--color-text-primary);line-height:1.1}
-.stat-l{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
-.ok{background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;color:var(--color-text-success);margin:8px 0}
-.warn{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;color:var(--color-text-warning);margin:8px 0}
-.info{background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;color:var(--color-text-info);margin:8px 0}
-.rank-pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;background:var(--color-background-tertiary);color:var(--color-text-tertiary);margin-right:6px}
-table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
-th{background:var(--color-background-tertiary);padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
-td{padding:6px 10px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
-tr:nth-child(even) td{background:var(--color-background-secondary)}
-.win{color:#27500A;font-weight:500}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+.site-header{padding:40px 32px 32px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;top:-60px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(245,200,66,.08) 0%,transparent 70%);pointer-events:none}
+.header-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.header-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.05;margin-bottom:10px;letter-spacing:-.02em}
+.header-title span{color:var(--accent)}
+.header-sub{font-size:14px;color:var(--text2);max-width:680px;line-height:1.6;margin-bottom:24px}
+.header-stats{display:flex;gap:32px;flex-wrap:wrap}
+.stat-item{display:flex;flex-direction:column;gap:3px}
+.stat-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text)}
+.stat-lbl{font-size:11px;color:var(--text3);letter-spacing:.05em;font-family:'DM Mono',monospace}
+
+/* FILTERS */
+.filter-bar{padding:20px 32px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;top:0;background:rgba(10,10,11,.95);backdrop-filter:blur(12px);z-index:100}
+.filter-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.filter-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 14px;border-radius:100px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.03em}
+.filter-btn:hover{border-color:var(--text2);color:var(--text)}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#0a0a0b;font-weight:500}
+
+/* MAIN GRID */
+.main{padding:24px 32px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
+
+/* IDEA CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .2s,transform .15s;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.card.expanded{border-color:var(--accent);grid-column:1/-1}
+.card-header{padding:20px;display:flex;gap:14px;align-items:flex-start}
+.card-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;flex-shrink:0;color:#0a0a0b}
+.card-info{flex:1;min-width:0}
+.card-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:4px}
+.card-tagline{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px}
+.card-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:6px;letter-spacing:.04em;font-weight:500}
+.card-meta{display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px 16px}
+.ask-amount{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text)}
+.ask-weeks{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.04em}
+.expand-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.05em}
+.card.expanded .expand-hint{color:var(--accent)}
+
+/* EXPANDED BODY */
+.card-body{display:none;border-top:1px solid var(--border);animation:fadeIn .2s ease}
+.card.expanded .card-body{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.body-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:24px}
+.body-grid.full{grid-template-columns:1fr}
+@media(max-width:700px){.body-grid{grid-template-columns:1fr}}
+.body-section{padding:0 16px 20px 0}
+.body-section:last-child{padding-right:0}
+.section-head{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.body-text{font-size:13px;color:var(--text2);line-height:1.7}
+.source-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:8px;padding:6px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-bottom:16px;line-height:1.4}
+
+/* MILESTONES */
+.milestones{display:flex;flex-direction:column;gap:10px}
+.milestone{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.ms-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.ms-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--text)}
+.ms-amount{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);white-space:nowrap;font-weight:500}
+.ms-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* BUDGET TABLE */
+.budget-rows{display:flex;flex-direction:column;gap:6px}
+.budget-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.budget-row:last-child{border-bottom:none;font-weight:500;color:var(--text)}
+.budget-cat{color:var(--text2)}
+.budget-amt{font-family:'DM Mono',monospace;color:var(--accent)}
+
+/* EMPTY STATE */
+.empty{grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);font-family:'DM Mono',monospace;font-size:13px}
+
+/* FOOTER */
+.site-footer{padding:32px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.footer-note{max-width:400px;line-height:1.6}
 </style>
+</head>
+<body>
 
-<div class="tabs">
-  <div class="tab active" onclick="show('overview',this)">All 12 streams</div>
-  <div class="tab" onclick="show('protocol',this)">Protocol rewards</div>
-  <div class="tab" onclick="show('build',this)">Build &amp; earn</div>
-  <div class="tab" onclick="show('service',this)">Services</div>
-  <div class="tab" onclick="show('grants',this)">Grants</div>
-  <div class="tab" onclick="show('yours',this)">Your position</div>
+<header class="site-header">
+  <div class="header-eyebrow">Canton Protocol Development Fund — 2026</div>
+  <h1 class="header-title">21 Grant Ideas<br>Worth <span>Building</span></h1>
+  <p class="header-sub">Research-backed proposals for the Canton Dev Fund. Sourced from the official DevRel developer survey (41 builders), 7 existing PRs on canton-foundation/canton-dev-fund, the canton forum, and cantonecosystem.com. Every idea is non-overlapping with existing proposals and grounded in real ecosystem gaps.</p>
+  <div class="header-stats">
+    <div class="stat-item"><div class="stat-val">21</div><div class="stat-lbl">Grant ideas</div></div>
+    <div class="stat-item"><div class="stat-val">$1.12M</div><div class="stat-lbl">Total CC value</div></div>
+    <div class="stat-item"><div class="stat-val">7</div><div class="stat-lbl">Categories</div></div>
+    <div class="stat-item"><div class="stat-val">41</div><div class="stat-lbl">Developers surveyed</div></div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="filter-btn active" onclick="filter('all',this)">All 21</button>
+  <button class="filter-btn" onclick="filter('devtools',this)">Dev Tools</button>
+  <button class="filter-btn" onclick="filter('infra',this)">Infrastructure</button>
+  <button class="filter-btn" onclick="filter('finance',this)">Finance Apps</button>
+  <button class="filter-btn" onclick="filter('education',this)">Education</button>
+  <button class="filter-btn" onclick="filter('governance',this)">Governance</button>
+  <button class="filter-btn" onclick="filter('ai',this)">AI</button>
 </div>
 
-<div id="overview" class="panel active">
-  <div class="stat-grid">
-    <div class="stat"><div class="stat-n">12</div><div class="stat-l">Revenue streams identified</div></div>
-    <div class="stat"><div class="stat-n">$9T</div><div class="stat-l">Monthly transaction volume</div></div>
-    <div class="stat"><div class="stat-n">$74.7M</div><div class="stat-l">Feb 2026 protocol revenue</div></div>
-  </div>
+<main class="main" id="grid"></main>
 
-  <div class="lbl">All Canton revenue opportunities — ranked by accessibility for you</div>
-
-  <div class="opp" style="border-left:3px solid #639922">
-    <div class="opp-head">
-      <div><span class="rank-pill">1</span><span class="opp-title">Validator liveness rewards</span><br><span class="badge b-green">You can start this</span></div>
-      <div class="opp-earn" style="color:#639922">~$11,250/month<br><span style="font-size:10px;color:var(--color-text-tertiary)">passive, just stay online</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:90%;background:#639922"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Very high</span></div>
-    <div class="row"><div class="dot dg"></div><div>Every validator earns CC every 10 minutes just for being online and connected to the Global Synchronizer. No transactions required. No users required.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Formula:</strong> Remaining CC in round ÷ active validators. At 888 validators = ~75,000 CC/month = ~$11,250/month.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>Risk:</strong> As network activity grows, liveness rewards decrease as a share. Activity-based rewards take over. Long-term floor remains but shrinks.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #EF9F27">
-    <div class="opp-head">
-      <div><span class="rank-pill">2</span><span class="opp-title">Featured App rewards</span><br><span class="badge b-amber">Requires Featured App status</span></div>
-      <div class="opp-earn" style="color:#EF9F27">Up to $193,500/month<br><span style="font-size:10px;color:var(--color-text-tertiary)">at 100K txns/month</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:70%;background:#EF9F27"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — needs committee approval</span></div>
-    <div class="row"><div class="dot da"></div><div>62% of all newly minted CC (516M CC/month) goes to Featured Apps proportional to their share of total network transactions. Cap: $1.50 per transaction.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>Formula:</strong> (Your txns ÷ 40M total txns) × 516M CC × $0.15/CC = monthly USD rewards</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Who qualifies:</strong> Any production-ready app providing real utility. Apply at canton.foundation/featured-app-request when within 2 weeks of production.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Real examples earning this:</strong> Hashnote USYC, Brale, 3Trade — each earning 100M–500M CC/month ($15M–$75M).</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #378ADD">
-    <div class="opp-head">
-      <div><span class="rank-pill">3</span><span class="opp-title">Transaction rebates (20% cashback)</span><br><span class="badge b-blue">Automatic — no approval needed</span></div>
-      <div class="opp-earn" style="color:#378ADD">20% of all fees paid<br><span style="font-size:10px;color:var(--color-text-tertiary)">returned every round</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:95%;background:#378ADD"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Maximum — every validator gets this</span></div>
-    <div class="row"><div class="dot db"></div><div>When your validator pays traffic fees for transactions, 20% comes back automatically as a reward coupon in the same round. Zero setup required.</div></div>
-    <div class="row"><div class="dot db"></div><div>If Ginie burns 50,000 CC/month in fees: 10,000 CC returned = $1,500/month free money.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #7F77DD">
-    <div class="opp-head">
-      <div><span class="rank-pill">4</span><span class="opp-title">Canton Dev Fund grants</span><br><span class="badge b-purple">Open to all builders</span></div>
-      <div class="opp-earn" style="color:#7F77DD">Unlimited per proposal<br><span style="font-size:10px;color:var(--color-text-tertiary)">CompliDaml: $72k, Ginie: $200k</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:65%;background:#7F77DD"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — milestone-gated, committee reviewed</span></div>
-    <div class="row"><div class="dot dp"></div><div>5% of all future CC emissions allocated by Super Validator vote to fund open-source public goods. Denominated and paid in Canton Coin. Milestone-gated — no upfront payment.</div></div>
-    <div class="row"><div class="dot dp"></div><div><strong>Who qualifies:</strong> Builders creating tools for the common good of the Canton ecosystem. Developer tooling, compliance, analytics, education all qualify.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>You are already accessing this:</strong> CompliDaml $72k + Ginie $200k = $272k in grants from this stream.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #1D9E75">
-    <div class="opp-head">
-      <div><span class="rank-pill">5</span><span class="opp-title">Node-as-a-Service (NaaS) provider</span><br><span class="badge b-teal">Service business model</span></div>
-      <div class="opp-earn" style="color:#1D9E75">10–20% of client CC rewards<br><span style="font-size:10px;color:var(--color-text-tertiary)">recurring from each client node</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:50%;background:#1D9E75"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — requires 15 days uptime proof across all 3 networks</span></div>
-    <div class="row"><div class="dot dt"></div><div>Once you have a proven validator running across DevNet, TestNet, and MainNet for 15+ continuous days with fewer than 50 rounds missed, you can apply as an official Canton NaaS provider.</div></div>
-    <div class="row"><div class="dot dt"></div><div><strong>The business:</strong> Run validator nodes on behalf of clients who want Canton access but not the infrastructure burden. Charge 10–20% of their CC rewards plus a setup fee.</div></div>
-    <div class="row"><div class="dot dt"></div><div><strong>Scale:</strong> 10 clients × $11,250 average liveness rewards × 15% cut = $16,875/month recurring from NaaS alone.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>Current NaaS providers:</strong> Kiln, P2P.org, Blockdaemon, IntellectEU, Figment — 36 approved providers in the list.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #E24B4A">
-    <div class="opp-head">
-      <div><span class="rank-pill">6</span><span class="opp-title">App subscription fees (charge your users CC)</span><br><span class="badge b-red">Your product pricing</span></div>
-      <div class="opp-earn" style="color:#E24B4A">Unlimited — your pricing<br><span style="font-size:10px;color:var(--color-text-tertiary)">denominated in CC or USD</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:75%;background:#E24B4A"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>High — you decide your pricing</span></div>
-    <div class="row"><div class="dot dr"></div><div>Any Canton app can charge users for access, usage, or subscription in Canton Coin. The Canton Name Service charges for name registration. Cantara is built specifically to handle subscription billing on Canton.</div></div>
-    <div class="row"><div class="dot dr"></div><div><strong>For Ginie:</strong> Charge enterprise users a subscription fee in CC for API access above a free tier. 100 enterprise users × 50 CC/month = 5,000 CC = $750/month recurring subscription revenue.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>For CompliDaml:</strong> Pro tier audit reports, GDPR/HIPAA/MiFID II policy packs, AI server access — all payable in CC. Every paid audit also generates a Featured App activity marker if CompliDaml gets Featured status.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">7</span><span class="opp-title">RWA tokenisation as a service</span><br><span class="badge b-gray">Institutional service</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">% of AUM + transaction fees<br><span style="font-size:10px;color:var(--color-text-tertiary)">massive ticket sizes</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:35%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Lower — requires regulatory relationships</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Tokenise real-world assets (bonds, equity, real estate, funds) on Canton and charge issuers a setup fee plus ongoing AUM management fee. Every transfer of the tokenised asset generates Canton transactions — which generate Featured App rewards if you are the app provider.</div></div>
-    <div class="row"><div class="dot dgr"></div><div><strong>Who is doing it:</strong> Black Manta (tokenisation as a service), HydraX (MAS-licensed, $100M+ tokenised on Canton), Excellar, Archax.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>The Ginie angle:</strong> Ginie generates the contracts that power tokenisation dApps. Every contract Ginie generates for an RWA issuer is a Ginie transaction = Ginie activity marker = Ginie Featured App reward.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">8</span><span class="opp-title">Data &amp; analytics services</span><br><span class="badge b-gray">B2B SaaS on Canton</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">Subscription SaaS revenue<br><span style="font-size:10px;color:var(--color-text-tertiary)">+ Featured App rewards</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:55%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — technical but no regulatory requirements</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Analytics and data apps earn subscription revenue from clients (validators, institutions) AND generate their own Featured App rewards if their queries create Canton transactions. Coin Metrics, The Tie, Flipside Crypto, Node Fortress are all doing this.</div></div>
-    <div class="row"><div class="dot dgr"></div><div>For Ginie: A "Ginie Analytics" dashboard showing contract deployment stats, audit pass rates, university adoption — charged as a SaaS product in CC.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">9</span><span class="opp-title">Developer tooling &amp; consulting</span><br><span class="badge b-gray">Professional services</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">Project-based fees<br><span style="font-size:10px;color:var(--color-text-tertiary)">$150–500/hour for Daml experts</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:60%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>High if you have Daml expertise</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Daml developers are extremely scarce globally. As Ginie and CompliDaml build ecosystem credibility, institutional clients will pay for smart contract development, audit consulting, CI/CD integration setup, and compliance advisory.</div></div>
-    <div class="row"><div class="dot dgr"></div><div><strong>Who does this:</strong> IntellectEU, PixelPlex, Chain Experts, 4MGroup — all charging institutional rates for Daml development on Canton.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Your positioning:</strong> CompliDaml makes you the compliance authority for Daml contracts. Institutional clients building GDPR/MiFID II-relevant contracts will pay to have you review and audit their contracts.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">10</span><span class="opp-title">Security &amp; audit services</span><br><span class="badge b-gray">Specialised services</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">Per-audit fees + subscription<br><span style="font-size:10px;color:var(--color-text-tertiary)">+ Featured App rewards</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:55%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — CompliDaml already does this</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Security scanning, smart contract audits, and compliance verification on Canton — charged to builders and institutions. AKASCAN is a Featured App doing exactly this. Every audit creates a Canton transaction = activity marker = Featured App reward.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>CompliDaml IS this opportunity.</strong> CompliDaml is the compliance audit service for Canton. The M3 milestone adds on-ledger audit attestation records — turning every audit into a Canton transaction that earns Featured App rewards.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">11</span><span class="opp-title">CC price appreciation (treasury strategy)</span><br><span class="badge b-gray">Investment / treasury</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">Unrealised gains on CC held<br><span style="font-size:10px;color:var(--color-text-tertiary)">CC up 111% in 90 days to Mar 2026</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:45%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Medium — buy CC, hold, benefit from network growth</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Canton Strategic Holdings (formerly Tharimmune, NASDAQ: CNTN) raised $545M specifically to hold CC as a treasury asset. CC surged 111.93% in 90 days to March 2026. As DTCC and JPMorgan volumes land in 2026, CC price appreciation is a separate revenue stream on top of protocol rewards.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>The play:</strong> Protocol rewards are denominated in CC. If you earn 75,000 CC/month in liveness rewards and CC doubles in price, your rewards are worth double in USD — without doing anything extra.</div></div>
-  </div>
-
-  <div class="opp" style="border-left:3px solid #888780">
-    <div class="opp-head">
-      <div><span class="rank-pill">12</span><span class="opp-title">Super Validator operation</span><br><span class="badge b-gray">Highest tier — institutional only</span></div>
-      <div class="opp-earn" style="color:#5F5E5A">~20% of total CC pool<br><span style="font-size:10px;color:var(--color-text-tertiary)">split across 13 SVs</span></div>
-    </div>
-    <div class="acc-bar"><div class="acc-fill" style="width:15%;background:#888780"></div></div>
-    <div class="acc-lbl"><span>Accessibility</span><span>Very low — requires massive infrastructure + institutional standing</span></div>
-    <div class="row"><div class="dot dgr"></div><div>Super Validators run the Global Synchronizer itself. 13 SVs currently: Goldman Sachs DAP, Tradeweb, Digital Asset, Cumberland, DTCC, etc. Each gets an equal share of the ~20% SV reward pool. Monthly: 20% of ~830M CC ÷ 13 SVs = ~12.8M CC/SV = ~$1.9M/month per SV at $0.15.</div></div>
-    <div class="row"><div class="dot da"></div><div>Canton Strategic Holdings just became the first publicly traded company to become a Super Validator. Not realistic for you right now — but noted for completeness.</div></div>
-  </div>
-</div>
-
-<div id="protocol" class="panel">
-  <div class="lbl">Revenue streams from the Canton protocol itself — no customers needed</div>
-
-  <div class="ok">These three streams require only that you run a validator node. No users, no product, no sales. Just infrastructure.</div>
-
-  <table>
-    <tr><th>Stream</th><th>Mechanism</th><th>Monthly estimate</th><th>What you need</th></tr>
-    <tr><td><strong>Liveness rewards</strong></td><td>Node online every 10 min → coupon minted → auto-redeemed</td><td class="win">~$11,250</td><td>Running validator on MainNet</td></tr>
-    <tr><td><strong>Transaction rebates</strong></td><td>20% of every traffic fee you pay returns automatically</td><td class="win">Varies with activity</td><td>Running validator + transactions</td></tr>
-    <tr><td><strong>Featured App rewards</strong></td><td>Activity markers × share of 516M CC pool</td><td class="win">Up to $193,500</td><td>Validator + Featured App approval</td></tr>
-  </table>
-
-  <div class="lbl">How liveness rewards work every 10 minutes</div>
-  <div class="opp">
-    <div class="row"><div class="dot dg"></div><div><strong>Round opens</strong> — every 10 minutes a new minting round starts</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Coupons distributed</strong> — your validator receives a reward coupon based on liveness and activity during the round</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Auto-minted next round</strong> — your node's automation redeems the coupon in the following round, minting CC into your wallet</div></div>
-    <div class="row"><div class="dot dr"></div><div><strong>Critical:</strong> If you miss a round (node offline), the coupon expires and is lost permanently. Uptime = money. Downtime = permanent loss.</div></div>
-  </div>
-
-  <div class="lbl">The 170% return on fees — official Canton math</div>
-  <div class="opp">
-    <div class="row"><div class="dot da"></div><div>You pay $1.00 in traffic fees for a transaction</div></div>
-    <div class="row"><div class="dot da"></div><div>You get $0.20 back immediately as a rebate (20% of fees)</div></div>
-    <div class="row"><div class="dot da"></div><div>Your Featured App activity marker earns up to $1.50 in minting rights from the 62% pool</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Total return: $0.20 + $1.50 = $1.70 earned on $1.00 spent = 170% return on fees paid</strong></div></div>
-    <div class="row"><div class="dot dgr"></div><div>This requires: (a) you pay the traffic fee yourself rather than passing to user, and (b) the $1.50/txn cap is reached — which it is at current network size and CC price</div></div>
-  </div>
-</div>
-
-<div id="build" class="panel">
-  <div class="lbl">Revenue from building products on Canton</div>
-
-  <div class="opp">
-    <div class="opp-head">
-      <div><span class="opp-title">Tokenised asset issuance</span><br><span class="badge b-teal">$36B+ RWA market on Canton</span></div>
-      <div class="opp-earn" style="color:#1D9E75">% of AUM + transfer fees</div>
-    </div>
-    <div class="row"><div class="dot dt"></div><div>Tokenise bonds, equity, real estate, money market funds on Canton. Charge issuers setup + AUM management fee (typically 0.10–0.50% AUM). Every transfer of the tokenised asset earns you Featured App rewards if you are the issuer app.</div></div>
-    <div class="row"><div class="dot dt"></div><div><strong>Example:</strong> Hashnote USYC has $300M+ AUM. At 0.20% annual management fee = $600K/year just in management fee. Plus 100M–500M CC/month in Featured App rewards. This is the biggest single revenue opportunity on Canton for institutional builders.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>What you need:</strong> Daml contracts (Ginie generates these), regulatory relationships, custody arrangement. The technical barrier is low — Ginie solves it. The regulatory barrier is the real challenge.</div></div>
-  </div>
-
-  <div class="opp">
-    <div class="opp-head">
-      <div><span class="opp-title">DeFi protocols on Canton (lending, DEX, derivatives)</span><br><span class="badge b-purple">Institutional DeFi</span></div>
-      <div class="opp-earn" style="color:#7F77DD">Protocol fees + Featured App rewards</div>
-    </div>
-    <div class="row"><div class="dot dp"></div><div>Build lending protocols (like ACME), DEXes (like Cantex and CantonSwap), or derivatives platforms on Canton. Charge users a protocol fee (0.10–0.30% per trade/loan). Every user interaction is a Canton transaction = Featured App reward on top of the protocol fee.</div></div>
-    <div class="row"><div class="dot dp"></div><div><strong>Scale:</strong> $1B in monthly DEX volume at 0.30% fee = $3M/month in protocol revenue. Plus Featured App rewards on every swap transaction. Canton's institutional user base means ticket sizes are much larger than retail DeFi.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>The Ginie angle:</strong> Ginie generates the Daml contracts for these protocols. Every DeFi protocol built using Ginie is a Ginie transaction. Ginie earns Featured App rewards for generating the contract that powers a DeFi protocol that itself earns Featured App rewards.</div></div>
-  </div>
-
-  <div class="opp">
-    <div class="opp-head">
-      <div><span class="opp-title">Wallet and custody services</span><br><span class="badge b-blue">Infrastructure product</span></div>
-      <div class="opp-earn" style="color:#378ADD">Pre-approval deposits + Featured App</div>
-    </div>
-    <div class="row"><div class="dot db"></div><div>Build a Canton-native wallet (like 5N Loop Wallet). Every CC transfer through your wallet generates a Featured App activity marker for you — even though you did not initiate the transfer. You earn rewards for being the wallet infrastructure that makes the transaction possible.</div></div>
-    <div class="row"><div class="dot db"></div><div>Additionally, when users set up pre-approved transfer contracts through your wallet, you earn reward coupons every time those pre-approvals are used. This is a passive income stream that grows with your user base.</div></div>
-  </div>
-
-  <div class="opp">
-    <div class="opp-head">
-      <div><span class="opp-title">Subscription billing platform</span><br><span class="badge b-teal">B2B infrastructure</span></div>
-      <div class="opp-earn" style="color:#1D9E75">% of transactions processed</div>
-    </div>
-    <div class="row"><div class="dot dt"></div><div>Cantara has built a subscription billing platform on Canton — charge for services in CC, manage recurring billing, role-based permissions. Canton has no native subscription billing infrastructure so this gap is a real opportunity.</div></div>
-    <div class="row"><div class="dot dt"></div><div>Every subscription payment processed through your billing platform is a Canton transaction. If you are a Featured App, every subscription collection earns you activity marker rewards.</div></div>
-  </div>
-</div>
-
-<div id="service" class="panel">
-  <div class="lbl">Revenue from Canton ecosystem services — charge other participants</div>
-
-  <table>
-    <tr><th>Service</th><th>Who pays you</th><th>Revenue model</th><th>Example doing it</th></tr>
-    <tr><td>NaaS — run nodes for clients</td><td>Institutions wanting Canton access</td><td>10–20% of client CC rewards + setup fee</td><td>Kiln, P2P.org, Blockdaemon</td></tr>
-    <tr><td>Daml smart contract development</td><td>Institutions building on Canton</td><td>$150–500/hour project rate</td><td>IntellectEU, PixelPlex</td></tr>
-    <tr><td>Compliance audit (CompliDaml)</td><td>Canton builders, institutions</td><td>Per-audit fee + SaaS subscription</td><td>You — CompliDaml</td></tr>
-    <tr><td>Security scanning (like AKASCAN)</td><td>Canton builders</td><td>Per-scan fee + annual subscription</td><td>AKASCAN</td></tr>
-    <tr><td>Analytics and data (like The Tie)</td><td>Validators, institutions, researchers</td><td>SaaS subscription tiers</td><td>Coin Metrics, The Tie, Flipside</td></tr>
-    <tr><td>Tax and accounting (Chainbridge)</td><td>Canton validators and SVs</td><td>Advisory fee + software subscription</td><td>Chainbridge, Bitwave</td></tr>
-    <tr><td>AI contract generation (Ginie)</td><td>Developers, universities, institutions</td><td>API access tiers + enterprise subscriptions</td><td>You — Ginie</td></tr>
-    <tr><td>Oracle / data feeds (Redstone)</td><td>DeFi protocols needing price data</td><td>Per-feed subscription to protocols</td><td>Redstone Finance</td></tr>
-    <tr><td>Interoperability services</td><td>Apps needing cross-chain access</td><td>Per-transaction fee</td><td>Chainlink, LayerZero, Wormhole</td></tr>
-    <tr><td>Identity verification (7Trust)</td><td>Validators needing credentialing</td><td>Per-verification + annual subscription</td><td>7Trust (C7 Digital)</td></tr>
-  </table>
-
-  <div class="info">Every service above that creates a Canton transaction can also earn Featured App rewards on top of the service fee. The service fee is your business revenue. The Featured App rewards are your protocol revenue on top.</div>
-</div>
-
-<div id="grants" class="panel">
-  <div class="lbl">Canton Dev Fund — official grant programme</div>
-
-  <div class="opp">
-    <div class="row"><div class="dot dp"></div><div><strong>Source:</strong> 5% of all future CC emissions programmatically allocated by Super Validator vote. Not a treasury or pre-mine — it grows with the network permanently.</div></div>
-    <div class="row"><div class="dot dp"></div><div><strong>Who qualifies:</strong> Builders creating open-source public goods for the Canton ecosystem. Developer tooling, compliance infrastructure, analytics, education, documentation, interoperability — all qualify.</div></div>
-    <div class="row"><div class="dot dp"></div><div><strong>Structure:</strong> Milestone-gated payments in CC. No upfront payment. Committee verifies each milestone before releasing funds.</div></div>
-    <div class="row"><div class="dot dp"></div><div><strong>No fixed cap:</strong> Funding amounts vary by scope and impact. There is no fixed maximum per proposal.</div></div>
-    <div class="row"><div class="dot dg"></div><div><strong>Apply at:</strong> canton.foundation/grants-program — proposals reviewed by the Tech and Ops Committee quarterly.</div></div>
-  </div>
-
-  <div class="lbl">Grant opportunities you have not yet filed</div>
-  <div class="opp">
-    <div class="row"><div class="dot da"></div><div><strong>GinieNet public testnet infrastructure</strong> — running a free public Canton-compatible testnet for the community is a public good. Could qualify for a separate infrastructure grant to fund server costs permanently.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>Daml education curriculum</strong> — the 50-university tour from Ginie M3 creates open-sourced Canton teaching materials. The curriculum itself could be a standalone grant proposal for documentation and education public goods.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>Ginie-1 open weights SLM</strong> — publishing an Apache 2.0 fine-tuned SLM exclusively trained on Daml is one of the most impactful open-source contributions possible to the Canton ecosystem. Strong case for a separate Dev Fund grant to fund the training compute.</div></div>
-    <div class="row"><div class="dot da"></div><div><strong>CompliDaml v2 — on-ledger audit records</strong> — once CompliDaml M3 is complete, a follow-on grant for the on-ledger audit attestation layer (the piece that makes CompliDaml a Featured App) could be filed as a new proposal.</div></div>
-  </div>
-</div>
-
-<div id="yours" class="panel">
-  <div class="lbl">Your current and potential Canton revenue — all streams combined</div>
-
-  <div class="ok"><strong>You are uniquely positioned to access more Canton revenue streams simultaneously than almost any other participant.</strong> Most validators earn only stream 1. Most apps earn streams 1+2+3. You have the structure to access streams 1+2+3+4+5+6+9+10 in parallel.</div>
-
-  <table>
-    <tr><th>Stream</th><th>Status</th><th>Timeline</th><th>Monthly potential</th></tr>
-    <tr><td>Validator liveness (Ginie validator)</td><td class="win">Ready to start</td><td>Month 2 (MainNet live)</td><td class="win">~$11,250</td></tr>
-    <tr><td>Transaction rebates</td><td class="win">Automatic</td><td>Month 2</td><td>~$1,500 at 5k deploys</td></tr>
-    <tr><td>Dev Fund grant — Ginie</td><td class="win">Active ($200k)</td><td>Apr–Sep 2026</td><td>~$33k avg/month</td></tr>
-    <tr><td>Dev Fund grant — CompliDaml</td><td class="win">Active ($72k)</td><td>Apr–Aug 2026</td><td>~$18k avg/month</td></tr>
-    <tr><td>Featured App — Ginie</td><td style="color:#EF9F27">Apply at M1 delivery</td><td>Month 3</td><td>$9,675–$193,500</td></tr>
-    <tr><td>Featured App — CompliDaml</td><td style="color:#EF9F27">Apply at M3 delivery</td><td>Month 5</td><td>Grows with audits done</td></tr>
-    <tr><td>CompliDaml audit subscriptions</td><td style="color:#378ADD">Buildable now</td><td>Month 6</td><td>$100–500/audit × volume</td></tr>
-    <tr><td>Daml consulting (CompliDaml credibility)</td><td style="color:#378ADD">Buildable now</td><td>Ongoing</td><td>$5k–50k per project</td></tr>
-    <tr><td>NaaS (after 15 days proven uptime)</td><td style="color:#888780">Future — month 4+</td><td>Month 4</td><td>$1,688/client at 15% cut</td></tr>
-    <tr><td>Ginie API subscriptions</td><td style="color:#888780">Future — post M2</td><td>Month 4</td><td>Enterprise pricing in CC</td></tr>
-    <tr><td>CC price appreciation on earned rewards</td><td class="win">Passive</td><td>Ongoing</td><td>Multiplies all above</td></div></td></tr>
-    <tr style="background:var(--color-background-secondary)"><td><strong>Conservative 12-month total</strong></td><td></td><td></td><td><strong class="win">~$500k–$800k</strong></td></tr>
-  </table>
-
-  <div class="warn"><strong>The most important insight:</strong> Every stream reinforces the others. Ginie generates contracts → those contracts generate Canton transactions → those transactions generate Featured App rewards → those rewards grow as more Ginie contracts are deployed → more Ginie contracts means more CompliDaml audits → CompliDaml audits create on-ledger records → on-ledger records generate CompliDaml Featured App rewards. This is not a linear revenue model. It is a compounding flywheel where each stream feeds the next.</div>
-</div>
+<footer class="site-footer">
+  <div class="footer-note">All ideas are positioned as non-overlapping with existing PRs #3–#9 on canton-foundation/canton-dev-fund. Every ask is calibrated to Jatin's $50–72k sweet spot for lower-risk proposals, with the exception of high-complexity finance and infrastructure items.</div>
+  <div>Research sources: Official DevRel Survey Feb 2026 · canton-dev-fund GitHub · forum.canton.network · cantonecosystem.com</div>
+</footer>
 
 <script>
-function show(id,el){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  el.classList.add('active');
+const CAT_COLORS = {
+  devtools: { bg:'rgba(167,139,250,.15)', border:'rgba(167,139,250,.3)', text:'#a78bfa', num:'#7c3aed', label:'Dev Tools' },
+  infra:    { bg:'rgba(45,212,191,.12)', border:'rgba(45,212,191,.25)', text:'#2dd4bf', num:'#0d9488', label:'Infrastructure' },
+  finance:  { bg:'rgba(245,200,66,.12)', border:'rgba(245,200,66,.25)', text:'#f5c842', num:'#d97706', label:'Finance' },
+  education:{ bg:'rgba(251,113,133,.12)', border:'rgba(251,113,133,.25)', text:'#fb7185', num:'#be123c', label:'Education' },
+  governance:{ bg:'rgba(255,107,53,.12)', border:'rgba(255,107,53,.25)', text:'#ff6b35', num:'#c2410c', label:'Governance' },
+  ai:       { bg:'rgba(96,165,250,.12)', border:'rgba(96,165,250,.25)', text:'#60a5fa', num:'#1d4ed8', label:'AI' }
+};
+
+const ideas = [
+  {
+    id:1, cat:'devtools', name:'CantonForge — Unified CLI Framework',
+    tagline:'The Hardhat/Anchor of Canton. One command scaffolds, tests, deploys, and upgrades.',
+    ask:'$68,000', weeks:'16 weeks',
+    source:'#1 Critical gap in official DevRel survey — Hardhat/Anchor mentioned 11+ times by 41 developers. 41% cited setup as longest task.',
+    why:'41% of developers in the official Feb 2026 survey said environment setup took the longest to get right. The survey named Hardhat and Anchor 11+ times as the equivalent Canton is missing. Zero unified CLI exists — every developer cobbles together custom shell scripts. This is the single most cited, highest-priority gap in the entire official developer survey. An RFP is expected from the DevRel team.',
+    what:'A single CLI: canton init, canton build, canton test, canton deploy, canton sandbox, canton upgrade. Handles scaffolding new projects, orchestrating local node environments, running test suites, generating typed clients from .dar files, and deploying to DevNet/TestNet/MainNet. Plugin architecture for community extensions. Includes a canton upgrade wizard for network version bumps.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$20,000', desc:'canton init (project scaffolding with 10 templates), canton build (DAR compilation), canton sandbox (LocalNet orchestration with auto-funded test wallets). 50+ documented commands.' },
+      { label:'M2 — Week 11', amount:'$28,000', desc:'canton test (automated test runner with coverage), canton deploy (DevNet/MainNet with smart gas estimation), canton upgrade (network version manager). TypeScript typed client generation from .dar.' },
+      { label:'M3 — Week 16', amount:'$20,000', desc:'canton publish (PyPI/npm), plugin architecture, video series (10 episodes), Canton DevRel co-marketing, community plugin registry.' }
+    ],
+    budget:[['CLI core + plugin architecture','$26,000'],['DAR parsing + typed client generation','$18,000'],['Testing framework integration','$10,000'],['Documentation + video series','$8,000'],['Buffer + infrastructure','$6,000']]
+  },
+  {
+    id:2, cat:'devtools', name:'CantonTrace — Visual Transaction Debugger',
+    tagline:'Tenderly for Canton. Visualise any transaction tree, decode failures, simulate outcomes.',
+    ask:'$55,000', weeks:'14 weeks',
+    source:'Tenderly named explicitly multiple times in the official DevRel survey as the missing standard tool for Canton.',
+    why:'Developers are parsing cryptic Docker log files to understand why transactions fail. The official survey explicitly named Tenderly as what Canton is missing — visual transaction simulation, failure decoding, party visibility overlay. No equivalent exists. This is the highest-frustration gap after environment setup.',
+    what:'A web dashboard: input any Canton transaction ID, see the full execution tree visually (colour-coded by success/failure), which parties observed which sub-transactions, exactly where a failure occurred and why in plain English. Simulation mode: replay any transaction with modified inputs to predict outcomes before submitting. Integrates with the Scan API.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$18,000', desc:'Transaction tree visualiser — input TX ID, see full execution graph with party visibility overlay. Colour-coded success/failure branches. Powered by Scan API.' },
+      { label:'M2 — Week 10', amount:'$22,000', desc:'Failure decoder with human-readable Canton error explanations and fix suggestions. Simulation mode — replay transactions with modified payloads without spending CC.' },
+      { label:'M3 — Week 14', amount:'$15,000', desc:'Public hosted instance at cantontrace.dev, VS Code extension, CI/CD integration (visual TX diff on PR), open-source repo.' }
+    ],
+    budget:[['Transaction parsing + tree rendering','$22,000'],['Simulation engine','$16,000'],['UI + VS Code extension','$10,000'],['Hosting + CI integration','$7,000']]
+  },
+  {
+    id:3, cat:'devtools', name:'DamlPack — Package Manager for Daml',
+    tagline:'npm/cargo for Daml. Discover, install, and version-manage .dar dependencies in one command.',
+    ask:'$52,000', weeks:'14 weeks',
+    source:'Official DevRel survey: Daml Dependency & Package Manager listed as high-priority missing tool. Manual .dar file management named as major pain point.',
+    why:'Developers manually download .dar files, move them between folders, and resolve version mismatches by hand. There is no discovery layer — you cannot search for existing Daml packages. Every Canton team reinvents the wheel on common contract patterns. The survey listed this explicitly in the high-priority gap list alongside Hardhat.',
+    what:'CLI + registry: damlpack install splice-amulet@0.5.10, damlpack search kyc, damlpack publish. Hosts a public registry of community .dar packages with version history, dependency resolution (like package.json), and changelog tracking. Auto-integrates with daml.yaml. Web UI at damlpack.dev for browsing.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$18,000', desc:'CLI — damlpack install, update, list, search, remove. Local resolution from daml.yaml. Version conflict detection and resolution.' },
+      { label:'M2 — Week 10', amount:'$20,000', desc:'Public registry (damlpack.dev) with 50+ indexed packages. Web UI for search and browsing. Automated version compatibility checks against Daml SDK versions.' },
+      { label:'M3 — Week 14', amount:'$14,000', desc:'damlpack publish workflow, CI badge integration, migration guide for existing Canton projects, DevRel-endorsed starter packages.' }
+    ],
+    budget:[['CLI core + resolution engine','$20,000'],['Registry backend + web UI','$18,000'],['Package indexing + compatibility','$8,000'],['Documentation + onboarding','$6,000']]
+  },
+  {
+    id:4, cat:'devtools', name:'Canton Sandbox Pro — One-Click Local Dev Environment',
+    tagline:'Like Ganache for Canton. Full local stack in 30 seconds. Browser IDE included.',
+    ask:'$48,000', weeks:'12 weeks',
+    source:'Official DevRel survey: Browser-based IDE (like Remix) and local framework both rated Critical. 41% cited environment setup as the longest task in their Canton journey.',
+    why:'New developers spend days configuring Docker and multi-node Canton architectures before writing a single Daml line. There is no Ganache equivalent — a simple, pre-configured local Canton ledger with visual UI. The survey asked for a Remix-like browser IDE. The Canton IDE was just released (March 2026) but has no integrated sandbox environment.',
+    what:'A Docker image (docker run canton/sandbox) giving: local Canton ledger, pre-funded test wallets, visual contract explorer at localhost:3000, REST API endpoint, auto-generated test parties, and a browser-accessible Daml IDE for writing and deploying contracts without local SDK installation. VS Code extension version also included.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$16,000', desc:'Docker image — single command local Canton stack. Pre-funded test wallets with 10,000 test CC. Visual contract explorer with ACS browser.' },
+      { label:'M2 — Week 9', amount:'$20,000', desc:'Browser IDE — write Daml, compile, deploy to sandbox without local SDK. Syntax highlighting, error annotations, live contract output. No account required.' },
+      { label:'M3 — Week 12', amount:'$12,000', desc:'VS Code extension, TypeScript playground integration, one-click export to DevNet, tutorial integration for Canton Campus (Idea #11).' }
+    ],
+    budget:[['Docker image + local node setup','$18,000'],['Browser IDE build','$16,000'],['VS Code extension','$8,000'],['Testing + polish','$6,000']]
+  },
+  {
+    id:5, cat:'infra', name:'Canton Data Indexer — The Graph for Canton',
+    tagline:'Query Canton ledger state with GraphQL. Stop hand-writing ACS parsers.',
+    ask:'$72,000', weeks:'18 weeks',
+    source:'Official DevRel survey: Data Indexing & APIs — 51% rated Important. Developers engineer custom caching layers just to query on-ledger state. The Graph transformed Ethereum — Canton needs the same.',
+    why:'Building useful frontends on Canton requires engineering custom discovery mechanisms and caching layers to query ledger state. The Scan API provides raw event streams — not queryable, not paginated, not filterable. The Graph protocol eliminated this problem for Ethereum and became foundational infrastructure. Canton has no equivalent.',
+    what:'A hosted indexer: define a schema (which templates you care about in YAML), instantly get a GraphQL endpoint with filtering, pagination, and subscription events. Includes a public hosted instance for Daml Finance templates (Account, Holding, Settlement, Lifecycle), a self-hosting Docker image, and a JavaScript SDK (canton-indexer-js).',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$22,000', desc:'Core indexer — subscribes to Scan API, parses ACS in real time, stores in PostgreSQL. Schema definition format. Basic REST API with filtering.' },
+      { label:'M2 — Week 12', amount:'$30,000', desc:'GraphQL layer with subscriptions, pagination, and complex filtering. Self-hosting Docker image. Pre-built schemas for all Daml Finance core templates.' },
+      { label:'M3 — Week 18', amount:'$20,000', desc:'Public hosted instance, schema registry for community templates, canton-indexer-js JavaScript SDK, documentation site with interactive explorer.' }
+    ],
+    budget:[['Indexer core + ACS parsing','$28,000'],['GraphQL layer + subscriptions','$20,000'],['JavaScript SDK','$10,000'],['Hosting + docs','$14,000']]
+  },
+  {
+    id:6, cat:'infra', name:'CantonWatch — Validator Node Operations Dashboard',
+    tagline:'One-click visibility into your validator. Sequencer handshakes, reward flow, alerts.',
+    ask:'$45,000', weeks:'12 weeks',
+    source:'Official DevRel survey: Observability had the HIGHEST "Important" score of any category. Developers want one-click visual dashboards without complex terminal commands.',
+    why:'Validators run complex multi-container deployments with no visual health layer. Operators must parse Docker logs and run curl commands to verify Sequencer/Mediator connections are healthy. The survey ranked observability infrastructure as the most broadly agreed-upon gap — above even local frameworks.',
+    what:'A lightweight sidecar Docker service alongside any validator node. Shows: live sequencer connectivity to all 13 SVs (green/red/yellow), CC balance trend with hourly chart, liveness rewards earned vs missed per round, disk/memory/CPU status, container health. Telegram + Slack alert integration. One docker compose service added to existing setup.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$16,000', desc:'Core dashboard — sequencer connectivity to all SVs, container health, CC balance. Runs as sidecar. Accessible at localhost:9000.' },
+      { label:'M2 — Week 9', amount:'$18,000', desc:'Liveness reward tracking (earned vs missed per round), CC balance trend chart, disk/memory alerting, historical data retention (30 days).' },
+      { label:'M3 — Week 12', amount:'$11,000', desc:'Telegram/Slack/email alerts, public Grafana template, one-liner Docker Compose deployment, documentation and video walkthrough.' }
+    ],
+    budget:[['Dashboard core + Scan API integration','$18,000'],['Reward tracking + charting','$14,000'],['Alert system + Grafana','$8,000'],['Documentation + hosting','$5,000']]
+  },
+  {
+    id:7, cat:'devtools', name:'Canton TypeScript SDK — Typed Frontend Client Generator',
+    tagline:'Generate fully typed TypeScript from any .dar file. No more hardcoded Package IDs.',
+    ask:'$58,000', weeks:'14 weeks',
+    source:'Official DevRel survey: Typed Client SDK & Code Generator — developers spend days manually extracting hash strings and hardcoding Package IDs into frontends. 71% of Canton devs come from EVM background.',
+    why:'Frontend integration with Canton is described as "opaque" by developers — manually extracting Package IDs from .dar files, hardcoding hashes, building custom discovery mechanisms. There is no web3.js equivalent for Canton. 71% of devs come from Ethereum/EVM and expect a JavaScript SDK that mirrors the contract interface exactly.',
+    what:'A code generator: canton-ts generate src/contracts/*.dar outputs a fully typed TypeScript SDK with method signatures for every choice, typed return values, JWT authentication middleware pre-built, and React hooks (useCantonContract, useCantonQuery). One import replaces hours of manual integration work.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$20,000', desc:'.dar → TypeScript interface generator. Typed choice methods, contract IDs, party types, event listeners. JWT auth middleware auto-generated.' },
+      { label:'M2 — Week 10', amount:'$22,000', desc:'React hooks library, wallet connection helper, automatic Package ID resolution (no hardcoding), multi-contract support.' },
+      { label:'M3 — Week 14', amount:'$16,000', desc:'NPM package (canton-ts), documentation site, migration guide from raw JSON API, example React app with full Canton integration.' }
+    ],
+    budget:[['DAR parser + TS code generator','$22,000'],['React hooks library','$16,000'],['JWT middleware + wallet connect','$10,000'],['NPM package + docs','$10,000']]
+  },
+  {
+    id:8, cat:'devtools', name:'Canton Cost Profiler — Pre-Flight Transaction Simulator',
+    tagline:'Know your traffic fees before submitting. Simulate any transaction without spending CC.',
+    ask:'$38,000', weeks:'10 weeks',
+    source:'Official DevRel survey: Pre-Flight Resource & Cost Profiler listed as missing tool. Developers "deploy blindly" and discover byte-size limits only after costly failures.',
+    why:'Developers submit transactions to TestNet without knowing if they will exceed byte-size limits or cost more CC than expected. The survey called this "deploying blindly" — failures are discovered post-submission, wasting CC and developer time. For institutional clients, cost predictability is a compliance requirement before production deployment.',
+    what:'CLI + browser UI: canton simulate <contract> <choice> <args> runs the transaction locally against a Canton sandbox, returns expected traffic fee in CC + USD at current price, flags byte-size violations, shows which parties would be notified. Integrates with CantonForge as a native plugin.',
+    milestones:[
+      { label:'M1 — Week 4', amount:'$14,000', desc:'CLI simulation against local sandbox. Returns fee estimate in CC and USD. Byte-size limit violation detection with specific line-number errors.' },
+      { label:'M2 — Week 7', amount:'$14,000', desc:'Party notification preview (who sees what in the transaction). Batch simulation for sequences of transactions. Cost comparison across contract versions.' },
+      { label:'M3 — Week 10', amount:'$10,000', desc:'Web UI version, CI/CD integration (fail build if cost exceeds threshold), CantonForge plugin integration.' }
+    ],
+    budget:[['Simulation engine','$16,000'],['Fee calculation + party preview','$12,000'],['Web UI + CI integration','$7,000'],['CantonForge plugin + docs','$3,000']]
+  },
+  {
+    id:9, cat:'infra', name:'Canton Public Faucet — Testnet CC Distribution API',
+    tagline:'Request DevNet and TestNet CC via API call. Essential for mass developer onboarding.',
+    ask:'$28,000', weeks:'8 weeks',
+    source:'New developers repeatedly ask for test CC in the Canton forum. Hackathons and university tours require automated CC distribution at scale.',
+    why:'Every new Canton developer needs CC to transact on DevNet. Currently there is no documented, reliable, rate-limited faucet. Developers ask in Discord or forum. For mass onboarding via Ginie workshops (50+ universities), a hackathon (100+ builders), or any developer programme, an automated faucet is essential baseline infrastructure.',
+    what:'REST API + web UI (faucet.canton.dev): POST your PartyID, receive 1,000 test CC immediately. Rate-limited per PartyID (1 request/day). DevNet and TestNet supported. Discord bot responding to !faucet commands. GitHub Actions integration for CI pipelines that auto-fund test wallets.',
+    milestones:[
+      { label:'M1 — Week 4', amount:'$12,000', desc:'REST API + web UI. Rate limiting per PartyID (1 req/day). DevNet CC distribution. Usage monitoring dashboard.' },
+      { label:'M2 — Week 8', amount:'$16,000', desc:'TestNet support, Discord bot, GitHub Actions integration, documentation, DevRel endorsement and inclusion in official onboarding docs.' }
+    ],
+    budget:[['API + rate limiting backend','$12,000'],['Web UI + Discord bot','$8,000'],['TestNet support + GitHub Actions','$5,000'],['Hosting + monitoring','$3,000']]
+  },
+  {
+    id:10, cat:'education', name:'Canton Docs Hub — Unified Developer Knowledge Base',
+    tagline:'One site. All Canton docs. Daml + Canton protocol + Splice + tutorials unified.',
+    ask:'$42,000', weeks:'12 weeks',
+    source:'Official DevRel survey: Fragmented Documentation listed as major friction. Developers synthesise across 4 separate sites. Unified hub listed as high-impact wishlist item.',
+    why:'Canton documentation is spread across 4 sites: docs.digitalasset.com, docs.dev.sync.global, canton.foundation, and multiple GitHub repos. 80% of Canton developers joined in the last 12 months and cannot form a mental model of the full stack. The survey listed Unified Developer Knowledge Hub as a high-impact wishlist item.',
+    what:'A single documentation site (docs.canton.dev) that aggregates, cross-links, and organises all Canton knowledge: Daml language, Canton protocol, Splice/Quickstart, featured app integration, tokenomics for developers, validator operations, and community tutorials. Searchable across all sources. Versioned by SDK release.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$14,000', desc:'Site structure and content architecture. Import and reorganise existing docs from all 4 sources. Full-text search. SDK-version-based organisation.' },
+      { label:'M2 — Week 9', amount:'$18,000', desc:'25 new tutorials (LocalNet → MainNet, Token Standard, Featured App setup). Video walkthroughs for top 5 developer journeys. Interactive code examples.' },
+      { label:'M3 — Week 12', amount:'$10,000', desc:'Community contribution workflow, Discord bot that answers docs questions, monthly freshness audit system, Canton DevRel co-maintenance agreement.' }
+    ],
+    budget:[['Site build + search','$14,000'],['Content creation (25 tutorials)','$16,000'],['Video production','$6,000'],['Community tooling + maintenance','$6,000']]
+  },
+  {
+    id:11, cat:'education', name:'Canton Campus — Interactive Learning Platform',
+    tagline:'Learn Canton by deploying real contracts. Gamified missions earn on-chain credentials.',
+    ask:'$65,000', weeks:'16 weeks',
+    source:'Ginie needs a learning continuation path for 50+ university tours. 80% of Canton devs joined in the last 12 months — structured onboarding infrastructure is critical at scale.',
+    why:'AngelHack Canton Core Academy is limited and invite-only. Students who attend a Ginie university workshop have nowhere to continue learning after the session. Without a self-paced free learning path, one-time workshop attendees never become permanent Canton developers. A learning platform converts single-event attendees into long-term ecosystem contributors.',
+    what:'A browser-based interactive learning platform: missions unlock progressively (Deploy your first contract → Write a KYC workflow → Build a Featured App). Each mission runs against a real Canton sandbox in the browser. Completing missions earns verifiable on-chain credentials (Canton contracts). Includes a job board connecting certified developers with Canton employers.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$20,000', desc:'Platform MVP with 10 beginner missions. Browser sandbox (no local setup). Progress tracking. First 3 missions free without login.' },
+      { label:'M2 — Week 12', amount:'$28,000', desc:'Advanced track (25 total missions). On-chain credentials minted as Canton contracts. Leaderboard. API for Ginie workshop integration.' },
+      { label:'M3 — Week 16', amount:'$17,000', desc:'Job board (50+ Canton jobs indexed). Discord bot grants roles on mission completion. Canton Foundation co-marketing and featured app integration.' }
+    ],
+    budget:[['Platform + browser sandbox','$28,000'],['Mission content (25 missions)','$18,000'],['On-chain credentials system','$10,000'],['Job board + community features','$9,000']]
+  },
+  {
+    id:12, cat:'finance', name:'OpenKYC — Portable KYC Credential Framework',
+    tagline:'Get verified once on Canton, use anywhere. Privacy-preserving reusable KYC credentials.',
+    ask:'$78,000', weeks:'18 weeks',
+    source:'DTCC, JPMorgan Kinexys, Broadridge all building on Canton — every workflow requires KYC. Each app builds it independently. Massive duplication and inconsistency.',
+    why:'Every financial app on Canton implements KYC independently. DTCC, JPMorgan, and every new Canton dApp must verify counterparty identity separately. No shared, privacy-preserving KYC credential layer exists. This creates duplication and poor UX — institutions re-verify for every app. A reusable KYC framework is a genuine public good that benefits the entire ecosystem immediately.',
+    what:'A Daml framework for portable KYC credentials: get verified once, receive a Canton-native KYCCredential contract. Any other Canton app can verify that credential without seeing underlying PII (selective disclosure via Canton privacy model). Open-source, MIT licensed, composable by any Featured App. Pre-built integrations for 3 existing Canton applications.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$24,000', desc:'Core credential contracts — KYCCredential, VerificationRequest, DisclosureConsent. Selective disclosure logic. Sample verifier integration. 5 test institutions onboarded.' },
+      { label:'M2 — Week 12', amount:'$32,000', desc:'Credential registry app (Featured App candidate). REST API for off-chain system integration. Integration guide + PRs for 3 existing Canton apps.' },
+      { label:'M3 — Week 18', amount:'$22,000', desc:'Regulatory compliance mapping (GDPR Art.25, AML 5AMLD). Legal opinion on cross-jurisdiction recognition. Canton developer workshop and documentation.' }
+    ],
+    budget:[['Daml credential contracts','$24,000'],['Registry app + API','$22,000'],['3 app integrations','$16,000'],['Legal mapping + workshop','$16,000']]
+  },
+  {
+    id:13, cat:'finance', name:'Canton Invoice Finance Protocol',
+    tagline:'On-chain invoice financing. $500B market. Zero Canton presence. Perfect workflow fit.',
+    ask:'$85,000', weeks:'20 weeks',
+    source:'Canton hosts $6T in tokenised assets. Broadridge DLR shows repo is solved. Invoice financing ($500B global market) has identical multi-party privacy requirements and zero Canton implementation.',
+    why:'Invoice financing — where companies sell receivables to banks at a discount for immediate cash — is a $500B global market still dominated by paper and bilateral contracts. It is exactly the multi-party, privacy-requiring workflow Canton was designed for: the corporate, bank, debtor, and regulator all have different visibility requirements. No Canton app exists for this today.',
+    what:'A Daml smart contract framework: invoice creation and tokenisation, bank approval workflow with privacy-preserving credit assessment, automatic settlement on due date, secondary market transfer of invoice tokens between banks. Fully composable with USYC/Brale stablecoins for settlement. MIT licensed reference implementation.',
+    milestones:[
+      { label:'M1 — Week 7', amount:'$26,000', desc:'Invoice and financing contracts in Daml. Multi-party approval workflow. Integration with Canton stablecoin settlement (Brale/USYC).' },
+      { label:'M2 — Week 14', amount:'$36,000', desc:'Secondary market (invoice token transfer between banks). Regulatory disclosure framework. 3 pilot transactions on TestNet.' },
+      { label:'M3 — Week 20', amount:'$23,000', desc:'MainNet deployment. 1 institutional pilot partner. Legal and compliance documentation. Featured App application submitted.' }
+    ],
+    budget:[['Core Daml contracts','$30,000'],['Secondary market + disclosure','$28,000'],['Stablecoin settlement integration','$15,000'],['Legal + institutional pilot','$12,000']]
+  },
+  {
+    id:14, cat:'finance', name:'Parametric Insurance Protocol on Canton',
+    tagline:'Automated payouts when oracle conditions are met. Privacy-preserving policy management.',
+    ask:'$72,000', weeks:'16 weeks',
+    source:'InsureTech is a $7T market. Canton has Chainlink and Redstone oracle integrations. Parametric insurance is a perfect fit for Canton smart contracts and has zero existing Canton implementation.',
+    why:'Traditional insurance claims take weeks. Parametric insurance — payouts trigger automatically when verifiable oracle conditions are met (weather data, flight delays, crop yields) — eliminates claim processing entirely. Canton privacy is ideal: the insurer sees aggregate data without individual policyholder details. Three reference implementations make this immediately useful.',
+    what:'Daml framework for parametric insurance: policy contract with oracle-triggered payout conditions, privacy-preserving policyholder registry, Chainlink/Redstone oracle integration, automatic settlement in CC or stablecoins. Three reference implementations: weather insurance, trade credit insurance, cargo delay insurance. All open-source, MIT licensed.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$22,000', desc:'Core policy contracts. Oracle condition framework. Manual trigger for testing. Weather insurance reference implementation fully working on TestNet.' },
+      { label:'M2 — Week 12', amount:'$30,000', desc:'Chainlink oracle integration via existing Canton bridge. Automatic settlement. Trade credit and cargo delay implementations. Privacy disclosure controls.' },
+      { label:'M3 — Week 16', amount:'$20,000', desc:'Featured App application. 1 InsureTech pilot partner. Regulatory compliance brief for UK/EU markets. Open-source release on GitHub.' }
+    ],
+    budget:[['Core Daml contracts','$24,000'],['Oracle integration','$22,000'],['3 reference implementations','$16,000'],['Pilot + compliance','$10,000']]
+  },
+  {
+    id:15, cat:'infra', name:'CantonBridge — Cross-Chain RWA Transfer Framework',
+    tagline:'Unified Daml abstraction over Chainlink CCIP, LayerZero, and Wormhole.',
+    ask:'$95,000', weeks:'20 weeks',
+    source:'RWA fragmentation report: 1–3% pricing gaps for identical assets across chains. Chainlink, LayerZero, Wormhole all integrating with Canton — no unified Daml abstraction layer exists.',
+    why:'The $36B tokenised RWA market runs on disconnected rails — 1–3% pricing gaps for identical assets on different chains. Chainlink, LayerZero, and Wormhole are all integrating with Canton but each requires separate custom Daml work. A standardised Daml bridge framework wrapping all three would let any Canton developer add cross-chain capabilities in hours, not weeks.',
+    what:'A Daml framework: a single BridgeRequest choice that handles the correct oracle/bridge provider automatically, unified transfer receipt, and privacy-preserving proof of asset origin. SDK adapters for Ethereum ERC-20 tokens and Solana SPL tokens. Audited and MIT licensed. Removes the need for every Canton app to build bridge integrations independently.',
+    milestones:[
+      { label:'M1 — Week 7', amount:'$30,000', desc:'Bridge abstraction layer in Daml. Chainlink CCIP adapter. Unit tests and simulation suite. LocalNet end-to-end demo of ETH → Canton transfer.' },
+      { label:'M2 — Week 14', amount:'$40,000', desc:'LayerZero and Wormhole adapters. Ethereum ERC-20 and Solana SPL token support. TestNet end-to-end transfer. Independent security audit commissioned.' },
+      { label:'M3 — Week 20', amount:'$25,000', desc:'MainNet deployment. 3 verified asset transfers on MainNet. canton-bridge-sdk developer library. Full security audit report published.' }
+    ],
+    budget:[['Daml bridge abstraction','$30,000'],['3 provider adapters','$28,000'],['Security audit','$20,000'],['SDK + documentation','$17,000']]
+  },
+  {
+    id:16, cat:'devtools', name:'Daml Test Studio — Property-Based & Fuzz Testing',
+    tagline:'Catch contract bugs before mainnet. 10,000 random scenarios in one command.',
+    ask:'$55,000', weeks:'14 weeks',
+    source:'Official DevRel survey: Security & Auditing Tools rated Important or Critical by 75% of developers. No property-based or fuzz testing framework exists for Daml.',
+    why:'Daml Script supports basic unit tests but has no property-based testing (10,000+ random inputs verifying invariants hold), no fuzz testing (finding edge cases that break authorisation), and no coverage reporting. For institutional finance where contract bugs mean billion-dollar errors, this gap is unacceptable. 75% of developers rated security tools as Important or Critical.',
+    what:'A testing framework: daml-test run --property generates 10,000+ random scenarios against your contract. daml-test fuzz probes every choice with malformed inputs to find authorisation breaks. daml-test coverage reports which choices and branches your test suite exercises. Machine-readable output for CI/CD gating. Integration with CompliDaml.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$18,000', desc:'Property-based test runner — generate random party sets and choice arguments. 5 built-in invariant checks (double-spend, unauthorised exercise, balance conservation).' },
+      { label:'M2 — Week 11', amount:'$22,000', desc:'Fuzz testing engine (malformed inputs, boundary values). Coverage reporting (which choices and branches are exercised). GitHub Actions integration.' },
+      { label:'M3 — Week 14', amount:'$15,000', desc:'100 pre-built test cases for Daml Finance contracts. VS Code plugin showing coverage inline. CompliDaml integration — static + dynamic testing combined.' }
+    ],
+    budget:[['Property-based engine','$20,000'],['Fuzz engine + coverage','$18,000'],['100 Daml Finance test cases','$10,000'],['VS Code + CompliDaml integration','$7,000']]
+  },
+  {
+    id:17, cat:'governance', name:'Canton Compliance Registry — On-Chain Regulatory Evidence',
+    tagline:'Immutable on-chain proof that compliance checks were performed. GDPR, MiFID II, AML.',
+    ask:'$68,000', weeks:'16 weeks',
+    source:'Complements CompliDaml (static analysis) and existing PR #5 (manual checklist). The missing piece: regulators want on-chain proof, not PDF reports.',
+    why:'Compliance reports are PDFs. Regulators increasingly demand on-chain, immutable evidence that compliance checks occurred. CompliDaml does static analysis before deployment. This is the runtime layer: immutable on-chain ComplianceEvent records — "this KYC check was performed on date X, outcome Y, by institution Z" — with selective disclosure for regulators.',
+    what:'A Daml framework: ComplianceEvent contracts (immutable, timestamped, party-signed), selective disclosure for regulator queries (they see the event occurred, not underlying data), pre-built event types for GDPR (consent, erasure, access), MiFID II (trade reporting), and AML (SAR filing confirmation). Integrates with CompliDaml M3 milestone.',
+    milestones:[
+      { label:'M1 — Week 6', amount:'$20,000', desc:'Core ComplianceEvent contracts. GDPR event types (consent, erasure, data access). Selective disclosure controls for regulator queries.' },
+      { label:'M2 — Week 11', amount:'$28,000', desc:'MiFID II and AML event types. Regulator portal (web UI). CompliDaml integration — audit results auto-recorded on-chain.' },
+      { label:'M3 — Week 16', amount:'$20,000', desc:'Featured App application. Legal mapping to GDPR Art.30 record-keeping requirements. 3 institutional pilot partners.' }
+    ],
+    budget:[['Daml compliance contracts','$22,000'],['Regulator portal','$18,000'],['CompliDaml integration','$12,000'],['Legal mapping + pilots','$16,000']]
+  },
+  {
+    id:18, cat:'infra', name:'Canton Network Status Page',
+    tagline:'Is Canton down or is it me? Real-time SV health, round tracking, uptime history.',
+    ask:'$22,000', weeks:'6 weeks',
+    source:'No reliable public source exists for: which SVs are offline, current round number, network degradation alerts. Developers cannot distinguish their code failing from network issues.',
+    why:'When a developer transaction fails, there is no way to know if it is their code, their node, or the Canton network itself. A public status page removing this uncertainty is minimal-scope but high-value infrastructure. Institutional validators need SLA visibility. Developers need quick network health checks.',
+    what:'Real-time status page (status.canton.network): sequencer availability for all 13 SVs (green/yellow/red), current round number and tick rate, historical uptime (30/90/365 days), planned maintenance announcements, email/Telegram alerts. Open-source. Built on the public Scan API.',
+    milestones:[
+      { label:'M1 — Week 3', amount:'$12,000', desc:'Core status page — all 13 SV sequencer statuses, round number, tick rate. Powered by Scan API. Live at status.canton.network.' },
+      { label:'M2 — Week 6', amount:'$10,000', desc:'Historical uptime charts (30/90/365 days), maintenance announcement system, email/Telegram subscribe alerts, open-source repository.' }
+    ],
+    budget:[['Status page + SV polling','$10,000'],['Historical data + charting','$6,000'],['Alert system','$4,000'],['Hosting + open-source','$2,000']]
+  },
+  {
+    id:19, cat:'governance', name:'Canton Governance Explorer — CIP Tracker & Voting Dashboard',
+    tagline:'Track every CIP, SV vote, and governance decision on Canton in real time.',
+    ask:'$35,000', weeks:'10 weeks',
+    source:'Complements existing PR #6 (Canton Transparency Working Group). That proposal creates the process — this is the technical implementation that makes transparency visible.',
+    why:'Canton governance happens on-chain via SV votes on CIPs, grant approvals, and network parameter changes. This information is spread across GitHub, mailing lists, and the Scan API. No single place shows: what CIPs are active, how SVs voted, what changes are coming. Institutional participants making investment decisions need this visibility.',
+    what:'A web dashboard (governance.canton.network): all active and historical CIPs with voting status and SV positions, Dev Fund grant proposals (linked to GitHub PRs), upcoming network upgrades with timelines, and all on-chain governance actions from the Scan API. Filter by SV, date, proposal type. Email alerts for new CIPs.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$14,000', desc:'Core governance dashboard — CIP tracker with SV vote display, grant proposal feed from GitHub PRs, live Scan API data.' },
+      { label:'M2 — Week 10', amount:'$21,000', desc:'Full historical archive from network genesis, email alerts for new CIPs and vote outcomes, API for The Tie and Coin Metrics integration.' }
+    ],
+    budget:[['Governance dashboard','$14,000'],['Historical archive + API','$12,000'],['Alert system + integrations','$6,000'],['Hosting + docs','$3,000']]
+  },
+  {
+    id:20, cat:'ai', name:'Daml AI Reviewer — LLM-Powered Contract Analysis',
+    tagline:'AI that reviews your Daml for logical correctness, security gaps, and regulatory alignment.',
+    ask:'$62,000', weeks:'14 weeks',
+    source:'IntellectEU announced building a Daml AI coding assistant (March 2026 forum). This is complementary — they help write Daml, this reviews what was written. Different function, zero overlap.',
+    why:'CompliDaml catches static code patterns. It cannot catch semantic intent errors: "is this KYC workflow logically correct given the GDPR Art.17 right-to-erasure requirement?" That requires understanding intent — which LLMs provide when grounded in Daml Finance contracts and regulatory frameworks via RAG. Catches what static analysis cannot.',
+    what:'CLI + VS Code extension: daml-ai review contract.daml calls an LLM fine-tuned on 500+ Daml contracts, Canton documentation, and regulatory frameworks. Returns: logical correctness assessment, regulatory alignment notes (GDPR, MiFID II, HIPAA), suggested contract improvements, and confidence scores. Integrates with CompliDaml for combined static + semantic reporting.',
+    milestones:[
+      { label:'M1 — Week 5', amount:'$20,000', desc:'RAG corpus of 500+ Daml contracts + all Canton docs. Claude API integration. CLI tool daml-ai review. Basic correctness and security checks with citations.' },
+      { label:'M2 — Week 10', amount:'$26,000', desc:'Regulatory alignment module (GDPR, MiFID II, HIPAA). Confidence scoring with explanation. VS Code extension with inline suggestions. GitHub Actions integration.' },
+      { label:'M3 — Week 14', amount:'$16,000', desc:'CompliDaml integration (AI findings + static findings in one unified report). Fine-tuning pipeline. PyPI + npm release. Community RAG corpus contributions.' }
+    ],
+    budget:[['RAG corpus + LLM integration','$22,000'],['Regulatory modules','$16,000'],['VS Code extension','$12,000'],['CompliDaml integration + release','$12,000']]
+  },
+  {
+    id:21, cat:'governance', name:'Dev Fund Analytics Dashboard',
+    tagline:'Every grant, milestone, and CC disbursed — transparent and on-chain verifiable.',
+    ask:'$25,000', weeks:'8 weeks',
+    source:'The Dev Fund launched with a transparency promise. No public dashboard shows how CC is being disbursed, to which proposals, or against which milestones. This is the infrastructure trust requires.',
+    why:'Institutional participants, potential grantees, and the public have no way to see the Dev Fund operating. How much CC disbursed? Which proposals in progress? Which milestones verified and paid? This transparency is required for the fund\'s credibility and necessary to attract high-quality future proposals. Smallest ask in this list. Fastest win.',
+    what:'A public dashboard (fund.canton.foundation): all approved proposals with status, CC disbursed per milestone with on-chain TX IDs from the Scan API verifying payment, quarterly budget remaining, and grant ROI metrics (transactions generated per CC spent). Open-source. Built with GitHub API + Scan API. No new infrastructure.',
+    milestones:[
+      { label:'M1 — Week 4', amount:'$12,000', desc:'Core dashboard — all proposals from GitHub PRs, milestone status, CC disbursed, linked to on-chain TX IDs. Live at fund.canton.foundation.' },
+      { label:'M2 — Week 8', amount:'$13,000', desc:'Quarterly budget tracker, ROI metrics (transactions generated per CC spent), open-source repo, DevRel announcement and maintenance handoff.' }
+    ],
+    budget:[['Dashboard build','$12,000'],['On-chain verification + ROI metrics','$8,000'],['Hosting + open-source setup','$3,000'],['Documentation','$2,000']]
+  }
+];
+
+function renderCard(idea){
+  const c = CAT_COLORS[idea.cat];
+  const ms = idea.milestones.map(m=>`
+    <div class="milestone">
+      <div class="ms-head">
+        <div class="ms-label">${m.label}</div>
+        <div class="ms-amount">${m.amount}</div>
+      </div>
+      <div class="ms-desc">${m.desc}</div>
+    </div>`).join('');
+  const brows = idea.budget.map(b=>`
+    <div class="budget-row">
+      <span class="budget-cat">${b[0]}</span>
+      <span class="budget-amt">${b[1]}</span>
+    </div>`).join('');
+  const total = `<div class="budget-row">
+    <span class="budget-cat" style="color:var(--text)">Total ask</span>
+    <span class="budget-amt" style="color:var(--accent);font-size:14px">${idea.ask}</span>
+  </div>`;
+
+  return `<div class="card" data-cat="${idea.cat}" data-id="${idea.id}" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-num" style="background:${c.num}">${idea.id}</div>
+      <div class="card-info">
+        <div class="card-name">${idea.name}</div>
+        <div class="card-tagline">${idea.tagline}</div>
+        <div class="card-badges">
+          <span class="badge" style="background:${c.bg};border:1px solid ${c.border};color:${c.text}">${c.label}</span>
+        </div>
+      </div>
+      <div class="card-right" style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="ask-amount">${idea.ask}</div>
+        <div class="ask-weeks" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">${idea.weeks}</div>
+        <div class="expand-hint" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px">↓ expand</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="padding:0 20px 16px">
+        <div class="source-pill">Source: ${idea.source}</div>
+        <div class="body-grid">
+          <div class="body-section">
+            <div class="section-head">Why this matters</div>
+            <div class="body-text">${idea.why}</div>
+          </div>
+          <div class="body-section">
+            <div class="section-head">What to build</div>
+            <div class="body-text">${idea.what}</div>
+          </div>
+        </div>
+        <div class="section-head" style="margin-top:4px">Milestone payment structure</div>
+        <div class="milestones" style="margin-bottom:20px">${ms}</div>
+        <div class="section-head">Budget breakdown</div>
+        <div class="budget-rows">${brows}${total}</div>
+      </div>
+    </div>
+  </div>`;
 }
-</script> </body></html>
+
+function buildGrid(cat){
+  const grid = document.getElementById('grid');
+  const filtered = cat === 'all' ? ideas : ideas.filter(i=>i.cat===cat);
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty">No ideas in this category.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(renderCard).join('');
+}
+
+function toggleCard(el){
+  const wasOpen = el.classList.contains('expanded');
+  document.querySelectorAll('.card.expanded').forEach(c=>c.classList.remove('expanded'));
+  if(!wasOpen) el.classList.add('expanded');
+  if(!wasOpen) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function filter(cat, btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildGrid(cat);
+}
+
+buildGrid('all');
+</script>
+</body>
+</html>
