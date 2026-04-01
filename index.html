@@ -3,1461 +3,959 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ginie AI — 15-Day Build Plan & $500k Raise</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<title>Ginie ML Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0a0a14;
-    --paper: #f3f2f8;
-    --paper2: #eae9f0;
-    --rule: #ccc8dc;
-    --gold: #3d8c40;
-    --gold-light: #8fcf92;
-    --muted: #3a5a3c;
-    --white: #ffffff;
-    --red: #c0392b;
-    --warn: #c07820;
-    --green: #2d8a4e;
-    --amber: #c07820;
-    --amber-light: #e8b866;
-  }
+:root{
+  --bg:#0f0e0b;--bg2:#141310;--bg3:#1a1815;--bg4:#201e1a;
+  --paper:#f5f0e8;--paper2:#ede8dc;
+  --amber:#f0a830;--amber2:#e89020;--amber3:#f8c860;
+  --amber-bg:rgba(240,168,48,0.08);--amber-border:rgba(240,168,48,0.2);
+  --teal:#38b898;--teal-bg:rgba(56,184,152,0.08);
+  --red:#e85048;--red-bg:rgba(232,80,72,0.08);
+  --blue:#5090e8;--blue-bg:rgba(80,144,232,0.08);
+  --green:#58b858;--green-bg:rgba(88,184,88,0.08);
+  --muted:rgba(245,240,232,0.5);--muted2:rgba(245,240,232,0.28);
+  --rule:rgba(245,240,232,0.07);--rule2:rgba(245,240,232,0.13);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--amber-border)}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(15,14,11,0.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule2);display:flex;align-items:stretch;height:48px}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);padding:0 20px;display:flex;align-items:center;border-right:1px solid var(--rule);white-space:nowrap;letter-spacing:0.04em}
+.nav-links{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);padding:0 14px;display:flex;align-items:center;border-right:1px solid var(--rule);cursor:pointer;user-select:none;text-decoration:none;transition:color 0.2s}
+.nav-link:hover,.nav-link.active{color:var(--amber)}
 
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+/* HERO */
+.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--rule2)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:56px 56px}
+.hero-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 0%,rgba(240,168,48,0.06) 0%,transparent 70%)}
+.hero-inner{position:relative;z-index:2;max-width:1060px;margin:0 auto;padding:0 3rem;width:100%}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:2rem;opacity:0;animation:rise 0.5s 0.1s ease forwards}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--amber)}
+.hero-h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(48px,8vw,96px);line-height:0.92;letter-spacing:-0.03em;margin-bottom:1.75rem;opacity:0;animation:rise 0.6s 0.2s ease forwards}
+.hero-h1 em{color:var(--amber);font-style:italic}
+.hero-sub{font-family:'Outfit',sans-serif;font-size:16px;color:var(--muted);max-width:540px;line-height:1.75;font-weight:300;margin-bottom:3rem;opacity:0;animation:rise 0.5s 0.35s ease forwards}
+.chapters{display:flex;gap:8px;flex-wrap:wrap;opacity:0;animation:rise 0.5s 0.5s ease forwards}
+.ch-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:7px 14px;border:1px solid var(--amber-border);color:var(--amber);background:var(--amber-bg);border-radius:2px;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.ch-btn:hover{background:var(--amber);color:var(--bg)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: var(--ink);
-    border-bottom: 1px solid #1a1a2e;
-    padding: 0 40px;
-    display: flex; align-items: center; gap: 0;
-    height: 52px;
-  }
-  .nav-brand {
-    font-family: 'DM Mono', monospace;
-    font-size: 15px; font-weight: 500;
-    color: var(--gold-light);
-    letter-spacing: 0.05em;
-    margin-right: 32px;
-    white-space: nowrap;
-  }
-  .nav-links {
-    display: flex; gap: 0;
-    overflow-x: auto; scrollbar-width: none;
-    flex: 1;
-  }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-link {
-    font-size: 11px; font-weight: 500;
-    color: #888; text-decoration: none;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 0 14px; height: 52px;
-    display: flex; align-items: center;
-    border-right: 1px solid #1a1a2e;
-    transition: all 0.2s; white-space: nowrap;
-    cursor: pointer; user-select: none;
-  }
-  .nav-link:hover { color: var(--gold-light); background: #111; }
-  .nav-link.active { color: var(--gold-light); }
-  .nav-link.money { color: #888; }
-  .nav-link.money:hover { color: var(--amber-light); background: #111; }
-  .nav-link.money.active { color: var(--amber-light); }
+/* SECTION */
+.section{border-bottom:1px solid var(--rule2);padding:5rem 3rem}
+.section:nth-child(even){background:var(--bg2)}
+.s-inner{max-width:1060px;margin:0 auto}
+.s-kicker{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:0.75rem}
+.s-kicker::before{content:'';width:18px;height:1px;background:var(--amber)}
+.s-title{font-family:'Fraunces',serif;font-size:clamp(26px,3.5vw,44px);font-weight:600;letter-spacing:-0.02em;line-height:1.05;margin-bottom:1.25rem}
+.s-body{font-size:15px;color:var(--muted);max-width:620px;line-height:1.8;margin-bottom:2.5rem;font-weight:300}
 
-  main { padding-top: 52px; }
-  .section { padding: 80px 0; border-bottom: 1px solid var(--rule); }
-  .section:nth-child(even) { background: var(--paper2); }
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+/* CONCEPT CARDS */
+.concept-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-bottom:2.5rem}
+.concept{background:var(--bg3);border:1px solid var(--rule);padding:1.5rem;position:relative;overflow:hidden}
+.concept::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.cc-amber::before{background:var(--amber)}
+.cc-teal::before{background:var(--teal)}
+.cc-blue::before{background:var(--blue)}
+.cc-red::before{background:var(--red)}
+.cc-green::before{background:var(--green)}
+.c-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
+.c-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--paper);margin-bottom:8px;letter-spacing:-0.01em}
+.c-body{font-size:13px;color:var(--muted);line-height:1.7}
+.c-analogy{margin-top:10px;padding:10px 12px;background:var(--amber-bg);border-left:2px solid var(--amber);font-size:12px;color:var(--muted);line-height:1.6;font-style:italic}
+.c-analogy strong{color:var(--amber2);font-style:normal;font-weight:500}
 
-  /* COVER */
-  .cover {
-    background: var(--ink);
-    color: var(--white);
-    padding: 100px 0 80px;
-    position: relative; overflow: hidden;
-  }
-  .cover::before {
-    content: '';
-    position: absolute; top: -60px; right: -80px;
-    width: 600px; height: 600px;
-    border: 1px solid #1a1a2e;
-    border-radius: 50%; opacity: 0.5;
-  }
-  .cover::after {
-    content: '';
-    position: absolute; bottom: -100px; left: -50px;
-    width: 350px; height: 350px;
-    border: 1px solid #1a1a2e;
-    border-radius: 50%; opacity: 0.35;
-  }
-  .cover-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
-  .cover-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold-light); margin-bottom: 24px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .cover-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
-  .cover h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 1.05; font-weight: 400;
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
-  }
-  .cover h1 em.g { color: var(--gold-light); font-style: italic; }
-  .cover h1 em.m { color: var(--amber-light); font-style: italic; }
-  .cover-sub {
-    font-size: 18px; color: #aaa; font-weight: 300;
-    margin-bottom: 56px; max-width: 640px;
-  }
-  .cover-meta {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 1px; background: #1a1a2e;
-    border: 1px solid #1a1a2e;
-    max-width: 900px;
-  }
-  .meta-item { background: #0a0a18; padding: 20px 24px; }
-  .meta-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: #555; margin-bottom: 6px;
-  }
-  .meta-val { font-size: 15px; font-weight: 600; color: var(--white); }
+/* STEP FLOW */
+.step-flow{display:flex;flex-direction:column;gap:2px;margin-bottom:2.5rem}
+.step{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem 1.5rem;display:grid;grid-template-columns:44px 1fr;gap:1rem;align-items:start}
+.step-n{font-family:'Fraunces',serif;font-size:32px;color:rgba(240,168,48,0.2);line-height:0.9;letter-spacing:-0.02em}
+.step-body{}
+.step-title{font-size:14px;font-weight:500;color:var(--paper);margin-bottom:5px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.step-code{margin-top:8px;padding:8px 12px;background:var(--bg4);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber3);line-height:1.6;border-radius:2px;overflow-x:auto}
 
-  .sec-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 10px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .sec-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
-  .sec-label.amber { color: var(--amber); }
-  .sec-label.amber::before { background: var(--amber); }
+/* CODE BLOCK */
+.code-block{background:var(--bg4);border:1px solid var(--rule2);border-radius:4px;padding:1.25rem;margin-bottom:1.5rem;overflow-x:auto}
+.code-block pre{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--paper2)}
+.code-comment{color:rgba(240,168,48,0.5)}
+.code-kw{color:#c792ea}
+.code-str{color:#c3e88d}
+.code-fn{color:#82aaff}
+.code-num{color:#f78c6c}
 
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(28px, 3.5vw, 42px);
-    font-weight: 400; line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-  }
-  h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; margin-top: 28px; }
-  p { font-size: 16px; color: #3a3850; line-height: 1.75; margin-bottom: 16px; }
+/* INFO TABLE */
+.info-table{width:100%;border-collapse:collapse;margin-bottom:2rem}
+.info-table th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);font-weight:400;padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule2);background:var(--bg3)}
+.info-table td{padding:11px 14px;border-bottom:1px solid var(--rule);font-size:13px;color:var(--muted);vertical-align:top;line-height:1.55}
+.info-table tr:hover td{background:rgba(255,255,255,0.02)}
+.td-name{font-size:13px;font-weight:500;color:var(--paper)}
+.td-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;letter-spacing:0.08em;text-transform:uppercase}
+.tb-good{background:var(--green-bg);color:var(--green)}
+.tb-warn{background:var(--amber-bg);color:var(--amber)}
+.tb-bad{background:var(--red-bg);color:var(--red)}
+.tb-info{background:var(--blue-bg);color:var(--blue)}
 
-  /* VERDICT STRIP */
-  .verdict-strip {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 1px; background: var(--ink);
-    border: 1px solid var(--ink);
-    margin-top: 48px;
-  }
-  .verdict-box {
-    background: var(--ink); color: var(--white);
-    padding: 24px 20px; text-align: center;
-  }
-  .verdict-val {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px; color: var(--gold-light);
-    margin-bottom: 8px; line-height: 1.2;
-  }
-  .verdict-label { font-size: 11px; color: #666; letter-spacing: 0.05em; line-height: 1.5; }
+/* CALLOUT */
+.callout{border:1px solid var(--rule2);border-left:3px solid var(--amber);background:var(--bg3);padding:1.25rem 1.5rem;margin-bottom:1.75rem;border-radius:0 4px 4px 0}
+.callout.teal{border-left-color:var(--teal)}
+.callout.red{border-left-color:var(--red)}
+.callout.blue{border-left-color:var(--blue)}
+.callout-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+.callout.teal .callout-label{color:var(--teal)}
+.callout.red .callout-label{color:var(--red)}
+.callout.blue .callout-label{color:var(--blue)}
+.callout-text{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+.callout-text strong{color:var(--paper);font-weight:500}
 
-  /* CARD GRID */
-  .card-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 24px; margin-top: 40px;
-  }
-  .card {
-    border: 1px solid var(--rule); background: var(--white); padding: 28px;
-  }
-  .card.c-green { border-left: 4px solid var(--gold); }
-  .card.c-amber { border-left: 4px solid var(--amber); }
-  .card.c-red   { border-left: 4px solid #c0392b; }
-  .card.c-blue  { border-left: 4px solid #3070c0; }
-  .card-hdr {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 12px;
-  }
-  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-  .card-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+/* ATTENTION VIS */
+.attn-demo{background:var(--bg3);border:1px solid var(--rule);border-radius:4px;padding:1.5rem;margin-bottom:1.75rem}
+.attn-tokens{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.attn-token{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;border-radius:3px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;user-select:none}
+.at-neutral{background:var(--bg4);color:var(--muted);border-color:var(--rule)}
+.at-query{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.at-high{background:rgba(240,168,48,0.25);color:var(--amber3);border-color:rgba(240,168,48,0.4)}
+.at-med{background:rgba(240,168,48,0.12);color:var(--amber2);border-color:rgba(240,168,48,0.2)}
+.at-low{background:rgba(240,168,48,0.04);color:var(--muted2);border-color:var(--rule)}
+.attn-label{font-size:12px;color:var(--muted);line-height:1.6}
+.attn-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.attn-bar-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);width:90px;flex-shrink:0}
+.attn-bar-track{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.attn-bar-fill{height:100%;border-radius:4px;background:var(--amber);transition:width 0.3s}
 
-  /* PHASE HEADER */
-  .phase-hdr { display: flex; align-items: center; gap: 1.25rem; padding: 2.5rem 0 1.5rem; }
-  .phase-hdr-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 72px; color: var(--paper2);
-    letter-spacing: -0.02em; line-height: 0.9;
-  }
-  .phase-hdr-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 4px;
-  }
-  .phase-hdr-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px; color: var(--ink);
-  }
-  .phase-hdr-line { flex: 1; height: 1px; background: var(--rule); }
-  .phase-hdr-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; color: var(--muted);
-    letter-spacing: 0.08em; text-align: right; line-height: 1.5;
-  }
+/* PIPELINE VIS */
+.pipeline{display:flex;align-items:stretch;gap:0;margin-bottom:2rem;overflow-x:auto}
+.pipe-step{background:var(--bg3);border:1px solid var(--rule);padding:1rem;min-width:130px;flex:1;text-align:center;position:relative}
+.pipe-step::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--amber);font-size:14px;z-index:1}
+.pipe-step:last-child::after{display:none}
+.ps-icon{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+.ps-name{font-size:12px;font-weight:500;color:var(--paper);margin-bottom:4px}
+.ps-desc{font-size:10px;color:var(--muted2);line-height:1.5}
 
-  /* DAY CARDS */
-  .days-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 1px; background: var(--rule);
-    border: 1px solid var(--rule); margin-bottom: 2rem;
-  }
-  .day-card { background: var(--white); padding: 20px 16px; border-right: 1px solid var(--rule); transition: background 0.2s; }
-  .day-card:last-child { border-right: none; }
-  .day-card:hover { background: #fafcf8; }
-  .dc-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 44px; line-height: 0.9;
-    letter-spacing: -0.01em; color: var(--paper2); margin-bottom: 8px;
-  }
-  .dc-title { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 10px; min-height: 34px; }
-  .dc-tasks { margin-bottom: 10px; }
-  .dc-task { display: flex; gap: 7px; align-items: flex-start; margin-bottom: 5px; }
-  .dc-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 8px; font-weight: 500;
-    padding: 2px 5px; flex-shrink: 0; margin-top: 1px; letter-spacing: 0.05em;
-  }
-  .tt-data  { background: #e8f4fb; color: #1a5a7a; }
-  .tt-model { background: rgba(61,140,64,0.12); color: #2a6830; }
-  .tt-reach { background: rgba(192,120,32,0.12); color: #7a4a10; }
-  .tt-rev   { background: #fdeaea; color: #7a1a1a; }
-  .dc-task-txt { font-size: 11px; color: #556050; line-height: 1.5; }
-  .dc-ms {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; color: #556050;
-    line-height: 1.5; padding-top: 8px;
-    border-top: 1px solid var(--rule); letter-spacing: 0.03em;
-  }
-  .dc-ms.build { border-top-color: rgba(61,140,64,0.3); color: var(--gold); }
-  .dc-ms.money { border-top-color: rgba(192,120,32,0.3); color: var(--amber); }
-  .dc-ms.blue  { border-top-color: rgba(48,112,192,0.3); color: #3070c0; }
+/* CAPABILITY TABLE */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:2rem}
+.cap-card{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem}
+.cap-hdr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px}
+.cap-hdr.good{color:var(--green)}
+.cap-hdr.bad{color:var(--red)}
+.cap-list{list-style:none}
+.cap-item{font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--rule);display:flex;gap:8px;line-height:1.5}
+.cap-item:last-child{border-bottom:none}
+.cap-item::before{flex-shrink:0;font-size:10px;margin-top:2px}
+.cap-item.good::before{content:'✓';color:var(--green)}
+.cap-item.bad::before{content:'✗';color:var(--red)}
 
-  /* DATA TABLE */
-  .data-table {
-    width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 14px;
-  }
-  .data-table th {
-    background: var(--ink); color: var(--white);
-    padding: 12px 16px; text-align: left;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    font-weight: 400;
-  }
-  .data-table td {
-    padding: 12px 16px; border-bottom: 1px solid var(--rule);
-    vertical-align: top; line-height: 1.5;
-  }
-  .data-table tr:nth-child(even) td { background: var(--paper2); }
+/* IMPROVE CARDS */
+.improve-list{display:flex;flex-direction:column;gap:2px;margin-bottom:2rem}
+.improve-item{background:var(--bg3);border:1px solid var(--rule);padding:1.25rem 1.5rem}
+.ii-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.ii-num{font-family:'Fraunces',serif;font-size:28px;color:rgba(240,168,48,0.15);line-height:0.9;letter-spacing:-0.01em}
+.ii-title{font-size:14px;font-weight:500;color:var(--paper)}
+.ii-body{font-size:12px;color:var(--muted);line-height:1.65;padding-left:40px}
+.ii-code{margin-top:8px;padding:8px 12px;background:var(--bg4);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);line-height:1.6}
 
-  /* MERMAID */
-  .arch-wrap {
-    border: 1px solid var(--rule); background: var(--white);
-    padding: 32px; margin-top: 40px;
-  }
-  .mermaid-wrap {
-    background: var(--white); border: 1px solid var(--rule);
-    padding: 32px; overflow-x: auto; margin-top: 24px;
-  }
-  .mermaid { display: flex; justify-content: center; }
-  .img-caption {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; color: var(--muted);
-    letter-spacing: 0.08em; text-align: center; margin-top: 16px;
-  }
+/* CLOSING */
+.closing{padding:5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.closing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(240,168,48,0.04) 0%,transparent 70%)}
+.closing-inner{position:relative;z-index:1;max-width:500px;margin:0 auto}
+.closing-big{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(56px,10vw,88px);color:var(--amber);line-height:0.85;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.closing-sub{font-size:14px;color:var(--muted);line-height:1.75;font-weight:300}
 
-  /* FLOW TABS */
-  .flow-nav {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-top: 40px; margin-bottom: 32px;
-  }
-  .flow-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-    border: 1px solid var(--ink);
-    background: transparent; color: var(--ink);
-    padding: 8px 16px; cursor: pointer; transition: all 0.2s;
-  }
-  .flow-btn:hover, .flow-btn.active { background: var(--ink); color: var(--gold-light); }
-  .flow-panel { display: none; }
-  .flow-panel.active { display: block; }
-  .flow-desc {
-    font-size: 14px; color: var(--muted);
-    margin-bottom: 24px; padding: 16px 20px;
-    border-left: 3px solid var(--gold); background: var(--white);
-  }
-
-  /* STACK GRID */
-  .stack-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 16px; margin-top: 40px;
-  }
-  .stack-card {
-    border: 1px solid var(--rule); background: var(--white); padding: 20px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .stack-card:hover { border-color: var(--gold); transform: translateY(-2px); }
-  .stack-icon {
-    font-family: 'DM Mono', monospace; font-size: 10px;
-    color: var(--gold); margin-bottom: 10px; letter-spacing: 0.1em;
-  }
-  .stack-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .stack-role {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.08em;
-    color: var(--gold); margin-bottom: 8px; text-transform: uppercase;
-  }
-  .stack-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
-
-  /* ROADMAP */
-  .roadmap-grid {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 24px; margin-top: 40px;
-  }
-  .roadmap-card { border: 1px solid var(--rule); background: var(--white); overflow: hidden; }
-  .roadmap-hdr {
-    background: var(--ink); color: var(--white);
-    padding: 16px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .roadmap-title { font-weight: 700; font-size: 14px; }
-  .roadmap-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; color: var(--gold-light); letter-spacing: 0.08em;
-  }
-  .roadmap-items { padding: 16px 20px; }
-  .roadmap-item {
-    display: flex; gap: 10px; align-items: flex-start;
-    padding: 6px 0; border-bottom: 1px solid var(--paper2); font-size: 13px;
-  }
-  .roadmap-item:last-child { border-bottom: none; }
-  .ri-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--gold); margin-top: 6px; flex-shrink: 0;
-  }
-
-  /* PAYMENT / REVENUE GRID */
-  .payment-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 1px; background: var(--rule);
-    border: 1px solid var(--rule); margin-top: 40px;
-  }
-  .payment-card { background: var(--white); padding: 24px 20px; }
-  .payment-source {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 6px;
-  }
-  .payment-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-  .payment-trigger { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
-  .payment-amt {
-    font-family: 'DM Mono', monospace;
-    font-size: 15px; font-weight: 500; color: var(--amber);
-  }
-  .payment-note { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .payment-total {
-    background: var(--ink); color: var(--white); padding: 20px 24px;
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 1px;
-  }
-  .payment-total-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #888; }
-  .payment-total-amt {
-    font-family: 'DM Mono', monospace; font-size: 22px; color: var(--amber-light);
-  }
-
-  /* INVESTOR GRID */
-  .inv-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1px; background: var(--rule);
-    border: 1px solid var(--rule); margin-top: 40px;
-  }
-  .inv-tier { background: var(--white); padding: 24px; }
-  .it-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 8px;
-  }
-  .it-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px; color: var(--ink); margin-bottom: 4px;
-  }
-  .it-check { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-  .it-check strong { color: var(--ink); }
-  .it-names { display: flex; flex-wrap: wrap; gap: 5px; }
-  .it-chip {
-    font-size: 10px; padding: 3px 8px;
-    border: 1px solid var(--rule);
-    color: var(--muted); background: var(--paper2);
-    font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
-  }
-
-  /* FUNNEL */
-  .funnel-strip {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 1px; background: var(--ink);
-    border: 1px solid var(--ink); margin-top: 1px;
-  }
-  .f-step {
-    background: var(--ink); padding: 22px 16px; text-align: center;
-    border-right: 1px solid #1a1a2e;
-  }
-  .f-step:last-child { border-right: none; }
-  .f-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px; color: var(--white);
-    margin-bottom: 5px; line-height: 1;
-  }
-  .f-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; color: #666;
-    letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.5;
-  }
-
-  /* SEQUENCE TABLE */
-  .seq-table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 14px; }
-  .seq-table th {
-    background: var(--ink); color: var(--white);
-    padding: 12px 16px; text-align: left;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400;
-  }
-  .seq-table td {
-    padding: 12px 16px; border-bottom: 1px solid var(--rule);
-    vertical-align: top; line-height: 1.5;
-  }
-  .seq-table tr:last-child td { border-bottom: none; }
-  .seq-table tr:nth-child(even) td { background: var(--paper2); }
-  .seq-day { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--muted); }
-  .seq-type {
-    display: inline-block; font-family: 'DM Mono', monospace;
-    font-size: 8px; font-weight: 500; padding: 2px 7px;
-    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
-  }
-  .st-email { background: #e8f0fb; color: #1a3a7a; }
-  .st-li    { background: rgba(61,140,64,0.12); color: #2a6830; }
-
-  /* SUMMARY TABLE */
-  .summary-table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 14px; }
-  .summary-table td { padding: 13px 20px; border-bottom: 1px solid var(--rule); }
-  .summary-table td:first-child {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted); width: 220px; background: var(--paper2); font-weight: 500;
-  }
-  .summary-table td:last-child { font-weight: 500; }
-
-  /* CALLOUT */
-  .callout {
-    background: var(--ink); color: var(--white);
-    padding: 32px 40px; margin-top: 48px;
-    border-left: 4px solid var(--gold);
-  }
-  .callout.amber { border-left-color: var(--amber); }
-  .callout-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold-light); margin-bottom: 12px;
-  }
-  .callout.amber .callout-label { color: var(--amber-light); }
-  .callout-text { font-size: 17px; color: #ddd; line-height: 1.7; font-weight: 300; }
-  .callout-text strong { color: var(--white); font-weight: 600; }
-
-  .badge {
-    display: inline-block; font-family: 'DM Mono', monospace;
-    font-size: 11px; font-weight: 500; padding: 3px 10px;
-  }
-  .badge-green  { background: #e8fde8; color: #1a5a1a; }
-  .badge-amber  { background: #fdf3e0; color: #7a5200; }
-  .badge-blue   { background: #e8f0fb; color: #1a3a7a; }
-
-  /* FOOTER */
-  footer {
-    background: var(--ink); color: var(--white);
-    padding: 60px 0; text-align: center;
-  }
-  footer h2 { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--white); margin-bottom: 12px; }
-  footer p { color: #888; margin-bottom: 0; }
-  .footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
-  .footer-cta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-    border: 1px solid; padding: 11px 24px; text-decoration: none; transition: all 0.2s;
-  }
-  .ftc-green { border-color: var(--gold-light); color: var(--gold-light); }
-  .ftc-green:hover { background: var(--gold-light); color: var(--ink); }
-  .ftc-amber { border-color: var(--amber-light); color: var(--amber-light); }
-  .ftc-amber:hover { background: var(--amber-light); color: var(--ink); }
-  .ftc-dim { border-color: #333; color: #888; }
-  .ftc-dim:hover { background: #222; color: #ccc; }
-
-  @media (max-width: 900px) {
-    .container, .cover-inner { padding: 0 24px; }
-    .days-grid { grid-template-columns: 1fr 1fr; }
-    .payment-grid { grid-template-columns: 1fr 1fr; }
-    .inv-grid, .roadmap-grid { grid-template-columns: 1fr; }
-    .stack-grid { grid-template-columns: 1fr 1fr; }
-    .card-grid { grid-template-columns: 1fr; }
-    .verdict-strip, .funnel-strip { grid-template-columns: 1fr 1fr; }
-    .cover-meta { grid-template-columns: 1fr 1fr; }
-    nav { padding: 0 16px; }
-    .nav-brand { margin-right: 16px; font-size: 13px; }
-  }
+@media(max-width:800px){
+  .hero,.section{padding:3rem 1.5rem}
+  .concept-grid,.cap-grid{grid-template-columns:1fr}
+  .pipeline{flex-direction:column}
+  .pipe-step::after{display:none}
+  .step{grid-template-columns:32px 1fr}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-brand">Ginie AI</div>
+  <div class="nav-brand">Ginie · ML Guide</div>
   <div class="nav-links">
-    <a class="nav-link" onclick="navTo('overview')">Overview</a>
-    <a class="nav-link" onclick="navTo('pipeline')">Build Pipeline</a>
+    <a class="nav-link" onclick="navTo('what')">What it is</a>
+    <a class="nav-link" onclick="navTo('tokenizer')">Tokenizer</a>
+    <a class="nav-link" onclick="navTo('transformer')">Transformer</a>
+    <a class="nav-link" onclick="navTo('kqv')">K Q V</a>
+    <a class="nav-link" onclick="navTo('pipeline')">Full pipeline</a>
+    <a class="nav-link" onclick="navTo('colab')">Colab training</a>
     <a class="nav-link" onclick="navTo('datasets')">Datasets</a>
-    <a class="nav-link" onclick="navTo('phase1')">Phase 1</a>
-    <a class="nav-link" onclick="navTo('phase2')">Phase 2</a>
-    <a class="nav-link" onclick="navTo('phase3')">Phase 3</a>
-    <a class="nav-link money" onclick="navTo('money')">Making $500k</a>
-    <a class="nav-link money" onclick="navTo('revenue')">Revenue Model</a>
-    <a class="nav-link money" onclick="navTo('investors')">Investors</a>
-    <a class="nav-link money" onclick="navTo('outreach')">Outreach</a>
-    <a class="nav-link money" onclick="navTo('automation')">Automation</a>
-    <a class="nav-link money" onclick="navTo('summary')">Summary</a>
+    <a class="nav-link" onclick="navTo('capabilities')">Capabilities</a>
+    <a class="nav-link" onclick="navTo('space')">HF Space</a>
+    <a class="nav-link" onclick="navTo('improve')">Improve it</a>
   </div>
 </nav>
 
-<!-- COVER -->
-<div class="cover">
-  <div class="cover-inner">
-    <div class="cover-tag">Ginie AI · Smart Contract Builder · Master Execution Plan · 2026</div>
-    <h1><em class="g">15 Days</em> to Build.<br><em class="m">$500k</em> to Raise.</h1>
-    <p class="cover-sub">A no-fluff blueprint for building the world's first specialized AI for Daml + Solidity smart contracts — on a zero-dollar budget — and raising $500k through Canton's institutional ecosystem.</p>
-    <div class="cover-meta">
-      <div class="meta-item">
-        <div class="meta-label">Build cost</div>
-        <div class="meta-val" style="color:#8fcf92;">$0</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Training contracts</div>
-        <div class="meta-val">514,506</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Base model</div>
-        <div class="meta-val">Qwen2.5-Coder</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Investors targeted</div>
-        <div class="meta-val">300</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Target raise</div>
-        <div class="meta-val" style="color:#e8b866;">$500k</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<main>
-
-<!-- ═══════ PART ONE: BUILD ═══════ -->
-
-<section class="section" id="overview">
-  <div class="container">
-    <div class="sec-label">Part One — Building the Model</div>
-    <h2>From zero to a working Ginie model in 15 days</h2>
-    <p>Three phases. Zero dollars. Free Colab GPU, open-source datasets, Unsloth LoRA fine-tuning on Qwen2.5-Coder. The Canton grant application opens Day 3 — while you build — so institutional validation is in flight before the model ships.</p>
-
-    <div class="verdict-strip">
-      <div class="verdict-box">
-        <div class="verdict-val" style="color:#8fcf92;">Free T4</div>
-        <div class="verdict-label">GPU source<br>Colab + Kaggle</div>
-      </div>
-      <div class="verdict-box">
-        <div class="verdict-val">Qwen2.5</div>
-        <div class="verdict-label">Base model<br>1.5B + 7B Coder</div>
-      </div>
-      <div class="verdict-box">
-        <div class="verdict-val" style="color:#8fcf92;">LoRA</div>
-        <div class="verdict-label">Training method<br>rank 16 · ~25 min</div>
-      </div>
-      <div class="verdict-box">
-        <div class="verdict-val">514k</div>
-        <div class="verdict-label">Available contracts<br>DISL + 6 datasets</div>
-      </div>
-      <div class="verdict-box">
-        <div class="verdict-val" style="color:#8fcf92;">$0</div>
-        <div class="verdict-label">Total build cost<br>free tier only</div>
-      </div>
-    </div>
-
-    <div class="callout" style="margin-top:48px;">
-      <div class="callout-label">The Core Insight</div>
-      <div class="callout-text">Most founders skip to the commercial product before the model is good enough. <strong>The data flywheel is the moat.</strong> Every contract a user generates on Day 14's beta becomes a training example for v3. By Month 3, Ginie's model improves weekly from real user prompts — a self-reinforcing loop that ChainGPT's static model cannot replicate. The flywheel starts on Day 12 when logging goes live.</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Ginie AI · Complete ML Guide · Beginner to Builder</div>
+    <h1 class="hero-h1">
+      Everything about<br>
+      <em>this model</em>.<br>
+      From zero.
+    </h1>
+    <p class="hero-sub">How the Ginie model works, what every term means, how training happens on Colab, what the datasets do, where it is strong, where it fails, and exactly how to make it better. Built for someone who is new to ML.</p>
+    <div class="chapters">
+      <a class="ch-btn" onclick="navTo('what')">What it is</a>
+      <a class="ch-btn" onclick="navTo('tokenizer')">Tokenizer</a>
+      <a class="ch-btn" onclick="navTo('transformer')">Transformer</a>
+      <a class="ch-btn" onclick="navTo('kqv')">K Q V</a>
+      <a class="ch-btn" onclick="navTo('pipeline')">Full pipeline</a>
+      <a class="ch-btn" onclick="navTo('colab')">Colab</a>
+      <a class="ch-btn" onclick="navTo('datasets')">Datasets</a>
+      <a class="ch-btn" onclick="navTo('capabilities')">What it can do</a>
+      <a class="ch-btn" onclick="navTo('space')">HF Space</a>
+      <a class="ch-btn" onclick="navTo('improve')">Improve it</a>
     </div>
   </div>
 </section>
 
-<!-- PIPELINE -->
-<section class="section" id="pipeline">
-  <div class="container">
-    <div class="sec-label">Complete Pipeline</div>
-    <h2>Day 1 → Day 15 end-to-end flow</h2>
-    <p>Every step from Colab setup to the first contract deployed on Canton MainNet. The competitive baseline test on Day 1 is deliberate — you need to know exactly what ChainGPT produces before you claim Ginie beats it.</p>
+<!-- WHAT IT IS -->
+<section class="section" id="what">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 1</div>
+    <h2 class="s-title">What Ginie actually is.</h2>
+    <p class="s-body">Before understanding how it works, understand what it is. Ginie is a language model — a giant mathematical function that takes text in and produces text out. That is it. Everything else is just implementation detail.</p>
 
-    <div class="arch-wrap">
-      <div class="mermaid">
-flowchart TD
-    A(["Day 1 · Colab T4 Setup"]) --> B["Baseline test\nChain-GPT/Solidity-LLM\non 10 test prompts"]
-    B --> C["Day 2 · Download goldmines\nAlfredPros 6k pairs\ndaml-finance · OpenZeppelin"]
-    C --> D["Day 3 · Clean data\n+ Canton grant PR\n+ Apollo Tier 1 list"]
-    D --> E["Day 4 · Load base model\nQwen2.5-Coder-1.5B\nUnsloth 4-bit T4"]
-    E --> F["Day 5 · First LoRA train\nrank 16 · alpha 16\n3 epochs · ~25 min"]
-    F --> G{"Day 6 · Evaluate v1\nvs ChainGPT baseline"}
-    G -->|"Passes"| H["Day 7–8 · Expand dataset\nDISL + Zellic + andstor\n7800 total examples"]
-    G -->|"Fails — retry"| F
-    H --> I["Day 8 · Retrain v2\nloss target under 0.6\nLaunch Tier 2 Apollo"]
-    I --> J["Day 9 · Ginie-7B on Kaggle\nT4×2 · 30 free GPU hours\n~90 min total"]
-    J --> K["Day 10 · Full scorecard\n3 models vs baseline\nBuild Tier 3 investor list"]
-    K --> L["Day 11 · GGUF export\nOllama on M5 Pro Max\n$0 per generation"]
-    L --> M["Day 12 · FastAPI + LangChain\nSwap Claude API out\nData flywheel starts"]
-    M --> N["Day 13 · Security layer\nSlither + OWASP\nCanton DevNet deploy"]
-    N --> O["Day 14 · Retrain v3\nOn real user logs\n10 beta users via EVI"]
-    O --> P(["Day 15 · Demo + term sheets\nGinie live on Canton · 3–5 TS open"])
-
-    style A fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
-    style P fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
-    style G fill:#2e2010,stroke:#c07820,color:#e8b866
-    style J fill:#1a1a28,stroke:#6060c0,color:#a0a0f0
+    <div class="concept-grid">
+      <div class="concept cc-amber">
+        <div class="c-num">Concept 01</div>
+        <div class="c-title">Language Model</div>
+        <div class="c-body">A language model predicts the most likely next word given everything before it. That is the only thing it does — over and over — until it builds a complete response. Ginie predicts the next token in a Solidity contract based on the instruction you gave it and all the tokens it has already generated.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Predictive text on your phone, but trained on millions of smart contracts instead of your messages.</div>
       </div>
-      <div class="img-caption">Figure 1 — Complete 15-day build pipeline · Colab free T4 → Canton MainNet</div>
+      <div class="concept cc-teal">
+        <div class="c-num">Concept 02</div>
+        <div class="c-title">Parameters</div>
+        <div class="c-body">Ginie has 2 billion parameters. A parameter is just a number. The model is literally 2 billion numbers arranged in matrices. During training, those numbers get adjusted until the model produces good contracts. After training, they are frozen — the numbers never change again during inference (when you use the model).</div>
+        <div class="c-analogy"><strong>Analogy:</strong> A very complicated dial with 2 billion knobs. Training is turning all the knobs to the right position. Using the model is just reading the output with the knobs fixed.</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">Concept 03</div>
+        <div class="c-title">Fine-tuning vs training from scratch</div>
+        <div class="c-body">Ginie did not start from zero. It started from Chain-GPT/Solidity-LLM, which started from Salesforce/codegen-2B-multi. That base model was trained on billions of lines of code from the entire internet. Fine-tuning just adjusts the existing knowledge toward smart contracts specifically — it takes hours instead of months.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Hiring a senior developer and giving them a 2-week Solidity bootcamp. You do not retrain their entire brain.</div>
+      </div>
+      <div class="concept cc-red">
+        <div class="c-num">Concept 04</div>
+        <div class="c-title">Inference</div>
+        <div class="c-body">Inference means using the model — giving it a prompt and getting output. Training is when the model learns. Inference is when you actually use what it learned. The HuggingFace Space runs inference. Colab training runs training. They are completely different processes requiring completely different amounts of compute.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> Training is studying for an exam. Inference is taking the exam. Studying takes weeks. Taking the exam takes an hour.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENIZER -->
+<section class="section" id="tokenizer">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 2</div>
+    <h2 class="s-title">The tokenizer.<br>How text becomes numbers.</h2>
+    <p class="s-body">The model cannot read text. It only works with numbers. The tokenizer converts your text into numbers before the model sees it, and converts numbers back to text after the model finishes. Ginie uses the GPT-2 tokenizer.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">You write a prompt</div>
+          <div class="step-desc">You type: "Write a Solidity ERC20 token with minting and burning." This is raw text — the model cannot process this directly.</div>
+          <div class="step-code">"Write a Solidity ERC20 token with minting and burning."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Tokenizer splits text into tokens</div>
+          <div class="step-desc">The tokenizer does not split by word. It splits by frequency — common words become one token, rare words get split into pieces. "Solidity" might be one token. "minting" might split into "mint" + "ing".</div>
+          <div class="step-code">["Write", " a", " Sol", "idity", " ERC", "20", " token", " with", " minting", " and", " burning", "."]</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Each token gets an ID number</div>
+          <div class="step-desc">Every token in the vocabulary has a unique integer ID. "Write" might be 16289. " a" might be 257. The tokenizer looks up each token and replaces it with its number.</div>
+          <div class="step-code">input_ids = [16289, 257, 1885, 1799, 23485, 1238, 11241, 351, 20350, 290, 6533, 13]</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Model processes the numbers</div>
+          <div class="step-desc">The model works entirely with these integer IDs — it never sees text. It produces new integer IDs as output, one at a time, until it generates the EOS (end of sequence) token or hits max_new_tokens.</div>
+          <div class="step-code">output_ids = [198, 1303, 50, 47, 28, 55, 25, 198, 28, 36, 2926, ...]  <span class="code-comment"># the contract</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Tokenizer decodes numbers back to text</div>
+          <div class="step-desc">tokenizer.decode() looks up each output ID in the vocabulary and converts it back to the corresponding text. You get readable Solidity code.</div>
+          <div class="step-code">tokenizer.decode(outputs[0], skip_special_tokens=True)  <span class="code-comment"># → "// SPDX-License-Identifier: MIT..."</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">What is max_new_tokens?</div>
+      <div class="callout-text">This is the maximum number of new tokens the model can generate in one response. In your app you set it to 600–800. One token is roughly 0.75 words on average. So 800 tokens ≈ 600 words ≈ about 40–60 lines of Solidity. If a contract needs more than that, the model cuts off mid-way. <strong>For complex contracts, increase to 1200–1500.</strong></div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">Vocabulary size</div>
+      <div class="callout-text">The GPT-2 tokenizer has a vocabulary of 50,257 tokens. That means 50,257 unique "words" (actually subword pieces). Every piece of text you could possibly write can be represented as a sequence of those 50,257 pieces. The model never sees anything outside that vocabulary.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMER -->
+<section class="section" id="transformer">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 3</div>
+    <h2 class="s-title">The transformer.<br>How the model thinks.</h2>
+    <p class="s-body">The transformer is the architecture — the structure — of the model. Ginie has 32 transformer layers stacked on top of each other. Each layer refines the model's understanding of the input a little more. By layer 32, it knows what to write next.</p>
+
+    <div class="concept-grid">
+      <div class="concept cc-amber">
+        <div class="c-num">Layer structure</div>
+        <div class="c-title">What happens in each of the 32 layers</div>
+        <div class="c-body">Each transformer layer does two things: first, self-attention (every token looks at every other token and decides which ones matter), then a feed-forward network (each token individually processes its updated representation). After 32 of these, the model has a rich understanding of context and produces the next token.</div>
+      </div>
+      <div class="concept cc-teal">
+        <div class="c-num">Why 32 layers?</div>
+        <div class="c-title">Depth = better reasoning</div>
+        <div class="c-body">Each layer can learn something the previous layer missed. Layer 1 might learn basic syntax. Layer 5 might learn variable relationships. Layer 20 might learn security patterns. Layer 32 synthesises all of it to predict the next token. More layers = more sophisticated understanding — but also more compute needed.</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">Embeddings</div>
+        <div class="c-title">Token IDs become vectors</div>
+        <div class="c-body">When token ID 16289 enters the model, the embedding layer converts it into a vector — a list of 2048 numbers. These numbers capture the semantic meaning of the token. The word "transfer" in a Solidity context gets a different vector than "transfer" in an English essay. This contextual meaning is what the transformer layers refine.</div>
+        <div class="c-analogy"><strong>Key number:</strong> Ginie's embedding dimension is 2048. Each token is represented as a list of 2048 floating-point numbers throughout the model.</div>
+      </div>
+      <div class="concept cc-green">
+        <div class="c-num">Context window</div>
+        <div class="c-title">2048 tokens max at once</div>
+        <div class="c-body">Ginie can hold 2048 tokens in its "working memory" at a time. That includes your prompt AND everything it has generated so far. If the prompt + output exceeds 2048 tokens, the model starts forgetting the beginning. This is the context length limitation — a key constraint for long contracts.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- K Q V -->
+<section class="section" id="kqv">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 4</div>
+    <h2 class="s-title">K, Q, V explained.<br>The heart of attention.</h2>
+    <p class="s-body">Inside every transformer layer, there is a self-attention mechanism. It uses three matrices called Query, Key, and Value. This is what allows the model to understand relationships between tokens — how "transfer" relates to "amount" and "address" in a Solidity function, for example.</p>
+
+    <div class="concept-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="concept cc-amber">
+        <div class="c-num">Q — Query</div>
+        <div class="c-title">What am I looking for?</div>
+        <div class="c-body">Each token generates a Query vector — essentially a question it is asking about the context. The token "balanceOf" is asking: "which other tokens in this sequence are relevant to understanding what I mean?"</div>
+        <div class="c-analogy"><strong>Analogy:</strong> A search query. "Show me things related to token balance."</div>
+      </div>
+      <div class="concept cc-teal">
+        <div class="c-num">K — Key</div>
+        <div class="c-title">What do I have to offer?</div>
+        <div class="c-body">Each token also generates a Key vector — an advertisement of what it contains. The token "address" advertises itself as relevant to wallet locations, function parameters, and ERC20 operations.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> The metadata on a file. "I contain: address-related information."</div>
+      </div>
+      <div class="concept cc-blue">
+        <div class="c-num">V — Value</div>
+        <div class="c-title">My actual content</div>
+        <div class="c-body">The Value vector is the actual information that gets passed along if the attention score is high. Once Q and K determine that two tokens should attend to each other, the V of the relevant token gets weighted into the output.</div>
+        <div class="c-analogy"><strong>Analogy:</strong> The contents of the file. Once you find the right file (via Q·K match), you read its contents (V).</div>
+      </div>
+    </div>
+
+    <div class="attn-demo">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem">Interactive — click a token to see its attention pattern</div>
+      <div class="attn-tokens" id="tokens">
+        <div class="attn-token at-neutral" onclick="showAttn(0)">function</div>
+        <div class="attn-token at-query" onclick="showAttn(1)">transfer</div>
+        <div class="attn-token at-neutral" onclick="showAttn(2)">(address</div>
+        <div class="attn-token at-neutral" onclick="showAttn(3)">to,</div>
+        <div class="attn-token at-neutral" onclick="showAttn(4)">uint256</div>
+        <div class="attn-token at-neutral" onclick="showAttn(5)">amount)</div>
+      </div>
+      <div id="attn-bars">
+        <div class="attn-bar-row"><span class="attn-bar-lbl">function</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:20%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">transfer</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:100%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">(address</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:85%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">to,</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:60%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">uint256</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:70%"></div></div></div>
+        <div class="attn-bar-row"><span class="attn-bar-lbl">amount)</span><div class="attn-bar-track"><div class="attn-bar-fill" style="width:75%"></div></div></div>
+      </div>
+      <div class="attn-label" id="attn-caption" style="margin-top:12px">"transfer" attends strongly to "address" and "amount" — it knows these are its arguments. Bar width = attention weight.</div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Multi-head attention</div>
+      <div class="callout-text">Ginie does not run attention once per layer — it runs it 16 times in parallel, each with different Q/K/V matrices. Each "head" learns to attend to different relationship types. One head might specialise in syntax. Another in security patterns. Another in variable scoping. The outputs of all 16 heads are concatenated and mixed. <strong>16 attention heads × 32 layers = 512 attention operations per forward pass.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL PIPELINE -->
+<section class="section" id="pipeline">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 5</div>
+    <h2 class="s-title">The complete pipeline.<br>Prompt to deployed contract.</h2>
+    <p class="s-body">From you typing a description to a contract appearing on the Canton explorer — here is every step and what happens in each one.</p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="ps-icon">Step 1</div>
+        <div class="ps-name">User prompt</div>
+        <div class="ps-desc">Plain English description of the contract</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 2</div>
+        <div class="ps-name">Tokenize</div>
+        <div class="ps-desc">GPT-2 tokenizer converts text to token IDs</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 3</div>
+        <div class="ps-name">32 Transformer layers</div>
+        <div class="ps-desc">Attention + FFN across all 32 blocks</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 4</div>
+        <div class="ps-name">Generate tokens</div>
+        <div class="ps-desc">One token at a time until EOS or max_tokens</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 5</div>
+        <div class="ps-name">Decode</div>
+        <div class="ps-desc">Token IDs back to Solidity text</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 6</div>
+        <div class="ps-name">Compile check</div>
+        <div class="ps-desc">solc validates syntax. Auto-fix if fail.</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 7</div>
+        <div class="ps-name">Slither audit</div>
+        <div class="ps-desc">Security vulnerabilities flagged</div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-icon">Step 8</div>
+        <div class="ps-name">Deploy</div>
+        <div class="ps-desc">Canton Ledger API → contract ID on explorer</div>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">Temperature — what it does</div>
+      <div class="callout-text">At each step, the model produces a probability distribution over all 50,257 tokens. Temperature scales those probabilities. <strong>Temperature 0:</strong> always pick the most likely token (deterministic, repetitive). <strong>Temperature 1.0:</strong> pick randomly from the distribution (creative, sometimes wrong). <strong>Temperature 0.7:</strong> the sweet spot — mostly follows the most likely path but introduces controlled variation. Ginie uses 0.7 by default.</div>
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-label">do_sample vs greedy</div>
+      <div class="callout-text"><code>do_sample=True</code> means the model samples from the probability distribution — it does not always pick the most likely next token. This gives varied, more natural outputs. <code>do_sample=False</code> (greedy decoding) always picks the single most likely token — outputs are deterministic but often loop or become repetitive. Always use <strong>do_sample=True with temperature 0.6–0.8</strong> for code generation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COLAB TRAINING -->
+<section class="section" id="colab">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 6</div>
+    <h2 class="s-title">Training on Colab.<br>Step by step.</h2>
+    <p class="s-body">Google Colab gives you a free NVIDIA T4 GPU with 16GB VRAM. That is enough to fine-tune a 7B model using LoRA (Low-Rank Adaptation) — the technique that makes training fast and cheap. Here is exactly how it works.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Install Unsloth — the training framework</div>
+          <div class="step-desc">Unsloth is a library that makes LoRA fine-tuning 2–5× faster and uses 60% less memory than vanilla HuggingFace training. It is specifically optimised for T4 and Apple Silicon.</div>
+          <div class="step-code">!pip install unsloth transformers datasets trl torch accelerate</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Load the base model in 4-bit precision</div>
+          <div class="step-desc">4-bit quantisation shrinks the model from 14GB to about 4GB in memory. The model loses almost no quality but now fits on a free T4. load_in_4bit=True is the key setting.</div>
+          <div class="step-code">from unsloth import FastLanguageModel
+model, tokenizer = FastLanguageModel.from_pretrained(
+    "GinieAI/Solidity-LLM",
+    max_seq_length=2048,
+    load_in_4bit=True    <span class="code-comment"># 14GB → 4GB</span>
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Add LoRA adapters</div>
+          <div class="step-desc">LoRA adds tiny trainable matrices (A and B) alongside the frozen model weights. Only A and B update during training — the 2B original parameters stay frozen. rank=16 means the matrices have 16 columns — a small but effective update size. This is why training takes 25 minutes instead of 1,095 hours.</div>
+          <div class="step-code">model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,               <span class="code-comment"># LoRA rank — higher = more capacity</span>
+    lora_alpha=16,      <span class="code-comment"># scaling factor</span>
+    target_modules=["q_proj","k_proj","v_proj","o_proj"],
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Format your training data</div>
+          <div class="step-desc">Every training example must follow the exact same prompt format as your inference. The model learns to complete the Response section given an Instruction. Consistency here is critical — if your training format differs from your inference prompt, the model outputs garbage.</div>
+          <div class="step-code">def format(example):
+    return {"text": f"""### Instruction:
+{example['instruction']}
+
+### Response:
+{example['output']}"""}
+
+dataset = dataset.map(format)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Train with SFTTrainer</div>
+          <div class="step-desc">SFTTrainer (Supervised Fine-Tuning Trainer) is the standard training loop from HuggingFace TRL. You set the number of epochs (3 is usually right for this size dataset), batch size (4 works on T4), and learning rate (2e-4 is safe for LoRA). save_steps=25 means a checkpoint saves every 25 steps — if Colab disconnects, you do not lose everything.</div>
+          <div class="step-code">from trl import SFTTrainer
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=dataset,
+    dataset_text_field="text",
+    max_seq_length=2048,
+    args=TrainingArguments(
+        num_train_epochs=3,
+        per_device_train_batch_size=4,
+        learning_rate=2e-4,
+        save_steps=25,           <span class="code-comment"># save checkpoint every 25 steps</span>
+        output_dir="checkpoints",
+    )
+)
+trainer.train()</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-body">
+          <div class="step-title">Save and push to HuggingFace</div>
+          <div class="step-desc">Save the adapter (not the full model — the adapter is just the tiny LoRA matrices, a few hundred MB). Push to HuggingFace so it is safe even if Colab shuts down. The merged model (adapter + base weights) is what you deploy.</div>
+          <div class="step-code">model.save_pretrained("ginie-v2-adapter")
+model.push_to_hub("GinieAI/Solidity-LLM-v2")   <span class="code-comment"># push adapter to HF</span>
+
+<span class="code-comment"># To merge and push the full model:</span>
+merged = model.merge_and_unload()
+merged.push_to_hub("GinieAI/Solidity-LLM-v2-merged")</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">Critical Colab warning</div>
+      <div class="callout-text">Colab free sessions disconnect after 3–12 hours of inactivity. <strong>Always save to Google Drive or push to HuggingFace Hub every 25 steps.</strong> If the session dies mid-training, you resume from the last checkpoint. Set save_steps=25 in your TrainingArguments — this is non-negotiable for free tier Colab.</div>
+    </div>
+
+    <div class="callout teal">
+      <div class="callout-label">What the loss number means</div>
+      <div class="callout-text">During training you will see a number called "loss" printed every few steps. It starts high (around 2.5) and should decrease toward 0.6–1.0 after 3 epochs. <strong>If loss does not decrease, the data format is wrong</strong> — check that your prompt format exactly matches the format the base model was trained with. Fix data quality before changing any hyperparameter.</div>
     </div>
   </div>
 </section>
 
 <!-- DATASETS -->
 <section class="section" id="datasets">
-  <div class="container">
-    <div class="sec-label">Dataset Goldmines</div>
-    <h2>The open-source corpus that trains Ginie</h2>
-    <p>Seven publicly available datasets cover Solidity, Daml, and security patterns. Combined they provide over 514k unique contracts — more than enough for a specialized model that beats general-purpose alternatives on smart contract generation tasks.</p>
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 7</div>
+    <h2 class="s-title">The datasets.<br>What trains Ginie.</h2>
+    <p class="s-body">A model is only as good as its training data. Here is every dataset in the Ginie pipeline, what it contains, why it matters, and how it is used.</p>
 
-    <div class="flow-nav">
-      <button class="flow-btn active" onclick="showFlow('ds-pipeline', this)">Dataset pipeline</button>
-      <button class="flow-btn" onclick="showFlow('ds-table', this)">Full dataset list</button>
-    </div>
-
-    <div id="flow-ds-pipeline" class="flow-panel active">
-      <div class="flow-desc">Three phases of data ingestion: immediate ready-to-train pairs on Day 2, scale phase on Days 7–8, and a security layer added on Days 13–14. Each phase feeds the same training pipeline.</div>
-      <div class="mermaid-wrap"><div class="mermaid">
-flowchart LR
-    subgraph Immediate["Day 2 — Immediate"]
-        A1["AlfredPros/\nsmart-contracts-instructions\n6,000 instruction-output pairs\nNo preprocessing needed"]
-        A2["digital-asset/daml-finance\n+ cn-quickstart\nDaml templates · Claude\ngenerates instructions"]
-        A3["OpenZeppelin/\nopenzeppelin-contracts\nERC20 · ERC721 · Governance"]
-    end
-    subgraph Scale["Day 7–8 — Scale"]
-        B1["ASSERT-KTH/DISL\n514,506 deduplicated\nSolidity contracts\nStream 2k best"]
-        B2["Zellic/smart-contract-fiesta\nAudit-quality DeFi protocols"]
-        B3["andstor/smart_contracts\n200k verified · filter 100+ lines"]
-    end
-    subgraph Security["Day 13–14 — Security"]
-        C1["mwritescode/slither-audited\nSlither scan per contract\nFilter zero-critical only"]
-        C2["darkknight25/\nVulnerability Dataset\n2000 JSONL · OWASP 2025"]
-    end
-    A1 & A2 & A3 --> D["Clean + dedup\n90/10 split\nDay 3 pipeline"]
-    B1 & B2 & B3 --> D
-    D --> E["train.jsonl\n7800+ examples"]
-    C1 & C2 --> F["Security classifier\nSlither validation layer"]
-    E --> G[("Ginie model\nLoRA adapter")]
-    F --> G
-    style G fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
-      </div></div>
-    </div>
-
-    <div id="flow-ds-table" class="flow-panel">
-      <div class="flow-desc">All seven datasets with their sizes, languages, and exactly how each is used in the Ginie training pipeline.</div>
-      <table class="data-table">
-        <thead>
-          <tr><th>Dataset</th><th>Size</th><th>Language</th><th>Use in Ginie</th><th>Phase</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>AlfredPros/smart-contracts-instructions</strong></td>
-            <td>6,000 pairs</td>
-            <td>Solidity</td>
-            <td>Primary training data — instruction-output pairs, zero preprocessing needed. Start training Day 5.</td>
-            <td><span class="badge badge-green">Day 2</span></td>
-          </tr>
-          <tr>
-            <td><strong>digital-asset/daml-finance + cn-quickstart</strong></td>
-            <td>~200 templates</td>
-            <td>Daml</td>
-            <td>Canton-specific corpus — Claude generates one instruction pair per .daml file. Essential for Daml quality.</td>
-            <td><span class="badge badge-green">Day 2</span></td>
-          </tr>
-          <tr>
-            <td><strong>OpenZeppelin/openzeppelin-contracts</strong></td>
-            <td>~150 contracts</td>
-            <td>Solidity</td>
-            <td>Gold-standard ERC20, ERC721, governance patterns. ChainGPT uses OZ compliance as benchmark — Ginie must match.</td>
-            <td><span class="badge badge-green">Day 2</span></td>
-          </tr>
-          <tr>
-            <td><strong>ASSERT-KTH/DISL</strong></td>
-            <td>514,506 files</td>
-            <td>Solidity</td>
-            <td>Largest available — stream 2k best contracts (over 100 lines, deduplicated) for the scale phase retrain.</td>
-            <td><span class="badge badge-amber">Day 7</span></td>
-          </tr>
-          <tr>
-            <td><strong>Zellic/smart-contract-fiesta</strong></td>
-            <td>Thousands</td>
-            <td>Solidity + Vyper</td>
-            <td>Audit-quality DeFi protocols — highest quality patterns. Reserved for Ginie-Turbo training in scale phase.</td>
-            <td><span class="badge badge-amber">Day 7</span></td>
-          </tr>
-          <tr>
-            <td><strong>mwritescode/slither-audited-smart-contracts</strong></td>
-            <td>47k+ contracts</td>
-            <td>Solidity</td>
-            <td>Security layer — every contract has a Slither scan attached. Filter for zero-critical results to train clean patterns.</td>
-            <td><span class="badge badge-blue">Day 13</span></td>
-          </tr>
-          <tr>
-            <td><strong>darkknight25/Smart_Contract_Vulnerability_Dataset</strong></td>
-            <td>2,000 entries</td>
-            <td>Solidity</td>
-            <td>OWASP 2025 vulnerability categories — trains the security classifier that scores every Ginie output at generation time.</td>
-            <td><span class="badge badge-blue">Day 13</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- PHASE 1 -->
-<section class="section" id="phase1">
-  <div class="container">
-    <div class="phase-hdr">
-      <div class="phase-hdr-num">01</div>
-      <div>
-        <div class="phase-hdr-label">Phase one · Days 1–5</div>
-        <div class="phase-hdr-title">Foundation — setup, data, first train</div>
-      </div>
-      <div class="phase-hdr-line"></div>
-      <div class="phase-hdr-sub">Colab · Data · LoRA v1</div>
-    </div>
-    <div class="days-grid">
-      <div class="day-card">
-        <div class="dc-num">01</div>
-        <div class="dc-title">Colab T4 + competitive baseline</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Colab T4, Drive folders, HuggingFace + Kaggle accounts ready</span></div>
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Run Chain-GPT/Solidity-LLM on 10 prompts. Record scores as baseline</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Post intro on discuss.daml.com — first Canton community presence</span></div>
-        </div>
-        <div class="dc-ms build">↳ Competitive scores recorded</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">02</div>
-        <div class="dc-title">Download all goldmine datasets</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">AlfredPros 6k pairs — no preprocessing, save as alfred_train.jsonl</span></div>
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">daml-finance + cn-quickstart — Claude generates instruction per .daml file</span></div>
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">OpenZeppelin contracts — filter over 100 lines, 5k Solidity contracts</span></div>
-        </div>
-        <div class="dc-ms build">↳ 500+ JSONL pairs · 200 Daml examples saved</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">03</div>
-        <div class="dc-title">Data pipeline + Canton grant PR</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Quality filter, dedup by 200-char hash, 90/10 train/eval split</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Open $50k grant PR on canton-foundation/canton-dev-fund GitHub</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Apollo Professional signup. Build 100-contact Tier 1 Canton investor list</span></div>
-        </div>
-        <div class="dc-ms build">↳ Clean data ready · Grant PR live</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">04</div>
-        <div class="dc-title">Load base model + inference test</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Qwen2.5-Coder-1.5B via Unsloth 4-bit on free T4. Fits easily.</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Score base model on 10 prompts — the before/after for investor pitches</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Make.com + Claude API overnight enrichment on 100 investor contacts</span></div>
-        </div>
-        <div class="dc-ms build">↳ Base model scored · 100 profiles enriched</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">05</div>
-        <div class="dc-title">First LoRA train — Ginie-Mini v1</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">LoRA rank 16 · alpha 16 · 3 epochs · save checkpoint every 25 steps</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">~25 min on T4. Loss drops from ~2.5 to ~0.8 if data is clean</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch 5-touch Apollo sequence to 100 Tier 1 contacts. Slack webhook live</span></div>
-        </div>
-        <div class="dc-ms build">↳ v1 adapter saved to Drive · sequences running</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PHASE 2 -->
-<section class="section" id="phase2">
-  <div class="container">
-    <div class="phase-hdr">
-      <div class="phase-hdr-num">02</div>
-      <div>
-        <div class="phase-hdr-label">Phase two · Days 6–10</div>
-        <div class="phase-hdr-title">Scale data + train 7B on Kaggle</div>
-      </div>
-      <div class="phase-hdr-line"></div>
-      <div class="phase-hdr-sub">Evaluate · Expand · Kaggle GPU</div>
-    </div>
-    <div class="days-grid">
-      <div class="day-card">
-        <div class="dc-num">06</div>
-        <div class="dc-title">Evaluate v1 + classify failures</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Load adapter, run 10 prompts, score vs ChainGPT baseline. Classify failures</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Claude classifies investor replies, drafts responses within 2 hours</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Tag Canton grant PR — follow up with Tech & Ops Committee champion</span></div>
-        </div>
-        <div class="dc-ms blue">↳ Scorecard written · first replies handled</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">07</div>
-        <div class="dc-title">Scrape 2k + Tier 2 investor list</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Stream andstor 2k contracts. Pull 50 Zellic/fiesta DeFi audit contracts</span></div>
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Claude batch generates 1,500 instruction pairs overnight via API</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Build Tier 2 list: 100 blockchain VCs — Multicoin, Pantera, a16z crypto</span></div>
-        </div>
-        <div class="dc-ms blue">↳ 2,000+ examples · Tier 2 enriching overnight</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">08</div>
-        <div class="dc-title">Retrain v2 on 7,800 examples</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Merge all data: 7,800 total. Retrain. Loss target below 0.6</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch Tier 2 Apollo sequences to 100 blockchain VCs</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Post demo on X: Daml bond in 90 sec. Tag @CantonNetwork</span></div>
-        </div>
-        <div class="dc-ms blue">↳ v2 retrained · Tier 2 sequences live</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">09</div>
-        <div class="dc-title">Ginie-7B on Kaggle free GPU</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Kaggle T4×2 · 30 free GPU hours · 7B model · rank 8 LoRA · 2 epochs</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Download adapter to Drive + push to HuggingFace repo. ~90 min total</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">First investor meetings. Lead with Canton grant + 7,800-example corpus</span></div>
-        </div>
-        <div class="dc-ms blue">↳ Ginie-7B saved · first 3–5 meetings complete</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">10</div>
-        <div class="dc-title">Full scorecard + Tier 3 list</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Run all 3 models. Ginie-7B must beat ChainGPT by 20%+ compile rate</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Build Tier 3: 100 dev tools VCs — Insight, Accel, Index, Balderton</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Scope EVI integration — Ginie as AI layer inside EVI platform</span></div>
-        </div>
-        <div class="dc-ms blue">↳ Ginie beats baseline · all 300 contacts loaded</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PHASE 3 -->
-<section class="section" id="phase3">
-  <div class="container">
-    <div class="phase-hdr">
-      <div class="phase-hdr-num">03</div>
-      <div>
-        <div class="phase-hdr-label">Phase three · Days 11–15</div>
-        <div class="phase-hdr-title">Ship, deploy, demo day</div>
-      </div>
-      <div class="phase-hdr-line"></div>
-      <div class="phase-hdr-sub">GGUF · FastAPI · Canton · Close</div>
-    </div>
-    <div class="days-grid">
-      <div class="day-card">
-        <div class="dc-num">11</div>
-        <div class="dc-title">GGUF export · Ollama on M5</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Q4_K_M GGUF export from Colab. Ollama Modelfile. ollama run ginie-7b</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">1.2GB Mini · 25 tok/sec. 4.5GB 7B · 12 tok/sec. Zero cost per generation</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Launch Tier 3 sequences. All 300 contacts in simultaneous 5-touch flow</span></div>
-        </div>
-        <div class="dc-ms build">↳ Runs locally · $0 per generation</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">12</div>
-        <div class="dc-title">FastAPI + LangChain swap</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">FastAPI POST /generate wraps Ollama. Swap ChatAnthropic out of pipeline</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Log every prompt + output — data flywheel starts today</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">Data room invite to 5 warmest investors. "Closing in 3 weeks."</span></div>
-        </div>
-        <div class="dc-ms build">↳ Own model in pipeline · flywheel running</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">13</div>
-        <div class="dc-title">Security layer + Canton deploy</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">slither-audited + darkknight25 OWASP data. Build security classifier</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Wire solc + Slither into FastAPI. Security score on every output</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">First Daml contract deployed to Canton DevNet. Visible on ccview.io</span></div>
-        </div>
-        <div class="dc-ms build">↳ First Ginie contract verified on Canton explorer</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">14</div>
-        <div class="dc-title">Retrain v3 on user data + beta</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-data">DATA</span><span class="dc-task-txt">Filter logs: compiled + scored over 70 security. Merge into training set</span></div>
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Retrain v3. Real prompts improve compile rate 5–15% over synthetic</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Onboard 10 beta users via EVI. Post on discuss.daml.com</span></div>
-        </div>
-        <div class="dc-ms build">↳ v3 on real user data · 10 beta users active</div>
-      </div>
-      <div class="day-card">
-        <div class="dc-num">15</div>
-        <div class="dc-title">Demo day + term sheet push</div>
-        <div class="dc-tasks">
-          <div class="dc-task"><span class="dc-tag tt-model">ML</span><span class="dc-task-txt">Record 3-min demo: prompt → 90 sec → live contract on Canton explorer</span></div>
-          <div class="dc-task"><span class="dc-tag tt-reach">OUT</span><span class="dc-task-txt">30–50 meetings done. 5–8 serious leads. Closing email to all warm contacts</span></div>
-          <div class="dc-task"><span class="dc-tag tt-rev">$$$</span><span class="dc-task-txt">Public announcement. FOMO restarts every contact who went silent</span></div>
-        </div>
-        <div class="dc-ms build">↳ Working product · 3–5 term sheets open</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ PART TWO: MONEY ═══════ -->
-
-<section class="section" id="money">
-  <div class="container">
-    <div class="sec-label amber">Part Two — Making $500k</div>
-    <h2>Four sources. Used in sequence. Ninety days.</h2>
-    <p>The Canton grant is the starting point, not the destination. The grant gives institutional validation. The validation makes the seed round easier. The seed funds the commercial product. The commercial product generates the revenue that compounds into the SV path. Each source unlocks the next.</p>
-
-    <div class="callout amber" style="margin-top:48px;">
-      <div class="callout-label">The Canton Precedent</div>
-      <div class="callout-text">Digital Asset raised <strong>$135 million in June 2025</strong> from Goldman Sachs, Citadel Securities, DTCC, and BNP Paribas — specifically to expand Canton Network adoption. The network already processes institutional-grade transactions. Ginie's pitch: <strong>every developer Ginie onboards generates more Canton network utility for these exact investors' portfolios.</strong> That's a strategic investment thesis, not just a financial bet. Tier 1 investors have a non-financial reason to write a check.</div>
-    </div>
-
-    <div class="arch-wrap" style="margin-top:40px;">
-      <div class="mermaid">
-flowchart TD
-    A(["Day 3 · Canton grant PR\n$50k · no equity given"]) --> B["3-milestone payout\n$15k + $20k + $15k\npaid in Canton Coin"]
-    B --> G1(["Grant total · $50k"])
-
-    C(["Day 5 · Tier 1 Apollo\n100 Canton ecosystem insiders"]) --> D["DRW · Goldman\nTradeweb · 7RIDGE"]
-    D --> D1{"Week 2–4\nStrategic meetings"}
-    D1 -->|"One check"| E1(["$150k · Strategic investment"])
-
-    F(["Day 8 · Tier 2 Apollo\n100 Blockchain VCs"]) --> H["Multicoin · Pantera\na16z · Electric Capital"]
-    H --> H1{"Week 3–5\nVC meetings"}
-    H1 -->|"1–2 funds"| I1(["$200k · VC round"])
-
-    J(["Day 11 · Tier 3 Apollo\n100 Dev tools VCs"]) --> K["Insight · Accel\nIndex · Balderton"]
-    K --> K1{"Week 4–6\nFill the round"}
-    K1 -->|"Fills gap"| L1(["$75k · Round complete"])
-
-    M(["Day 14 · EVI Beta\n50 users × $49/mo"]) --> N1(["$25k · Early MRR"])
-
-    G1 & E1 & I1 & L1 & N1 --> O(["$500k closed · 90 days"])
-
-    style A fill:#2e2010,stroke:#c07820,color:#e8b866
-    style C fill:#2e2010,stroke:#c07820,color:#e8b866
-    style F fill:#2e2010,stroke:#c07820,color:#e8b866
-    style J fill:#2e2010,stroke:#c07820,color:#e8b866
-    style M fill:#2e2010,stroke:#c07820,color:#e8b866
-    style O fill:#2e2010,stroke:#c07820,color:#e8b866
-    style G1 fill:#1a2e1a,stroke:#3d8c40,color:#8fcf92
-      </div>
-      <div class="img-caption">Figure 2 — Revenue flow · from Canton grant PR to $500k closed · 90 days</div>
-    </div>
-  </div>
-</section>
-
-<!-- REVENUE MODEL -->
-<section class="section" id="revenue">
-  <div class="container">
-    <div class="sec-label amber">Revenue Model</div>
-    <h2>$500k — broken down by source</h2>
-    <p>No single source funds the whole raise. Each piece is independently achievable. The Canton grant closes first and anchors every subsequent investor conversation. The EVI MRR proves commercial demand before any VC meeting.</p>
-
-    <div class="payment-grid">
-      <div class="payment-card">
-        <div class="payment-source">Source 01 · First</div>
-        <div class="payment-name">Canton Foundation Grant</div>
-        <div class="payment-trigger">Open-source Daml contract generator + 150+ example corpus. Submitted Day 3 as public goods infrastructure. Three milestones. Requires champion from Tech & Ops Committee.</div>
-        <div class="payment-amt">$50,000</div>
-        <div class="payment-note">~333k CC at $0.15 · no equity · milestone-gated</div>
-      </div>
-      <div class="payment-card">
-        <div class="payment-source">Source 02 · Strategic first</div>
-        <div class="payment-name">Tier 1 Strategic Check</div>
-        <div class="payment-trigger">DRW, Goldman, Tradeweb, 7RIDGE. Strategic angle: every Ginie developer onboarded grows Canton utility for their Super Validator portfolio. One check closes this entire line.</div>
-        <div class="payment-amt">$150,000</div>
-        <div class="payment-note">Strategic investment · week 2–4 meetings</div>
-      </div>
-      <div class="payment-card">
-        <div class="payment-source">Source 03 · VC round</div>
-        <div class="payment-name">Tier 2 Blockchain VC</div>
-        <div class="payment-trigger">Multicoin, Pantera, a16z crypto, Electric Capital. Thesis: institutional blockchain at inflection point needs developer tooling at scale. Ginie-7B beating ChainGPT is the proof.</div>
-        <div class="payment-amt">$200,000</div>
-        <div class="payment-note">One to two VC funds · week 3–5 meetings</div>
-      </div>
-      <div class="payment-card">
-        <div class="payment-source">Source 04 · Fill</div>
-        <div class="payment-name">Tier 3 Dev Tools VC</div>
-        <div class="payment-trigger">Insight, Accel, Index Ventures. AI B2B SaaS with Canton moat + EVI distribution. Use the Tier 1 term sheet as leverage. Faster decisions than crypto VCs. Fills the round cleanly.</div>
-        <div class="payment-amt">$75,000</div>
-        <div class="payment-note">1–2 dev tools funds · week 4–6 · use T1 TS as leverage</div>
-      </div>
-      <div class="payment-card">
-        <div class="payment-source">Source 05 · Ongoing</div>
-        <div class="payment-name">EVI Early MRR</div>
-        <div class="payment-trigger">50 users × $49/mo from EVI's existing Canton developer base. Real revenue from Day 14 proves demand without requiring investors to take a thesis leap. No cold acquisition needed.</div>
-        <div class="payment-amt">$25,000</div>
-        <div class="payment-note">MRR · Day 14 beta · EVI existing user base</div>
-      </div>
-    </div>
-
-    <div class="payment-total" style="margin-top:1px;">
-      <div>
-        <div class="payment-total-label">Total raise target</div>
-        <div style="font-size:12px;color:#555;margin-top:4px;font-family:'DM Mono',monospace;">Canton grant + 3-tier investor system + early MRR · 90 days</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="payment-total-amt">$500,000</div>
-        <div style="font-size:13px;color:#666;margin-top:4px;">seed round</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- INVESTORS -->
-<section class="section" id="investors">
-  <div class="container">
-    <div class="sec-label amber">Three-Tier Investor Targeting</div>
-    <h2>300 contacts · three angles · one round</h2>
-    <p>Tier 1 launches first because they have the strongest non-financial reason to invest. A Tier 1 term sheet changes every subsequent Tier 2 and Tier 3 conversation from a cold pitch into a follow-on opportunity. Sequence matters.</p>
-
-    <div class="inv-grid">
-      <div class="inv-tier">
-        <div class="it-label">Tier 1 · Launched Day 5</div>
-        <div class="it-name">Canton Ecosystem Insiders</div>
-        <div class="it-check">Check: <strong>$100k–$500k</strong> · Strategic angle · 100 contacts</div>
-        <div class="it-names">
-          <span class="it-chip">DRW Venture Capital</span>
-          <span class="it-chip">Goldman Sachs</span>
-          <span class="it-chip">Tradeweb Ventures</span>
-          <span class="it-chip">BNP Paribas</span>
-          <span class="it-chip">7RIDGE</span>
-          <span class="it-chip">Liberty City Ventures</span>
-          <span class="it-chip">DB1 Ventures</span>
-          <span class="it-chip">Digital Asset</span>
-        </div>
-      </div>
-      <div class="inv-tier">
-        <div class="it-label">Tier 2 · Launched Day 8</div>
-        <div class="it-name">Blockchain + AI VCs</div>
-        <div class="it-check">Check: <strong>$250k–$1M</strong> · Thesis fit · 100 contacts</div>
-        <div class="it-names">
-          <span class="it-chip">Blockchain Capital</span>
-          <span class="it-chip">Multicoin Capital</span>
-          <span class="it-chip">Pantera Capital</span>
-          <span class="it-chip">Electric Capital</span>
-          <span class="it-chip">a16z crypto</span>
-          <span class="it-chip">Framework Ventures</span>
-          <span class="it-chip">Sequoia</span>
-          <span class="it-chip">Bessemer</span>
-        </div>
-      </div>
-      <div class="inv-tier">
-        <div class="it-label">Tier 3 · Launched Day 11</div>
-        <div class="it-name">Dev Tools + Enterprise SaaS</div>
-        <div class="it-check">Check: <strong>$500k–$2M</strong> · AI B2B SaaS · 100 contacts</div>
-        <div class="it-names">
-          <span class="it-chip">Insight Partners</span>
-          <span class="it-chip">Accel</span>
-          <span class="it-chip">Index Ventures</span>
-          <span class="it-chip">Balderton Capital</span>
-          <span class="it-chip">Redpoint</span>
-          <span class="it-chip">Lightspeed</span>
-          <span class="it-chip">Peak XV</span>
-          <span class="it-chip">Nexus VP</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="funnel-strip">
-      <div class="f-step">
-        <div class="f-num">300</div>
-        <div class="f-lbl">contacts<br>enriched</div>
-      </div>
-      <div class="f-step">
-        <div class="f-num">105</div>
-        <div class="f-lbl">email<br>opens</div>
-      </div>
-      <div class="f-step">
-        <div class="f-num">30</div>
-        <div class="f-lbl">replies<br>received</div>
-      </div>
-      <div class="f-step">
-        <div class="f-num">18</div>
-        <div class="f-lbl">meetings<br>booked</div>
-      </div>
-      <div class="f-step">
-        <div class="f-num">3–5</div>
-        <div class="f-lbl">term<br>sheets</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- OUTREACH -->
-<section class="section" id="outreach">
-  <div class="container">
-    <div class="sec-label amber">5-Touch Email Sequence</div>
-    <h2>The exact outreach cadence — 21 days, 5 touches</h2>
-    <p>Every email is Claude-generated from the investor's enriched profile — their specific thesis, recent deals, and Canton portfolio overlap. The sequence respects timing, escalates from hook to proof to urgency, and exits gracefully after 21 days.</p>
-
-    <table class="seq-table">
+    <table class="info-table">
       <thead>
-        <tr><th style="width:70px;">Day</th><th>Channel</th><th>Angle</th><th>The ask</th></tr>
+        <tr>
+          <th>Dataset</th>
+          <th>What it contains</th>
+          <th>Size</th>
+          <th>Used for</th>
+          <th>Quality</th>
+        </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="seq-day">1</td>
-          <td><span class="seq-type st-email">Email</span><br>The hook</td>
-          <td>Opens with their specific recent deal or public statement. Ginie in one sentence. One traction metric. Never generic — Claude personalises from enriched profile.</td>
-          <td>15 minutes this week?</td>
+          <td class="td-name">AlfredPros/smart-contracts-instructions</td>
+          <td>6,000 instruction-output pairs. Each row has an English instruction and a matching Solidity contract. Ready to train — no preprocessing needed.</td>
+          <td>6k pairs</td>
+          <td>Primary fine-tuning. Day 2 download.</td>
+          <td><span class="td-badge tb-good">High</span></td>
         </tr>
         <tr>
-          <td class="seq-day">4</td>
-          <td><span class="seq-type st-email">Email</span><br>The proof</td>
-          <td>New traction signal: Canton grant update, new partner conversation, or beta user milestone. Three sentences maximum.</td>
-          <td>Quick call still useful?</td>
+          <td class="td-name">digital-asset/daml-finance</td>
+          <td>The official Daml Finance library from Digital Asset. Contains Daml templates for Holdings, Instruments, Accounts, and Settlement. Used to generate Daml instruction pairs via Claude API.</td>
+          <td>~200 templates</td>
+          <td>Canton-specific training. The reason Ginie can write Daml.</td>
+          <td><span class="td-badge tb-good">Very high</span></td>
         </tr>
         <tr>
-          <td class="seq-day">9</td>
-          <td><span class="seq-type st-email">Email</span><br>The angle</td>
-          <td>Canton's $135M raise + CIP-0100 dev fund live. Ginie at the exact developer tooling inflection point for institutional blockchain.</td>
-          <td>Wanted to loop you in before closing.</td>
+          <td class="td-name">ASSERT-KTH/DISL</td>
+          <td>514,506 deduplicated Solidity files scraped from Etherscan. The largest publicly available Solidity corpus. Not labelled — needs Claude API to generate instructions.</td>
+          <td>514k files</td>
+          <td>Scale phase (v2). Use 2,000 best ones filtered by quality.</td>
+          <td><span class="td-badge tb-warn">Medium — needs filtering</span></td>
         </tr>
         <tr>
-          <td class="seq-day">12</td>
-          <td><span class="seq-type st-li">LinkedIn</span><br>Connect</td>
-          <td>Short note referencing your email. Makes you a real person, not just an automated sequence. Two sentences maximum.</td>
-          <td>Connect + brief reference</td>
+          <td class="td-name">mwritescode/slither-audited-smart-contracts</td>
+          <td>47,000+ Solidity contracts, each with a Slither security scan attached. The key filter: only keep contracts where Slither reports zero high-severity issues.</td>
+          <td>47k contracts</td>
+          <td>Security layer training. Improves the 58% security score.</td>
+          <td><span class="td-badge tb-good">High — pre-audited</span></td>
         </tr>
         <tr>
-          <td class="seq-day">21</td>
-          <td><span class="seq-type st-email">Email</span><br>Exit</td>
-          <td>"Dropping off radar after this one. If timing changes — ginie.ai." No pressure. Leaves the door permanently open.</td>
-          <td>Graceful exit</td>
+          <td class="td-name">Zellic/smart-contract-fiesta</td>
+          <td>DeFi contracts audited by Zellic, one of the top smart contract security firms. Highest quality Solidity available publicly — real production code that has been reviewed by experts.</td>
+          <td>~1,000</td>
+          <td>Quality boost for v3. Use for DeFi-specific examples.</td>
+          <td><span class="td-badge tb-good">Very high</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">darkknight25/Smart_Contract_Vulnerability_Dataset</td>
+          <td>2,000 contracts labelled with OWASP 2025 vulnerability categories. Negative examples — contracts with known security holes. Trains the security classifier.</td>
+          <td>2k entries</td>
+          <td>Security classifier training. Ginie learns what NOT to generate.</td>
+          <td><span class="td-badge tb-good">High — labelled</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">User logs (flywheel)</td>
+          <td>Every prompt + output + compile status + security score logged in real time. The most valuable dataset of all — real users solving real problems with real feedback signals.</td>
+          <td>Grows weekly</td>
+          <td>v4 weekly retraining. The permanent moat.</td>
+          <td><span class="td-badge tb-info">Improves over time</span></td>
         </tr>
       </tbody>
     </table>
-  </div>
-</section>
 
-<!-- AUTOMATION -->
-<section class="section" id="automation">
-  <div class="container">
-    <div class="sec-label amber">Apollo + AI Automation Stack</div>
-    <h2>Eight tools · $160/month · six webhook triggers · 24/7</h2>
-    <p>Six Make.com webhook triggers connect Apollo signals to Claude actions, replacing 20+ hours of manual follow-up per week. The stack costs less than one investor dinner and runs while you sleep.</p>
-
-    <div class="flow-nav">
-      <button class="flow-btn active" onclick="showFlow('auto-triggers', this)">Webhook triggers</button>
-      <button class="flow-btn" onclick="showFlow('auto-flow', this)">Full Apollo flow</button>
-      <button class="flow-btn" onclick="showFlow('auto-stack', this)">Stack + costs</button>
-    </div>
-
-    <div id="flow-auto-triggers" class="flow-panel active">
-      <div class="flow-desc">Six automation triggers run 24/7 via Make.com. Every hot signal gets an automated response within minutes — from Slack alert to Claude-drafted reply to auto-sent Calendly link.</div>
-      <div class="card-grid">
-        <div class="card c-amber">
-          <div class="card-hdr">Trigger: email opened 3× in 24 hours</div>
-          <div class="card-title">Slack alert + priority bump</div>
-          <div class="card-body">Contact moves to priority sequence. Slack fires instantly: "[Name] at [Firm] opened 4 times in 24 hours — act within 2 hours." Claude drafts a suggested follow-up. You review and send in one click.</div>
-        </div>
-        <div class="card c-amber">
-          <div class="card-hdr">Trigger: link clicked</div>
-          <div class="card-title">Auto-send Calendly link</div>
-          <div class="card-body">Claude generates a short warm follow-up with Calendly embedded. Sent within 15 minutes of the click. Converts investor curiosity to a booked meeting without manual intervention — even at 3am.</div>
-        </div>
-        <div class="card c-green">
-          <div class="card-hdr">Trigger: reply received</div>
-          <div class="card-title">Claude classifies + drafts reply</div>
-          <div class="card-body">Claude reads the reply, classifies it (positive, objection, not interested, needs info), and drafts a tailored response. You review and send in one click. Response time under 30 minutes on any reply.</div>
-        </div>
-        <div class="card c-green">
-          <div class="card-hdr">Trigger: meeting booked</div>
-          <div class="card-title">Full AI meeting prep brief</div>
-          <div class="card-body">Claude generates a 1-page brief: fund thesis, portfolio overlap with Canton, likely objections and your responses, questions to ask, what a yes looks like. Delivered to your inbox before every call.</div>
-        </div>
-        <div class="card c-blue">
-          <div class="card-hdr">Trigger: new contact added to Apollo</div>
-          <div class="card-title">Overnight enrichment pipeline</div>
-          <div class="card-body">Apollo API pulls contact data → Claude researches via web search → generates investor profile JSON with thesis, recent deals, Canton overlap, and personalisation hook → stored in Notion CRM for sequence use.</div>
-        </div>
-        <div class="card c-red">
-          <div class="card-hdr">Trigger: 21 days no response</div>
-          <div class="card-title">Archive + warm intro research</div>
-          <div class="card-body">Contact archived. Claude researches second-degree connections — mutual contacts in the EVI user base, Canton ecosystem, or your LinkedIn network. Flags the best warm intro path for a follow-up attempt.</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="flow-auto-flow" class="flow-panel">
-      <div class="flow-desc">The complete Apollo automation flow — from 265M-contact database to signed term sheet. Make.com connects every Apollo signal to a Claude action, and every Claude action to your calendar or Notion CRM.</div>
-      <div class="mermaid-wrap"><div class="mermaid">
-flowchart TD
-    A[("Apollo.io\n265M contacts")] --> B["Search Tier 1\n100 Canton insiders"]
-    A --> C["Search Tier 2\n100 Blockchain VCs"]
-    A --> D["Search Tier 3\n100 Dev tools VCs"]
-
-    B & C & D --> E["Make.com webhook\n→ Claude API enrichment"]
-    E --> F["Overnight enrichment\nThesis · recent deals\nCanton overlap · hook"]
-    F --> G["5-touch sequence\nClaude-personalised\nper investor profile"]
-
-    G --> H{"Signal detected?"}
-    H -->|"Email opened 3×"| I["Slack alert\n2-hour response window"]
-    H -->|"Link clicked"| J["Auto-send\nCalendly link"]
-    H -->|"Reply received"| K["Claude classifies\n+ drafts reply"]
-    H -->|"Meeting booked"| L["Claude meeting\nprep brief"]
-    H -->|"21 days silence"| M["Archive\n+ warm intro research"]
-
-    I & J & K --> N["Investor meeting"]
-    L --> N
-    N --> O{"Outcome"}
-    O -->|"Strong interest"| P["Data room invite\n+ Canton grant as anchor"]
-    O -->|"Soft interest"| Q["Nurture with\nprogress updates"]
-    P --> R(["Term sheet"])
-
-    style A fill:#1a1a28,stroke:#6060c0,color:#a0a0f0
-    style R fill:#2e2010,stroke:#c07820,color:#e8b866
-    style H fill:#1e1e10,stroke:#c07820,color:#e8b866
-    style O fill:#1e1e10,stroke:#c07820,color:#e8b866
-      </div></div>
-      <div class="img-caption">Figure 3 — Complete Apollo automation flow · from database to term sheet</div>
-    </div>
-
-    <div id="flow-auto-stack" class="flow-panel">
-      <div class="flow-desc">Eight tools. Six are free. Two cost money. The entire outreach automation system runs for $160/month.</div>
-      <div class="stack-grid">
-        <div class="stack-card">
-          <div class="stack-icon">OUTREACH · $99/MO</div>
-          <div class="stack-name">Apollo.io Professional</div>
-          <div class="stack-role">Contact database + sequences</div>
-          <div class="stack-body">265M contacts, email sequences, open/click tracking, intent signals, CRM sync, built-in dialer. The engine of the entire outreach system.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">AI · $20–40/MO</div>
-          <div class="stack-name">Claude API</div>
-          <div class="stack-role">Intelligence layer</div>
-          <div class="stack-body">Investor enrichment, email personalisation at scale, reply classification, meeting prep briefs, warm intro research. Runs overnight on every new contact added.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">AUTOMATION · $16/MO</div>
-          <div class="stack-name">Make.com</div>
-          <div class="stack-role">Webhook bridge</div>
-          <div class="stack-body">Apollo webhook → Claude automation bridge. Handles enrichment, reply handling, Slack alerts, and Notion CRM updates. The connective tissue of the system.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">CRM · FREE</div>
-          <div class="stack-name">Notion</div>
-          <div class="stack-role">Fundraising pipeline</div>
-          <div class="stack-body">Track: contacted → opened → replied → meeting → passed → committed. Store enriched investor profiles. Simple kanban view of the full pipeline.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">SCHEDULING · FREE</div>
-          <div class="stack-name">Calendly</div>
-          <div class="stack-role">Auto-scheduling</div>
-          <div class="stack-body">Auto-scheduling triggered by Apollo link-click webhook. Zero friction from investor curiosity to booked meeting. Works at 3am while you sleep.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">ALERTS · FREE</div>
-          <div class="stack-name">Slack</div>
-          <div class="stack-role">Signal notifications</div>
-          <div class="stack-body">Real-time notifications when a priority investor opens 3+ times, clicks a link, or replies. Enables fast response on the hottest signals.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">GRANT · NO EQUITY</div>
-          <div class="stack-name">Canton Foundation</div>
-          <div class="stack-role">Institutional anchor</div>
-          <div class="stack-body">$50k grant via canton-foundation/canton-dev-fund on GitHub. Opens Day 3. No equity given. The single most powerful line in every investor pitch deck.</div>
-        </div>
-        <div class="stack-card">
-          <div class="stack-icon">DISTRIBUTION · EXISTING</div>
-          <div class="stack-name">EVI Platform</div>
-          <div class="stack-role">Built-in distribution</div>
-          <div class="stack-body">First 50 beta users from EVI's existing Canton developer base. No cold acquisition campaign. Real revenue from Day 14 with zero additional marketing spend.</div>
-        </div>
-      </div>
+    <div class="callout">
+      <div class="callout-label">Why daml-finance is the most important dataset for Ginie's moat</div>
+      <div class="callout-text">The digital-asset/daml-finance repository contains the official Daml Finance library — the standard library every Canton developer uses. <strong>No other model on HuggingFace has been trained on this data.</strong> When you convert these templates into instruction-output pairs via Claude API and train Ginie on them, you get something that simply does not exist anywhere else. That is the Canton moat. Not the model quality — the data exclusivity.</div>
     </div>
   </div>
 </section>
 
-<!-- SUMMARY -->
-<section class="section" id="summary">
-  <div class="container">
-    <div class="sec-label">At a Glance</div>
-    <h2>Everything in one table</h2>
+<!-- CAPABILITIES -->
+<section class="section" id="capabilities">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 8</div>
+    <h2 class="s-title">What it can do.<br>What it cannot.</h2>
+    <p class="s-body">Honest assessment of the current v1 model. Knowing the limitations is as important as knowing the strengths — because the limitations tell you exactly where to focus your v2 training data.</p>
 
-    <table class="summary-table">
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-hdr good">What Ginie v1 does well</div>
+        <ul class="cap-list">
+          <li class="cap-item good">Standard ERC20 contracts — mint, burn, transfer, allowance</li>
+          <li class="cap-item good">ERC721 NFT contracts with basic minting</li>
+          <li class="cap-item good">OpenZeppelin import patterns — uses the right library for each standard</li>
+          <li class="cap-item good">Solidity >= 0.8 syntax — modern Solidity with SafeMath built in</li>
+          <li class="cap-item good">Basic access control — Ownable, Role-based with OZ</li>
+          <li class="cap-item good">Events, modifiers, constructor patterns</li>
+          <li class="cap-item good">Simple staking and reward contracts</li>
+          <li class="cap-item good">Following the instruction format consistently</li>
+        </ul>
+      </div>
+      <div class="cap-card">
+        <div class="cap-hdr bad">Where Ginie v1 struggles</div>
+        <ul class="cap-list">
+          <li class="cap-item bad">Complex DeFi — AMMs, liquidity pools, yield farming with multi-token logic</li>
+          <li class="cap-item bad">Daml contracts — not yet in v1, planned for v3</li>
+          <li class="cap-item bad">Reentrancy guards — the 58% security score reflects this gap</li>
+          <li class="cap-item bad">Long contracts over ~150 lines — hits context window limits</li>
+          <li class="cap-item bad">Cross-contract interactions — calling external contract interfaces reliably</li>
+          <li class="cap-item bad">Proxy and upgradeable contract patterns</li>
+          <li class="cap-item bad">Gas optimisation at the assembly level</li>
+          <li class="cap-item bad">Rare or niche standards like ERC4626, ERC2981</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">The 58% security score — what it means in practice</div>
+      <div class="callout-text">58% security means Slither finds issues in about 42% of generated contracts. The most common issues are: missing reentrancy guards on external calls, unchecked return values from external calls, and integer overflow in edge cases (even with Solidity 0.8's built-in checks, some patterns still need explicit handling). <strong>Never deploy a Ginie-generated contract to mainnet without running Slither and fixing every high-severity finding.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- HF SPACE -->
+<section class="section" id="space">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 9</div>
+    <h2 class="s-title">How the HuggingFace<br>Space works.</h2>
+    <p class="s-body">The Space runs Gradio on a free CPU tier inside a Docker container on HuggingFace's servers. Understanding the architecture explains why it is slow and how to make it faster.</p>
+
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Docker container starts on HuggingFace servers</div>
+          <div class="step-desc">When someone opens the Space, HuggingFace spins up a Docker container running Ubuntu. It installs the packages from requirements.txt — gradio, transformers, torch, accelerate. This happens once per deployment and takes 2–4 minutes.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">app.py runs — model downloads from HuggingFace Hub</div>
+          <div class="step-desc">The first time app.py runs, it calls AutoModelForCausalLM.from_pretrained("GinieAI/Solidity-LLM"). This downloads 6GB of model weights from the HuggingFace CDN into the container's local cache. On a cold start (no cache) this takes 3–5 minutes. On a warm start (cached), 30 seconds.</div>
+          <div class="step-code">model = AutoModelForCausalLM.from_pretrained(
+    "GinieAI/Solidity-LLM",
+    torch_dtype=torch.float32,   <span class="code-comment"># float32 because no GPU — CPU only</span>
+    device_map="cpu"
+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Gradio serves the UI</div>
+          <div class="step-desc">Gradio is a Python library that creates the web interface — the text boxes, sliders, and buttons — with one decorator. demo.launch() starts a web server on port 7860. HuggingFace proxies external traffic to that port. The user's browser loads the Gradio frontend (HTML/JS) and communicates via WebSocket.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">User submits — generate_contract() runs on CPU</div>
+          <div class="step-desc">The generate_contract() function runs entirely on CPU — no GPU available on the free tier. CPU inference is 20–50× slower than GPU. A 600-token output that would take 8 seconds on a T4 takes 3–8 minutes on CPU. This is the main performance problem with the current Space.</div>
+          <div class="step-code">with torch.no_grad():
+    outputs = model.generate(
+        input_ids=inputs["input_ids"],
+        attention_mask=inputs["attention_mask"],
+        max_new_tokens=600,     <span class="code-comment"># each of these takes ~0.3s on CPU</span>
+        temperature=0.7,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+    )</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Response streams back to the browser</div>
+          <div class="step-desc">The generated text is decoded and returned to Gradio, which displays it in the Code component. The current implementation returns everything at once (not streaming). Adding a TextStreamer would show tokens appearing in real time — much better user experience.</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="info-table">
+      <thead><tr><th>Component</th><th>Current state</th><th>Problem</th><th>Fix</th></tr></thead>
       <tbody>
-        <tr><td>Build cost</td><td><span class="badge badge-green">$0</span> — free Colab T4, free Kaggle GPU, all open-source datasets</td></tr>
-        <tr><td>Base model</td><td>Qwen2.5-Coder-1.5B (Mini) + 7B — Apache 2.0 licence · LoRA fine-tuning via Unsloth</td></tr>
-        <tr><td>Primary dataset</td><td>AlfredPros/smart-contracts-instructions — 6,000 instruction-output pairs · zero preprocessing · load Day 2</td></tr>
-        <tr><td>Competitive baseline</td><td>Chain-GPT/Solidity-LLM — run on 10 prompts Day 1, score it, beat it with Ginie-7B by Day 10</td></tr>
-        <tr><td>Canton grant</td><td>$50k · three milestones · no equity · submit Day 3 on canton-foundation/canton-dev-fund GitHub</td></tr>
-        <tr><td>Training examples at Day 8</td><td>7,800 total: AlfredPros 6k + Daml 200 + OZ 100 + scraped 1,500 via Claude batch API</td></tr>
-        <tr><td>Ginie-7B training</td><td>Kaggle T4×2 · 30 free GPU hours · ~90 minutes · rank 8 LoRA · Day 9</td></tr>
-        <tr><td>Deployment cost</td><td><span class="badge badge-green">$0/generation</span> — GGUF Q4_K_M on M5 Pro Max via Ollama from Day 11</td></tr>
-        <tr><td>Security validation</td><td>solc compiler + Slither scanner in FastAPI · Day 13 · OWASP 2025 classifier from darkknight25 dataset</td></tr>
-        <tr><td>First Canton deploy</td><td>Day 13 · Canton DevNet · visible on ccview.io and lighthouse.fivenorth.io</td></tr>
-        <tr><td>Data flywheel starts</td><td>Day 12 — every prompt + output logged · v3 retrained on real user data Day 14 · 5–15% compile rate gain</td></tr>
-        <tr><td>Investors targeted</td><td>300 total: 100 Tier 1 (Day 5) + 100 Tier 2 (Day 8) + 100 Tier 3 (Day 11)</td></tr>
-        <tr><td>Outreach automation cost</td><td>$160/month — Apollo $99 + Claude API $40 + Make.com $16 + Notion/Calendly/Slack free</td></tr>
-        <tr><td>Conversion funnel</td><td>300 contacts → 105 opens (35%) → 30 replies (10%) → 18 meetings → 3–5 term sheets</td></tr>
-        <tr><td>Canton grant</td><td>$50k CC · no equity · institutional validation for every subsequent investor pitch</td></tr>
-        <tr><td>Tier 1 strategic check</td><td>$150k · DRW / Goldman / Tradeweb · every Ginie dev onboarded grows their Canton network stake</td></tr>
-        <tr><td>Tier 2 VC round</td><td>$200k · Multicoin / Pantera / a16z · institutional blockchain needs developer tooling at scale</td></tr>
-        <tr><td>Tier 3 fill</td><td>$75k · Insight / Accel / Index · use Tier 1 term sheet as leverage · closes the round</td></tr>
-        <tr><td>EVI early MRR</td><td>$25k · 50 users × $49/mo · real revenue from Day 14 from existing EVI Canton developer base</td></tr>
-        <tr><td>Total raise target</td><td><span class="badge badge-amber">$500,000</span> · Canton grant + 3-tier investors + early MRR · 90 days to close</td></tr>
-        <tr><td>Long-term ceiling</td><td>$2M–5M+ over 3 years if institutional broker traction materialises via grant + seed + SV path</td></tr>
+        <tr>
+          <td class="td-name">Compute tier</td>
+          <td>Free CPU</td>
+          <td>3–8 min per generation</td>
+          <td><span class="td-badge tb-warn">Upgrade to T4 GPU ($0.60/hr)</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Model precision</td>
+          <td>float32 on CPU</td>
+          <td>Maximum memory usage, slowest inference</td>
+          <td><span class="td-badge tb-warn">Use bfloat16 + auto device map</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Streaming</td>
+          <td>Returns all at once</td>
+          <td>User sees nothing for 3–8 min then everything</td>
+          <td><span class="td-badge tb-warn">Add TextStreamer to show token by token</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">YAML metadata</td>
+          <td>Missing</td>
+          <td>Not searchable on HuggingFace</td>
+          <td><span class="td-badge tb-bad">Fix today — 5 minutes</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Build error</td>
+          <td>gradio==6.10.0 conflict</td>
+          <td>Space fails to build entirely</td>
+          <td><span class="td-badge tb-bad">Pin to gradio==4.44.0</span></td>
+        </tr>
       </tbody>
     </table>
   </div>
 </section>
 
-</main>
+<!-- IMPROVE -->
+<section class="section" id="improve">
+  <div class="s-inner">
+    <div class="s-kicker">Chapter 10</div>
+    <h2 class="s-title">How to make it better.<br>The exact steps.</h2>
+    <p class="s-body">Every improvement mapped to what it fixes, how to do it, and what result to expect. In order of impact.</p>
 
-<footer>
-  <div class="container">
-    <h2>The path is real.<br>The shortcut isn't.</h2>
-    <p>Build on free Colab. Submit the grant. Launch the outreach. Close the round.</p>
-    <div class="footer-links">
-      <a href="https://github.com/canton-foundation/canton-dev-fund" class="footer-cta ftc-green" target="_blank">Canton Dev Fund →</a>
-      <a href="https://huggingface.co/datasets/AlfredPros/smart-contracts-instructions" class="footer-cta ftc-amber" target="_blank">AlfredPros Dataset →</a>
-      <a href="https://www.apollo.io" class="footer-cta ftc-dim" target="_blank">Apollo.io →</a>
-      <a href="https://canton.foundation/grants-program/" class="footer-cta ftc-dim" target="_blank">Grant Program →</a>
-    </div>
-    <div style="margin-top:48px; padding-top:24px; border-top:1px solid #1a1a2e;">
-      <p style="font-size:13px;">Ginie AI · 15-Day Build Plan & $500k Raise · 2026</p>
-      <p style="font-size:12px; margin-top:8px;">Built on open-source datasets · Runs on Canton Network · $0 build cost</p>
+    <div class="improve-list">
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">01</div>
+          <div class="ii-title">Fix the Space build error — gradio version conflict</div>
+        </div>
+        <div class="ii-body">
+          Change requirements.txt to pin gradio==4.44.0 and transformers==4.41.2. The current 6.10.0 version has dependency conflicts on HuggingFace's free tier Docker environment. This is why the Space is broken right now.
+          <div class="ii-code">gradio==4.44.0
+transformers==4.41.2
+torch==2.2.2
+accelerate==0.30.0</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">02</div>
+          <div class="ii-title">Add streaming to the Space — users see output appearing in real time</div>
+        </div>
+        <div class="ii-body">
+          Replace the current generate call with TextIteratorStreamer. Instead of waiting 5 minutes to see anything, users watch the contract appear token by token. This alone makes the Space feel 10× faster even if the total generation time is identical.
+          <div class="ii-code">from transformers import TextIteratorStreamer
+from threading import Thread
+
+streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+thread = Thread(target=model.generate, kwargs={**inputs, "streamer": streamer, ...})
+thread.start()
+for chunk in streamer:
+    yield chunk  # Gradio streams this to the UI</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">03</div>
+          <div class="ii-title">Retrain v2 on 7,800 examples to push security score above 70%</div>
+        </div>
+        <div class="ii-body">
+          The 58% security score is the main weakness in the benchmark. Fix it by adding the mwritescode/slither-audited dataset (zero high-severity contracts only) and darkknight25/vulnerability dataset as negative examples. The model learns what good security looks like AND what bad security looks like.
+          <div class="ii-code"># Filter slither-audited for zero high-severity findings
+safe_contracts = [c for c in slither_data if c["high_severity_count"] == 0]
+# Add vulnerability examples as "bad output" negative examples
+# Merge into 7,800 total training examples</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">04</div>
+          <div class="ii-title">Add daml-finance training data — unlock the Canton moat</div>
+        </div>
+        <div class="ii-body">
+          Clone digital-asset/daml-finance. For every .daml template file, use Claude API to generate an instruction-output pair. This produces ~200 high-quality Daml examples that no other model on HuggingFace has been trained on. Merge into the training set. Ginie becomes the only model that can write Daml.
+          <div class="ii-code">import subprocess, os
+subprocess.run(["git", "clone", "https://github.com/digital-asset/daml-finance"])
+daml_files = [f for f in os.listdir("daml-finance/src") if f.endswith(".daml")]
+for f in daml_files:
+    content = open(f).read()
+    instruction = claude_api(f"Generate instruction for this Daml contract:\n{content}")
+    # Save as JSONL training pair</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">05</div>
+          <div class="ii-title">Export GGUF — multiply downloads by 10×</div>
+        </div>
+        <div class="ii-body">
+          The GGUF format runs on any laptop without a GPU via llama.cpp or Ollama. The audience for "runs locally on my Mac" is 10× larger than the audience for "runs on CUDA only." Uploading a Q4_K_M quantised GGUF alongside the safetensors immediately reaches every developer running an M-series Mac.
+          <div class="ii-code">python llama.cpp/convert_hf_to_gguf.py GinieAI/Solidity-LLM --outtype f16
+./llama.cpp/llama-quantize ginie-f16.gguf ginie-q4_k_m.gguf Q4_K_M
+# Upload to GinieAI/Solidity-LLM-GGUF on HuggingFace</div>
+        </div>
+      </div>
+      <div class="improve-item">
+        <div class="ii-header">
+          <div class="ii-num">06</div>
+          <div class="ii-title">Build the data flywheel — the permanent moat</div>
+        </div>
+        <div class="ii-body">
+          Log every prompt, output, compile status, and security score in production. Every Friday, filter for: compiled=True AND security_score >= 70. Add these to the training set. Retrain v(n+1). The model improves weekly from real user prompts — a data distribution competitors cannot buy or synthesise because they do not have your users.
+          <div class="ii-code">import json, datetime
+def log_generation(prompt, output, compiled, security_score):
+    entry = {
+        "instruction": prompt,
+        "output": output,
+        "compiled": compiled,
+        "security_score": security_score,
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    }
+    with open("logs.jsonl", "a") as f:
+        f.write(json.dumps(entry) + "\n")</div>
+        </div>
+      </div>
     </div>
   </div>
-</footer>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="closing-inner">
+    <div class="closing-big">Build it.</div>
+    <p class="closing-sub">You now understand every component — the tokenizer that converts text to numbers, the transformer layers that process them, the Q/K/V attention that finds relationships, the LoRA training that fine-tunes efficiently on Colab, the datasets that make Ginie unique, and the flywheel that makes it better every week. The only thing left is execution.</p>
+  </div>
+</div>
 
 <script>
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'neutral',
-    themeVariables: {
-      primaryColor: '#eae9f0',
-      primaryTextColor: '#0a0a14',
-      primaryBorderColor: '#ccc8dc',
-      lineColor: '#5a5870',
-      secondaryColor: '#f3f2f8',
-      tertiaryColor: '#fff',
-      fontFamily: 'Outfit, sans-serif',
-      fontSize: '13px'
-    },
-    flowchart: { htmlLabels: true, curve: 'basis' }
+function navTo(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var top=el.getBoundingClientRect().top+window.pageYOffset-50;
+  window.scrollTo({top:top,behavior:'smooth'});
+  document.querySelectorAll('.nav-link').forEach(function(l){
+    l.classList.remove('active');
+    var oc=l.getAttribute('onclick')||'';
+    if(oc.indexOf("'"+id+"'")!==-1)l.classList.add('active');
   });
+}
 
-  async function renderAllDiagrams() {
-    var stage = document.createElement('div');
-    stage.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1200px;visibility:hidden;';
-    document.body.appendChild(stage);
-    var nodes = Array.from(document.querySelectorAll('.mermaid'));
-    var counter = 0;
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var src = node.textContent.trim();
-      if (!src) continue;
-      var placeholder = document.createComment('mermaid-placeholder-' + i);
-      node.parentNode.insertBefore(placeholder, node);
-      stage.appendChild(node);
-      try {
-        var id = 'mg' + (counter++);
-        var result = await mermaid.render(id, src);
-        node.innerHTML = result.svg || result;
-      } catch(err) {
-        node.innerHTML = '<p style="color:#c0392b;font-size:12px;padding:8px;font-family:monospace;border:1px solid #f0c0c0">Diagram error: ' + (err.message || err) + '</p>';
-      }
-      placeholder.parentNode.insertBefore(node, placeholder);
-      placeholder.parentNode.removeChild(placeholder);
+window.addEventListener('scroll',function(){
+  var current='';
+  ['what','tokenizer','transformer','kqv','pipeline','colab','datasets','capabilities','space','improve'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&window.pageYOffset>=el.offsetTop-120)current=id;
+  });
+  document.querySelectorAll('.nav-link').forEach(function(l){
+    l.classList.remove('active');
+    var oc=l.getAttribute('onclick')||'';
+    if(current&&oc.indexOf("'"+current+"'")!==-1)l.classList.add('active');
+  });
+});
+
+const attnData = [
+  {bars:[90,30,20,15,10,20],caption:'"function" attends most to itself — it is the anchor keyword. Moderate attention to "transfer" as the function name.'},
+  {bars:[20,100,85,60,70,75],caption:'"transfer" attends strongly to "address" and "amount" — its two arguments. This is how the model understands function signatures.'},
+  {bars:[15,80,100,90,40,30],caption:'"address" attends to "to," strongly — they are semantically linked as the recipient parameter.'},
+  {bars:[10,60,90,100,35,25],caption:'"to," attends strongly to "address" — it knows it is a label for the address parameter.'},
+  {bars:[20,70,40,30,100,85],caption:'"uint256" attends strongly to "amount)" — it knows they form the second parameter pair.'},
+  {bars:[15,75,30,25,80,100],caption:'"amount)" attends to "uint256" and "transfer" — it knows its type and which function it belongs to.'}
+];
+const words=['function','transfer','(address','to,','uint256','amount)'];
+
+function showAttn(i){
+  const tokenEls=document.querySelectorAll('.attn-token');
+  tokenEls.forEach(function(t,j){
+    t.className='attn-token ';
+    if(j===i)t.className+='at-query';
+    else{
+      const w=attnData[i].bars[j];
+      if(w>=80)t.className+='at-high';
+      else if(w>=50)t.className+='at-med';
+      else t.className+='at-low';
     }
-    document.body.removeChild(stage);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderAllDiagrams);
-  } else {
-    renderAllDiagrams();
-  }
-
-  function showFlow(name, btn) {
-    document.querySelectorAll('.flow-panel').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('.flow-btn').forEach(function(b) { b.classList.remove('active'); });
-    var t = document.getElementById('flow-' + name);
-    if (t) t.classList.add('active');
-    if (btn) btn.classList.add('active');
-  }
-
-  function navTo(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    var top = el.getBoundingClientRect().top + window.pageYOffset - 60;
-    window.scrollTo({ top: top, behavior: 'smooth' });
-    document.querySelectorAll('.nav-link').forEach(function(l) {
-      l.classList.remove('active');
-      var oc = l.getAttribute('onclick') || '';
-      if (oc.indexOf("'" + id + "'") !== -1) l.classList.add('active');
-    });
-  }
-
-  window.addEventListener('scroll', function() {
-    var current = '';
-    document.querySelectorAll('section[id]').forEach(function(s) {
-      if (window.pageYOffset >= s.offsetTop - 120) current = s.id;
-    });
-    document.querySelectorAll('.nav-link').forEach(function(l) {
-      l.classList.remove('active');
-      var oc = l.getAttribute('onclick') || '';
-      if (current && oc.indexOf("'" + current + "'") !== -1) l.classList.add('active');
-    });
   });
+  const bars=document.querySelectorAll('.attn-bar-fill');
+  attnData[i].bars.forEach(function(v,j){bars[j].style.width=v+'%'});
+  document.getElementById('attn-caption').textContent=attnData[i].caption;
+}
 </script>
+
 </body>
 </html>
